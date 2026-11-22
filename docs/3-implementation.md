@@ -336,6 +336,7 @@ a picker.
 | Daylight | "Use my location once" asks for permission and fills the coordinates |
 | Storage | Persistent storage reported |
 | Layout | Safe areas, dark mode, larger text |
+| Glass | With the moving backdrop on (D-048): scrolling and the player stay smooth, the raindrops show on Today, Week and Progress, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 
 **Other platforms** (D-047), on whatever devices are at hand:
 
