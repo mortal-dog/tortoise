@@ -82,7 +82,8 @@
 ## Pitfalls
 
 - **Building pitfalls** (worktrees, Biome, Playwright clocks and locators, route tree, TypeScript 7, the service
-  worker, D-number merges, NOAA values, deploy runs from the session, the settings race): `ai/memory/building-pitfalls.md`.
+  worker, D-number merges, NOAA values, deploy runs from the session, the settings race, glass screenshots, the light
+  theme's contrast margin, the sheet's empty sentinel): `ai/memory/building-pitfalls.md`.
 - **The glass costs per pixel without a GPU** (D-049): CI's WebKit renders the e2e at 1x; the Mac's GPU hides that
   cost, so judge CI speed on CI. When CI slows, rerun the last fast commit as a control and bisect the commits before
   guessing at causes (three guesses came first on 2026-11-22). Numbers: `ai/memory/ci-pipeline.md`.

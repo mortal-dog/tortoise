@@ -1,6 +1,30 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## Compact the closed sessions of 2026-11-22 — started 2026-11-22 16:24 ET, done 2026-11-22 16:30 ET
+
+**Why:** the owner, 2026-11-22: "all other sessions are closed you can handle compact everything for other sessions".
+
+**Where:** ib (`~/Repo/ib`), this repo, the global memory (`~/Repo/script`, `ai/global-memory/`). Not the doctornova
+session (live since 17:19 local), not the folder outside any repo (no context there by the owner's rule).
+
+**Done**
+- [x] survey: french's two sessions ran compact-ai (`f793712` and a later one); tortoise's Phases 0-9 session ran it
+  (`1825aba`); not compacted: ib `a0c1875d` (the money-flow layer on its /economy page, pushed 16:22 ET on the owner's picker),
+  tortoise `eaef234b` (glass, D-048) and `a1d2a868` (install card, D-047)
+- [x] ib: compacted and pushed `814f17b` (now.md header, open work, Built on 11-22, Analysis answers given on 11-22,
+  recent commits; memory `money-flow-layer-d243`; resume-done: the push done) — **do not commit it again**
+- [x] global memory: the two leftover notes were committed by their own session (`ff84d1f`, 16:44 local); added
+  `sheet-empty-sentinel-stays`, corrected `playwright-ci-renders-without-gpu` (WebKit draws no blur) — `ae749b1`, pushed
+- [x] french: clean, pushed, sheet empty (`2e3c9c9` its last compact)
+- [x] tortoise memory: `ci-pipeline` (no blur in WebKit), `building-pitfalls` (glass screenshots, contrast margin, the
+  sheet's sentinel), the index — committed with this entry's move
+
+- [x] ♻️ `ai/now.md`'s pitfall pointer names the new topics; this entry moved here; `ai/` committed and pushed
+
+**Don't forget:** sessions that close without compact-ai leave their lessons only in their transcripts (the newest 3 per
+project survive): read their final reports. The project kept out of sweeps stays out of them, its leftovers too.
+
 ## CI: the glass theme made the e2e tests 2-3x slower and the player test flaky — started 2026-11-22 15:13 ET, done 2026-11-22 15:30 ET
 
 **Why:** the owner, 2026-11-22: "fix all issues and run compact at end", after the report that since `af76e29` (D-048)

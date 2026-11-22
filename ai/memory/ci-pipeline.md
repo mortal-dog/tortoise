@@ -22,7 +22,9 @@ metadata:
   instead of 12 to 22 s, and the player test hit its 30-s limit in two runs. Bisected on CI: `856d3d7` fast (17/19/13
   s), `af76e29` slow. Probes: no blur 36/46/30 s; Moving background off 33/41/74 s (flaky); reduced motion 42/50/40 s;
   1x 18/32/21 s; 1x and a still backdrop 18/27/18 s (not taken: within the spread between runs). On the Mac the GPU hid
-  it: the whole suite on 2 workers took 50 s at 3x and 38 s at 1x.
+  it: the whole suite on 2 workers took 50 s at 3x and 38 s at 1x. Playwright's WebKit draws no backdrop blur at all
+  (the glass session's finding: its screenshots showed none, real Chrome did), which is why removing the blur changed
+  nothing: the cost is the large layers and the translucent panels composited at 3x.
 - **Test a workflow change without deploying:** push a branch (from a temporary worktree, so main's tree stays as it
   is), run `gh workflow run ci.yml --repo mortal-dog/tortoise --ref <branch> -f deploy=false`, read the jobs with
   `gh api repos/mortal-dog/tortoise/actions/runs/<id>/jobs` and the annotations with `.../check-runs/<job id>/annotations`,
