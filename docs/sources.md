@@ -1,0 +1,91 @@
+# Sources
+
+Every number in the Tortoise plan names one of these sources by its id, in square brackets: `[lee2014]`.
+
+**How each source was checked.** The 26 sources in part A were read in their raw PubMed abstract text (NCBI E-utilities,
+`efetch`) on 2026-11-21. Each "Finding" restates only what that abstract says. The sources in part B come from the Straight Back
+page (<https://money.doctornova.net/posture>), which read each one in its raw text on 2026-11-17. A search-engine or AI
+summary never counts as a reading.
+
+**Rules for new sources.**
+- Read the raw text (abstract, full text or guideline), never a summary.
+- Restate the finding with its numbers.
+- Give it an id: first author or body, plus year.
+- A plan line that holds a digit names at least one source. Our own rules (for example "add at most 10% a week") are
+  marked *our rule* instead. Physical facts and unit conversions (1 litre of water = 1 kg) need neither.
+
+---
+
+## A. Read on 2026-11-21
+
+### Fitness, strength and survival
+
+| Id | Source | Finding |
+|---|---|---|
+| mandsager2018 | Mandsager et al. Association of cardiorespiratory fitness with long-term mortality among adults undergoing exercise treadmill testing. JAMA Netw Open 2018. <https://pubmed.ncbi.nlm.nih.gov/30646252/> | 122,007 patients, median follow-up 8.4 years. Risk-adjusted death rates fell with every step up in fitness. Elite against low fitness: adjusted hazard ratio 0.20 (low against elite: 5.04). Low fitness carried as much risk as smoking, diabetes or coronary disease, or more. The authors saw "no observed upper limit of benefit". Elite beat high fitness even at 70 or older (hazard ratio 0.71). |
+| kodama2009 | Kodama et al. Cardiorespiratory fitness as a quantitative predictor of all-cause mortality and cardiovascular events in healthy men and women: a meta-analysis. JAMA 2009. <https://pubmed.ncbi.nlm.nih.gov/19454641/> | 33 studies, 102,980 people. Each 1 MET more of maximal aerobic capacity (about 1 km/h faster running speed): risk ratio 0.87 for death from any cause and 0.85 for heart and vascular events. Low fitness (under 7.9 METs) against high (10.9 or more): risk ratio 1.70 for death. |
+| leong2015 | Leong et al. Prognostic value of grip strength: findings from the Prospective Urban Rural Epidemiology (PURE) study. Lancet 2015. <https://pubmed.ncbi.nlm.nih.gov/25982160/> | 139,691 adults aged 35–70 in 17 countries, median 4.0 years. Each 5 kg less grip strength: hazard ratio 1.16 for death from any cause. Grip predicted death better than systolic blood pressure. |
+| yang2019 | Yang et al. Association between push-up exercise capacity and future cardiovascular events among active adult men. JAMA Netw Open 2019. <https://pubmed.ncbi.nlm.nih.gov/30768197/> | 1,104 male firefighters, mean age 39.6, followed 10 years. Men who could do more than 40 push-ups had an incidence rate ratio of 0.04 for heart and vascular events against men who could do fewer than 10. There were only 37 events, so it is a small, observational study. |
+| momma2022 | Momma et al. Muscle-strengthening activities are associated with lower risk and mortality in major non-communicable diseases: a systematic review and meta-analysis of cohort studies. Br J Sports Med 2022. <https://pubmed.ncbi.nlm.nih.gov/35228201/> | 16 cohort studies. Muscle-strengthening went with a 10–17% lower risk of death, heart disease, cancer and diabetes. The largest reduction, about 10–20%, came at about 30–60 minutes a week (a J-shaped curve). The effect of larger volumes was unclear. Strength plus aerobic activity beat neither. |
+| brito2014 | Brito et al. Ability to sit and rise from the floor as a predictor of all-cause mortality. Eur J Prev Cardiol 2014. <https://pubmed.ncbi.nlm.nih.gov/23242910/> | 2,002 adults aged 51–80, median 6.3 years. On the sitting-rising test (0–10 points), a score of 0–3 against 8–10 gave a hazard ratio of 5.44. Each extra point went with 21% better survival. |
+| araujo2022 | Araujo et al. Successful 10-second one-legged stance performance predicts survival in middle-aged and older individuals. Br J Sports Med 2022. <https://pubmed.ncbi.nlm.nih.gov/35728834/> | 1,702 adults aged 51–75, median 7 years. 20.4% could not stand 10 seconds on one leg. For them the adjusted hazard ratio for death was 1.84. |
+| reid2012 | Reid, Fielding. Skeletal muscle power: a critical determinant of physical functioning in older adults. Exerc Sport Sci Rev 2012. <https://pubmed.ncbi.nlm.nih.gov/22016147/> | Muscle power declines earlier and more steeply with age than muscle strength, and peak power predicts functional limitation in older adults. |
+| bull2020 | Bull et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. Br J Sports Med 2020. <https://pubmed.ncbi.nlm.nih.gov/33239350/> | Adults: 150–300 min of moderate or 75–150 min of vigorous aerobic activity a week, or a mix. Regular muscle-strengthening for all ages. Less sitting, though the evidence did not support a specific threshold. |
+
+### Endurance, intervals and running
+
+| Id | Source | Finding |
+|---|---|---|
+| helgerud2007 | Helgerud et al. Aerobic high-intensity intervals improve VO2max more than moderate training. Med Sci Sports Exerc 2007. <https://pubmed.ncbi.nlm.nih.gov/17414804/> | 40 moderately trained men, 3 sessions a week for 8 weeks, total work matched. Four groups: long slow distance at 70% of maximal heart rate (HRmax), threshold work at 85%, 15/15 intervals, and 4 × 4 min at 90–95% HRmax with 3 min at 70% between. Only the interval groups raised VO2max: by 5.5% (15/15) and 7.2% (4 × 4, from 55.5 to 60.4 mL/kg/min). Stroke volume rose about 10%. |
+| fleg2005 | Fleg et al. Accelerated longitudinal decline of aerobic capacity in healthy older adults. Circulation 2005. <https://pubmed.ncbi.nlm.nih.gov/16043637/> | 810 adults aged 21–87, followed with repeated treadmill tests. Peak VO2 fell in every decade. The fall sped up from 3–6% per 10 years in the 20s and 30s to more than 20% per 10 years in the 70s and beyond. The rates were similar in every quarter of self-reported activity. |
+| paterson1999 | Paterson et al. Aerobic fitness in a population of independently living men and women aged 55–86 years. Med Sci Sports Exerc 1999. <https://pubmed.ncbi.nlm.nih.gov/10613433/> | The minimum aerobic power compatible with independent living at 85 was about 18 mL/kg/min in men and 15 in women. |
+| stensvold2020 | Stensvold et al. Effect of exercise training for five years on all cause mortality in older adults: the Generation 100 study. BMJ 2020. <https://pubmed.ncbi.nlm.nih.gov/33028588/> | 1,567 adults aged 70–77 for 5 years. Interval training (2 sessions a week at about 90% of peak heart rate) against national advice: hazard ratio 0.63 for death, confidence interval 0.33–1.20. That is a lower trend, not a proven effect. |
+| tanaka2001 | Tanaka, Monahan, Seals. Age-predicted maximal heart rate revisited. J Am Coll Cardiol 2001. <https://pubmed.ncbi.nlm.nih.gov/11153730/> | HRmax ≈ 208 − 0.7 × age in healthy adults (351 studies, 18,712 people, plus a laboratory check on 514). The same for men and women and at any activity level. |
+| kline1987 | Kline et al. Estimation of VO2max from a one-mile track walk, gender, age, and body weight. Med Sci Sports Exerc 1987. <https://pubmed.ncbi.nlm.nih.gov/3600239/> | The Rockport one-mile walk test, 343 adults aged 30–69. VO2max (L/min) = 6.9652 + 0.0091 × weight (lb) − 0.0257 × age + 0.5955 × sex (1 = male, 0 = female) − 0.2240 × walk time (min) − 0.0115 × heart rate in the last quarter mile. r = 0.93; a cross-validation group gave r = 0.92. |
+| lee2014 | Lee et al. Leisure-time running reduces all-cause and cardiovascular mortality risk. J Am Coll Cardiol 2014. <https://pubmed.ncbi.nlm.nih.gov/25082581/> | 55,137 adults, 15 years. Runners: 30% lower risk of death from any cause and 45% lower from heart and vascular disease, and 3 years more life expectancy. Running 5–10 min a day at under 6 miles/h was enough. Persistent runners benefited most. |
+| pedisic2020 | Pedisic et al. Is running associated with a lower risk of all-cause, cardiovascular and cancer mortality, and is the more the better? Br J Sports Med 2020. <https://pubmed.ncbi.nlm.nih.gov/31685526/> | 14 studies, 232,149 people. Any running: 27% lower risk of death from any cause. No dose-response for frequency, duration, pace or volume. "Even just once a week is better than no running." |
+| nielsen2014 | Nielsen et al. Excessive progression in weekly running distance and risk of running-related injuries. J Orthop Sports Phys Ther 2014. <https://pubmed.ncbi.nlm.nih.gov/25155475/> | 874 novice runners. Those who raised their weekly distance by more than 30% over 2 weeks had more distance-related injuries (hazard ratio 1.59, p = 0.07) than those who raised it by less than 10%. The authors advise less than 30%. |
+| vandyk2019 | van Dyk et al. Including the Nordic hamstring exercise in injury prevention programmes halves the rate of hamstring injuries. Br J Sports Med 2019. <https://pubmed.ncbi.nlm.nih.gov/30808663/> | 15 studies, 8,459 athletes. Programmes that included the Nordic hamstring exercise cut hamstring injuries by up to 51% (risk ratio 0.49). |
+
+### Balance, daily movement and sun
+
+| Id | Source | Finding |
+|---|---|---|
+| sherrington2019 | Sherrington et al. Exercise for preventing falls in older people living in the community. Cochrane Database Syst Rev 2019. <https://pubmed.ncbi.nlm.nih.gov/30703272/> | 108 trials, 23,407 people aged 60+. Exercise cut the rate of falls by 23% overall: balance and functional exercise by 24%, several types combined by 34%, tai chi by 19%. The effect of resistance training alone, dance or walking on falls was uncertain. |
+| paluch2022 | Paluch et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. Lancet Public Health 2022. <https://pubmed.ncbi.nlm.nih.gov/35247352/> | 47,471 adults, median 7.1 years. Risk of death kept falling with more steps up to about 6,000–8,000 a day at 60 or older, and up to about 8,000–10,000 a day under 60. |
+| stamatakis2022 | Stamatakis et al. Association of wearable device-measured vigorous intermittent lifestyle physical activity with mortality. Nat Med 2022. <https://pubmed.ncbi.nlm.nih.gov/36482104/> | 25,241 non-exercisers in the UK Biobank, 6.9 years. Three short bursts of vigorous everyday activity a day (1–2 min each) went with a 38–40% lower risk of death from any cause and 48–49% lower from heart and vascular disease. |
+| webb1988 | Webb, Kline, Holick. Influence of season and latitude on the cutaneous synthesis of vitamin D3. J Clin Endocrinol Metab 1988. <https://pubmed.ncbi.nlm.nih.gov/2839537/> | On cloudless days, sunlight made no previtamin D3 in skin from November through February in Boston (42.2° N), and from October through March in Edmonton (52° N). Further south (34° N, 18° N) winter sun still made it. |
+
+### Flexibility
+
+| Id | Source | Finding |
+|---|---|---|
+| thomas2018 | Thomas et al. The relation between stretching typology and stretching duration: the effects on range of motion. Int J Sports Med 2018. <https://pubmed.ncbi.nlm.nih.gov/29506306/> | 23 studies. Every kind of stretching improved range of motion over the long term; static stretching beat ballistic and PNF stretching. Weekly time (at least 5 min a week) and weekly frequency mattered; the length of a single session did not. Suggested: static stretching at least 5 days a week. |
+| afonso2021 | Afonso et al. Strength training versus stretching for improving range of motion: a systematic review and meta-analysis. Healthcare (Basel) 2021. <https://pubmed.ncbi.nlm.nih.gov/33917036/> | 11 randomised trials, 452 people. Strength training and stretching improved range of motion equally. |
+| weppler2010 | Weppler, Magnusson. Increasing muscle extensibility: a matter of increasing length or modifying sensation? Phys Ther 2010. <https://pubmed.ncbi.nlm.nih.gov/20075147/> | After one session, and after short programmes of 3–8 weeks, more range of motion mostly reflects a changed sensation (greater stretch tolerance), not longer muscle. The effects of programmes longer than 8 weeks had not been measured. |
+
+---
+
+## B. From the Straight Back page (read in raw text on 2026-11-17)
+
+| Id | Source | Finding |
+|---|---|---|
+| ros2022 | Brooke-Wavell et al. Strong, steady and straight: UK consensus statement on physical activity and exercise for osteoporosis. Br J Sports Med 2022. <https://pmc.ncbi.nlm.nih.gov/articles/PMC9304091/> | Back-strengthening exercises repeated 3–5 times and held 3–5 seconds, at least twice a week. Strength training at the most that can be lifted 8–12 times, building to 3 sets. About 50 moderate impacts on most days. A straight upper back and a hip hinge for bending and lifting. Avoid sustained, repeated or end-range forward bending. After a spine fracture, impact only up to brisk walking. Impacts above 4 times body weight for people without osteoporosis. |
+| octftf | Osteoporosis Canada. Too Fit To Fracture: exercise recommendations. <https://osteoporosis.ca/too-fit-to-fracture/> | Balance exercise and muscle strengthening, each two or more times a week. Planks, side planks and bird dogs for the abdominal and back-extensor muscles and posture. |
+| oc2023 | Morin et al. Clinical practice guideline for management of osteoporosis and fracture prevention in Canada: 2023 update. CMAJ 2023. <https://pmc.ncbi.nlm.nih.gov/articles/PMC10610956/> | Progressive resistance training at least twice a week, including the back extensors. Spine imaging when height is down more than 2 cm measured (6 cm by history), the back of the head is more than 5 cm from the wall, or the ribs are within 2 finger-widths of the pelvis. Bone density testing at 70 for everyone, at 65 with one risk factor, at 50–64 after a fracture or with two. |
+| liftmor2018 | Watson et al. The LIFTMOR trial. J Bone Miner Res 2018. <https://pubmed.ncbi.nlm.nih.gov/28975661/> | Eight months of twice-weekly, 30-minute supervised heavy lifting with jumps (5 × 5 above 85% of one-repetition maximum) raised spine bone density 2.9% against a 1.2% fall in controls. |
+| liftmor2019 | Watson et al. LIFTMOR: vertebral fractures and thoracic kyphosis. Osteoporos Int 2019. <https://pubmed.ncbi.nlm.nih.gov/30612163/> | The standing upper-back curve fell 6.7° with training against 1.6° in controls, with no new spine fractures. |
+| harding2020 | Harding et al. LIFTMOR-M. J Bone Miner Res 2020. <https://pubmed.ncbi.nlm.nih.gov/32176813/> | In men, heavy resistance and impact training raised spine density 4.1% against 0.9%. A machine that compressed the spine in held efforts did not raise bone density. |
+| turner1998 | Turner. Three rules for bone adaptation to mechanical stimuli. Bone 1998. <https://pubmed.ncbi.nlm.nih.gov/9823445/> | Bone responds to dynamic, not static, loading; a short bout is enough to start the response; bone grows used to routine loading. |
+| lanyon1984 | Lanyon, Rubin. Static vs dynamic loads as an influence on bone remodelling. J Biomech 1984. <https://pubmed.ncbi.nlm.nih.gov/6520138/> | A constant load lost as much bone as no load at all over 8 weeks (13% in both). |
+| ma2013 | Ma et al. Effects of walking on the preservation of bone mineral density. Menopause 2013. <https://pubmed.ncbi.nlm.nih.gov/24149921/> | Walking alone had no significant effect on spine density. |
+| berger2008 | Berger et al. Change in bone mineral density as a function of age in women and men (CaMos). CMAJ 2008. <https://pubmed.ncbi.nlm.nih.gov/18559803/> | In a Canadian cohort, men's bone loss began at 25–39, women's at 40–44. |
+| howe2011 | Howe et al. Exercise for preventing and treating osteoporosis in postmenopausal women. Cochrane 2011. <https://pubmed.ncbi.nlm.nih.gov/21735380/> | Leg resistance training raised femoral-neck density by 1.03 percentage points against controls. |
+| mages2021 | Mages et al. Exercise effects on bone mineral density in men. Nutrients 2021. <https://pubmed.ncbi.nlm.nih.gov/34959796/> | In men, exercise had small positive effects at the spine and femoral neck (standardised mean differences 0.38 and 0.25). |
+| katzman2010 | Katzman et al. Age-related hyperkyphosis: its causes, consequences, and management. J Orthop Sports Phys Ther 2010. <https://pubmed.ncbi.nlm.nih.gov/20511692/> | The upper-back curve begins to increase after 40. Back-extension protocols: 3 sets of 8, arms moving from the sides to a W to the ears; or 1 set of 10, 5 times a week, with a backpack loaded up to 30% of one-repetition maximum. |
+| kado2004 | Kado et al. Hyperkyphotic posture predicts mortality in older community-dwelling men and women. J Am Geriatr Soc 2004. <https://pubmed.ncbi.nlm.nih.gov/15450042/> | People with a hyperkyphotic posture died at a 1.44 times higher rate. |
+| kado2005 | Kado et al. Hyperkyphotic posture and poor physical functional ability. J Gerontol A 2005. <https://pubmed.ncbi.nlm.nih.gov/15972617/> | The odds of needing the arms to rise from a chair rose with the curve, to 3.7 for the most hunched. |
+| sinaki2002 | Sinaki et al. Stronger back muscles reduce the incidence of vertebral fractures. Bone 2002. <https://pubmed.ncbi.nlm.nih.gov/12052450/> | Eight years after a two-year back-extension programme, 1.6% of vertebrae had fractured against 4.3% in controls (50 women). |
+| sheaf2017 | Katzman et al. Targeted spine strengthening exercise and posture training program to reduce hyperkyphosis in older adults (SHEAF). Osteoporos Int 2017. <https://pmc.ncbi.nlm.nih.gov/articles/PMC5873977/> | Spine strengthening with posture training cut the curve by 3.0° in 6 months; it rose 1.6° again in the 6 months after training stopped. |
+| green2004 | Green et al. Does this woman have osteoporosis? JAMA 2004. <https://pubmed.ncbi.nlm.nih.gov/15598921/> | Any gap between the back of the head and the wall raised the likelihood of a hidden spine fracture 4.6-fold. |
+| wiyanad2018 | Wiyanad et al. Is the occiput-wall distance valid and reliable to determine the presence of thoracic hyperkyphosis? Musculoskelet Sci Pract 2018. <https://pubmed.ncbi.nlm.nih.gov/30278368/> | The occiput-to-wall distance tracked the X-ray angle (r = 0.68); 6.5 cm or more best marked hyperkyphosis. |
