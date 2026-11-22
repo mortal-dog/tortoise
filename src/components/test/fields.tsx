@@ -38,7 +38,7 @@ export function NumberField({
           inputMode="decimal"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="min-h-11 w-28 rounded-xl border border-line bg-background px-3 text-text"
+          className="min-h-11 w-28 rounded-xl border border-edge bg-field px-3 text-text"
         />
         <span className="text-sm text-primary-strong">{unit}</span>
         {stopwatch && (
@@ -138,7 +138,7 @@ export function PulseCount({ onBpm }: { onBpm: (bpm: number) => void }) {
                 const n = parseNumber(e.target.value)
                 if (n !== undefined) onBpm(n * 4)
               }}
-              className="ml-1 min-h-11 w-20 rounded-xl border border-line bg-background px-3 text-text"
+              className="ml-1 min-h-11 w-20 rounded-xl border border-edge bg-field px-3 text-text"
             />
           </label>
           <span className="text-sm">× 4</span>

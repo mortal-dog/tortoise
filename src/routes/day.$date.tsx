@@ -197,7 +197,7 @@ function DayDetail() {
   )
 }
 
-const inputClass = 'mt-1 block min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text'
+const inputClass = 'mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text'
 
 function Field({ label, children, wide }: { label: string; children: ReactNode; wide?: boolean }) {
   return (
@@ -249,7 +249,7 @@ function BackLink() {
     <Link
       to="/week"
       aria-label="Back to the week"
-      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-line px-3 text-sm font-semibold text-primary"
+      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-edge bg-field px-3 text-sm font-semibold text-primary"
     >
       <ChevronLeft aria-hidden className="size-4" /> Week
     </Link>

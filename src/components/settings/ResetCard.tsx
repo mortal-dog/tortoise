@@ -10,7 +10,7 @@ export function ResetCard({ onReset }: { onReset: () => Promise<void> }) {
   const [typed, setTyped] = useState('')
   const [busy, setBusy] = useState(false)
   return (
-    <Card className="border-brick">
+    <Card tone="brick">
       <SectionTitle>Reset</SectionTitle>
       {!open ? (
         <>

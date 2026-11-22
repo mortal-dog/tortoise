@@ -1,5 +1,6 @@
 import { Camera, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Button, Card } from '@/components/ui'
 import { formatShort, type LocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
@@ -70,43 +71,46 @@ export function Photos({ today }: { today: LocalDate }) {
           ))}
         </ul>
       )}
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col bg-background p-4 pt-[calc(env(safe-area-inset-top)+1rem)]"
-          role="dialog"
-          aria-label={`Photo of ${formatShort(open.date)}`}
-        >
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-semibold">
-              {formatShort(open.date)} {open.date.slice(0, 4)}
-            </p>
-            <button
-              type="button"
-              aria-label="Close the photo"
-              onClick={() => setOpen(null)}
-              className="flex size-11 items-center justify-center rounded-xl border border-line text-primary"
-            >
-              <X aria-hidden className="size-5" />
-            </button>
-          </div>
-          <img
-            src={open.dataUrl}
-            alt={`Progress on ${formatShort(open.date)}`}
-            className="mt-3 min-h-0 flex-1 object-contain"
-          />
-          <Button
-            variant="danger"
-            className="mt-3"
-            onClick={async () => {
-              if (!window.confirm('Delete this photo? It cannot be undone, except from a backup.')) return
-              await deletePhoto(open.id)
-              setOpen(null)
-            }}
+      {/* In a portal: a glass card's backdrop filter would hold a fixed child inside the card (D-048). */}
+      {open &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-50 flex flex-col bg-background p-4 pt-[calc(env(safe-area-inset-top)+1rem)]"
+            role="dialog"
+            aria-label={`Photo of ${formatShort(open.date)}`}
           >
-            <Trash2 aria-hidden className="size-4" /> Delete
-          </Button>
-        </div>
-      )}
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-semibold">
+                {formatShort(open.date)} {open.date.slice(0, 4)}
+              </p>
+              <button
+                type="button"
+                aria-label="Close the photo"
+                onClick={() => setOpen(null)}
+                className="flex size-11 items-center justify-center rounded-xl border border-edge bg-field text-primary"
+              >
+                <X aria-hidden className="size-5" />
+              </button>
+            </div>
+            <img
+              src={open.dataUrl}
+              alt={`Progress on ${formatShort(open.date)}`}
+              className="mt-3 min-h-0 flex-1 object-contain"
+            />
+            <Button
+              variant="danger"
+              className="mt-3"
+              onClick={async () => {
+                if (!window.confirm('Delete this photo? It cannot be undone, except from a backup.')) return
+                await deletePhoto(open.id)
+                setOpen(null)
+              }}
+            >
+              <Trash2 aria-hidden className="size-4" /> Delete
+            </Button>
+          </div>,
+          document.body,
+        )}
     </Card>
   )
 }

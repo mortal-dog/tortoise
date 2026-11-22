@@ -53,7 +53,7 @@ function DayCard({ day }: { day: Weekday }) {
     max: 0,
   })
   return (
-    <section className="rounded-xl border border-line bg-surface p-4" aria-labelledby={`day-${day}`}>
+    <section className="glass rounded-xl border border-edge p-4" aria-labelledby={`day-${day}`}>
       <h2 id={`day-${day}`} className="text-xl font-semibold text-primary">
         {DAY_NAMES[day]}
       </h2>

@@ -77,7 +77,7 @@ function BackLink() {
         router.history.back()
       }}
       aria-label="Back"
-      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-line px-3 text-sm font-semibold text-primary"
+      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-edge bg-field px-3 text-sm font-semibold text-primary"
     >
       <ChevronLeft aria-hidden className="size-4" /> Back
     </Link>

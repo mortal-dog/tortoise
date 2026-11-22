@@ -2,8 +2,7 @@ import { type ReactNode, useEffect, useState } from 'react'
 import { cn } from '@/lib/cn'
 import { Button } from '../ui'
 
-export const inputClass =
-  'mt-1 block min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text'
+export const inputClass = 'mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text'
 
 export function SectionTitle({ children }: { children: ReactNode }) {
   return <h2 className="font-semibold text-primary">{children}</h2>
@@ -109,4 +108,35 @@ export function formatBytes(bytes: number): string {
   if (bytes <= 0) return '0 KB'
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+/** An on/off switch; the label names what it turns on. */
+export function Switch({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string
+  checked: boolean
+  onChange: (on: boolean) => void
+}) {
+  return (
+    <label className="flex min-h-11 items-center justify-between gap-3">
+      <span className="font-semibold">{label}</span>
+      <span className="relative inline-flex shrink-0 items-center">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked={checked}
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer h-8 w-13 appearance-none rounded-full border-2 border-primary bg-field transition-colors checked:bg-primary"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1 size-6 rounded-full bg-primary transition-transform duration-200 peer-checked:translate-x-5 peer-checked:bg-on-primary"
+        />
+      </span>
+    </label>
+  )
 }

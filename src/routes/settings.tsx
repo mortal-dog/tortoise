@@ -9,6 +9,7 @@ import {
   numberIn,
   SavedField,
   SectionTitle,
+  Switch,
 } from '@/components/settings/fields'
 import { RemindersCard } from '@/components/settings/RemindersCard'
 import { ResetCard } from '@/components/settings/ResetCard'
@@ -25,6 +26,7 @@ import {
   weekday,
 } from '@/lib/dates'
 import { isStoragePersistent, requestPersistentStorage } from '@/lib/db'
+import { setMovingBackdrop, useMovingBackdropSwitch } from '@/lib/effects'
 import type { SettingsRecord } from '@/lib/records'
 import { resetAll, saveSettings, startPlan } from '@/lib/repo'
 import { useSettings, useToday } from '@/lib/use-app'
@@ -49,6 +51,7 @@ function Settings() {
         <UnitsSection settings={settings} />
         <DaylightSection settings={settings} />
         <RunsSection settings={settings} />
+        <DisplaySection />
         <RemindersCard settings={settings} today={t} />
         <BackupCard settings={settings} />
         <StorageSection />
@@ -307,6 +310,21 @@ function RunsSection({ settings }: { settings: SettingsRecord }) {
         value={settings.runDefault}
         onChange={(v) => void saveSettings({ runDefault: v })}
       />
+    </Card>
+  )
+}
+
+/** The look (D-048): the moving backdrop is a per-phone switch, kept off by the system's reduced motion. */
+function DisplaySection() {
+  const { on, reduced } = useMovingBackdropSwitch()
+  return (
+    <Card>
+      <SectionTitle>Display</SectionTitle>
+      <Switch label="Moving background" checked={on} onChange={setMovingBackdrop} />
+      <p className="text-sm">
+        Slow drifting light behind every screen, and raindrops on Today, Week and Progress.
+        {reduced && ' Still while the phone asks for reduced motion.'}
+      </p>
     </Card>
   )
 }

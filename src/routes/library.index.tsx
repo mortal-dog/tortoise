@@ -48,7 +48,7 @@ function Library() {
             placeholder="Search exercises"
             value={q ?? ''}
             onChange={(e) => set({ q: e.target.value || undefined })}
-            className="block min-h-11 w-full rounded-xl border border-line bg-surface pr-11 pl-10 text-text placeholder:text-primary-strong"
+            className="glass block min-h-11 w-full rounded-xl border border-edge pr-11 pl-10 text-text placeholder:text-primary-strong"
           />
           {q && (
             <button
@@ -68,7 +68,7 @@ function Library() {
             onClick={() => set({ area: undefined })}
             className={cn(
               chipClass,
-              !area ? 'border-primary bg-primary text-on-primary' : 'border-line text-text',
+              !area ? 'border-primary bg-primary text-on-primary' : 'border-edge bg-field text-text',
             )}
           >
             All
@@ -81,7 +81,9 @@ function Library() {
               onClick={() => set({ area: area === a.id ? undefined : a.id })}
               className={cn(
                 chipClass,
-                area === a.id ? 'border-primary bg-primary text-on-primary' : 'border-line text-text',
+                area === a.id
+                  ? 'border-primary bg-primary text-on-primary'
+                  : 'border-edge bg-field text-text',
               )}
             >
               {a.label}
@@ -91,7 +93,10 @@ function Library() {
             type="button"
             aria-pressed={!!video}
             onClick={() => set({ video: video ? undefined : true })}
-            className={cn(chipClass, video ? 'border-sky bg-sky text-on-primary' : 'border-line text-text')}
+            className={cn(
+              chipClass,
+              video ? 'border-sky bg-sky text-on-primary' : 'border-edge bg-field text-text',
+            )}
           >
             <CirclePlay aria-hidden className="size-4" /> With video
           </button>
@@ -110,7 +115,7 @@ function Library() {
               <Link
                 to="/library/$exerciseId"
                 params={{ exerciseId: e.id }}
-                className="flex min-h-11 items-center gap-3 rounded-2xl border border-line bg-surface p-3"
+                className="glass flex min-h-11 items-center gap-3 rounded-2xl border border-edge p-3 transition-transform duration-150 active:scale-[0.98]"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold">{e.name}</span>

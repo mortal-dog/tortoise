@@ -39,7 +39,7 @@ export function TrendChart({
   const id = useId()
   if (points.length === 0) {
     return (
-      <figure className="rounded-2xl border border-line bg-surface p-4" data-testid={testId}>
+      <figure className="glass rounded-2xl border border-edge p-4" data-testid={testId}>
         <figcaption className="font-semibold">{title}</figcaption>
         <p className="mt-1 text-sm">No result yet.</p>
       </figure>
@@ -92,7 +92,7 @@ export function TrendChart({
   }
 
   return (
-    <figure className="rounded-2xl border border-line bg-surface p-4" data-testid={testId}>
+    <figure className="glass rounded-2xl border border-edge p-4" data-testid={testId}>
       <figcaption className="flex items-baseline justify-between gap-2">
         <span className="font-semibold">{title}</span>
         <span className="shrink-0 text-sm tabular-nums" aria-live="polite">

@@ -80,7 +80,7 @@ export function Player(props: PlayerProps) {
             if (startedAt !== null && !window.confirm('Leave the session? Nothing of it is saved.'))
               e.preventDefault()
           }}
-          className="flex size-11 items-center justify-center rounded-xl border border-line text-primary"
+          className="glass flex size-11 items-center justify-center rounded-xl border border-edge text-primary"
         >
           <X aria-hidden className="size-5" />
         </Link>
@@ -96,7 +96,7 @@ export function Player(props: PlayerProps) {
               setSpoken(!spoken)
               setSpokenCues(!spoken)
             }}
-            className="flex size-11 items-center justify-center rounded-xl border border-line text-primary"
+            className="glass flex size-11 items-center justify-center rounded-xl border border-edge text-primary"
           >
             {spoken ? <Volume2 aria-hidden className="size-5" /> : <VolumeX aria-hidden className="size-5" />}
           </button>
@@ -116,7 +116,7 @@ export function Player(props: PlayerProps) {
         </div>
       )}
 
-      <div className="mt-4 flex-1">
+      <div className="glass mt-4 flex-1 rounded-3xl border border-edge p-4">
         {startedAt === null ? (
           <Intro
             units={units}
@@ -383,7 +383,7 @@ function Summary({
             inputMode="decimal"
             value={distance}
             onChange={(e) => setDistance(e.target.value)}
-            className="mt-1 min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text"
+            className="mt-1 min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
           />
         </label>
       )}
@@ -393,7 +393,7 @@ function Summary({
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={2}
-          className="mt-1 w-full rounded-xl border border-line bg-background px-3 py-2 text-text"
+          className="mt-1 w-full rounded-xl border border-edge bg-field px-3 py-2 text-text"
         />
       </label>
       <Button className="min-h-14 w-full text-lg" disabled={saving} onClick={() => void save()}>

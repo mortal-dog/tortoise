@@ -1,13 +1,22 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
+/** A glass panel (D-048). `tone` colours its edge: a done card, a danger zone. */
 export function Card({
   children,
   className,
+  tone,
   ...rest
-}: { children: ReactNode; className?: string } & Record<string, unknown>) {
+}: { children: ReactNode; className?: string; tone?: 'primary' | 'brick' } & Record<string, unknown>) {
   return (
-    <section className={cn('rounded-2xl border border-line bg-surface p-4', className)} {...rest}>
+    <section
+      className={cn(
+        'glass rounded-2xl border p-4',
+        tone === 'primary' ? 'border-primary' : tone === 'brick' ? 'border-brick' : 'border-edge',
+        className,
+      )}
+      {...rest}
+    >
       {children}
     </section>
   )
@@ -20,10 +29,12 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant
 export function buttonClass(variant: Variant = 'primary', className?: string) {
   return cn(
     'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold',
+    'transition-transform duration-150 active:scale-[0.97]',
     'disabled:cursor-not-allowed disabled:border-disabled disabled:bg-transparent disabled:text-disabled',
-    variant === 'primary' && 'bg-primary text-on-primary',
-    variant === 'quiet' && 'border border-primary text-primary',
-    variant === 'danger' && 'border border-brick text-brick',
+    'disabled:shadow-none disabled:active:scale-100',
+    variant === 'primary' && 'button-primary bg-primary text-on-primary',
+    variant === 'quiet' && 'border border-primary bg-field text-primary',
+    variant === 'danger' && 'border border-brick bg-field text-brick',
     className,
   )
 }
@@ -43,7 +54,7 @@ export function Banner({
     <div
       role="status"
       className={cn(
-        'rounded-xl border bg-surface px-4 py-3 text-sm',
+        'glass-strong rounded-xl border px-4 py-3 text-sm',
         tone === 'sky' && 'border-sky',
         tone === 'shell' && 'border-shell',
         tone === 'brick' && 'border-brick',
@@ -65,9 +76,9 @@ export function Screen({
   action?: ReactNode
 }) {
   return (
-    <main className="mx-auto max-w-xl px-4 pt-4 pb-28">
+    <main className="animate-rise mx-auto max-w-xl px-4 pt-4 pb-32">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-primary">{title}</h1>
+        <h1 className="text-[1.75rem] leading-tight font-semibold tracking-tight text-primary">{title}</h1>
         {action}
       </div>
       {children}

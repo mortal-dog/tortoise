@@ -9,7 +9,7 @@ export function UpdateBanner() {
   return (
     <div
       role="status"
-      className="mx-4 mt-2 flex items-center gap-3 rounded-xl border border-sky bg-surface px-4 py-3 text-text"
+      className="mx-4 mt-2 flex items-center gap-3 glass-strong rounded-xl border border-sky px-4 py-3 text-text"
     >
       <RefreshCw aria-hidden className="size-5 shrink-0 text-sky" />
       <span className="flex-1 text-sm">A new version of Tortoise is ready.</span>

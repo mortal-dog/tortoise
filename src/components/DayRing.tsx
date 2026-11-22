@@ -9,18 +9,18 @@ export function DayRing({ done, total = 2 }: { done: number; total?: number }) {
     <div className="relative size-13 shrink-0" role="img" aria-label={`${done} of ${total} parts done`}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--line)" strokeWidth="6" />
-        {frac > 0 && (
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={r}
-            fill="none"
-            stroke={colour}
-            strokeWidth="6"
-            strokeLinecap="round"
-            strokeDasharray={`${c * frac} ${c}`}
-          />
-        )}
+        {/* The arc fills smoothly as a part is done (D-048); it is always drawn, so the change can glide. */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={colour}
+          strokeWidth="6"
+          strokeLinecap="round"
+          className="ring-arc"
+          style={{ strokeDasharray: `${c * frac} ${c}`, opacity: frac > 0 ? 1 : 0 }}
+        />
       </svg>
       <span
         className="absolute inset-0 flex items-center justify-center text-sm font-semibold"

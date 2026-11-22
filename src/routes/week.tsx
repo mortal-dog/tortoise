@@ -65,7 +65,7 @@ function Week() {
             type="button"
             aria-label="Previous week"
             onClick={() => setOffset((o) => o - 1)}
-            className="flex size-11 items-center justify-center rounded-xl border border-line text-primary"
+            className="glass flex size-11 items-center justify-center rounded-xl border border-edge text-primary"
           >
             <ChevronLeft aria-hidden className="size-5" />
           </button>
@@ -73,7 +73,7 @@ function Week() {
             type="button"
             aria-label="Next week"
             onClick={() => setOffset((o) => o + 1)}
-            className="flex size-11 items-center justify-center rounded-xl border border-line text-primary"
+            className="glass flex size-11 items-center justify-center rounded-xl border border-edge text-primary"
           >
             <ChevronRight aria-hidden className="size-5" />
           </button>
@@ -113,8 +113,8 @@ function Week() {
             </div>
           )
           const rowClass = cn(
-            'block w-full rounded-2xl border bg-surface p-3 text-left',
-            isToday ? 'border-primary' : 'border-line',
+            'glass block w-full rounded-2xl border p-3 text-left transition-transform duration-150 active:scale-[0.98]',
+            isToday ? 'border-primary' : 'border-edge',
             picked && 'border-shell ring-2 ring-shell',
           )
           return (

@@ -63,7 +63,7 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 
 ## 3. Screens
 
-A bottom tab bar, within thumb reach, holds five tabs: **Today · Week · Progress · Library · Settings**. The session player
+A bottom tab bar, within thumb reach, floating as a glass bar (D-048), holds five tabs: **Today · Week · Progress · Library · Settings**. The session player
 and the test wizard open full screen above the tabs.
 
 ### 3.1 Today (home)
@@ -184,6 +184,7 @@ and the test wizard open full screen above the tabs.
 | Units and equipment | kg or lb; km or mi; dumbbell weight (each), in the chosen unit. One card |
 | Daylight | Location as latitude/longitude, typed in or "Use my location once". Stored on the phone; no network. Off until set |
 | Runs | Default variant: outdoor, indoor, or ask each time |
+| Display | **Moving background**: the drifting light and the raindrops (D-048), on by default, kept on this phone; still while the phone asks for reduced motion |
 | Reminders | Times for the morning block and for the main session on each weekday, the times as text, then "Add to Calendar" and "Open the calendar file" ([§9](#9-reminders)) |
 | Backup | Export, import, the last backup date, and the reminder interval (30 days by default; 7, 14, 60 or 90 to choose) |
 | Storage | Whether storage is persistent, with "Ask to keep the data" when it is not; space used |
@@ -418,6 +419,23 @@ There are no push notifications in v1, because a web app needs a push server for
 - **Layout:** one column; safe-area insets for the notch and the home indicator; tap targets of 44 pt or more.
 - **Motion:** small and short; none when the system asks for reduced motion.
 
+**Glass and the backdrop (D-048):**
+
+- **Panels are glass:** cards, banners, the tab bar, the player's panel and fields are translucent, with a blur of what
+  lies behind them, a bright top edge and a soft shadow tinted with the text colour. `surface` stays the solid panel
+  colour, used when the phone asks for reduced transparency.
+- **The backdrop:** the page colour with four soft colour fields (moss, sky, amber and a light) that drift to and fro over
+  80 to 131 seconds each. They are pale in the light theme and deep in the dark, so that text, primary, primary-strong,
+  shell, sky and brick keep 4.5:1 on the page and on every panel, over any overlap of the fields (the contrast guard
+  computes every case).
+- **Raindrops** on Today, Week and Progress: drops on a window pane, most of them still; now and then one slides a short
+  way, slowly, leaves small beads that fade, and takes in the drops it touches. None on the screens for reading, typing
+  or timing (Library, Settings, the player, the test). Drawn at most 24 times a second and only when something moved;
+  stopped while the app is hidden.
+- **Small motion:** the tab bar's pill glides to the open tab; a screen settles in with a short lift; buttons press in;
+  the day ring's arc glides to its new length; the big timer glows softly.
+- **Off:** Settings → Display → Moving background stops the drift and the rain; reduced motion stops them as well.
+
 ---
 
 ## 13. Accessibility
@@ -425,6 +443,7 @@ There are no push notifications in v1, because a web app needs a push server for
 - Contrast of 4.5:1 or more for text, in both themes.
 - Every control has a label; timers announce changes to VoiceOver.
 - Layouts hold up with larger text.
+- Less transparency asked for: the glass panels turn solid (D-048).
 - Colour is never the only signal: every day status has its own mark as well as its colour
   ([§5.2](#52-day-status-and-the-tortoise-streak)), and the ring shows a count.
 

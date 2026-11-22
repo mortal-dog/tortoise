@@ -342,7 +342,7 @@ function PlanCard({
   children,
 }: PlanCardProps) {
   return (
-    <Card data-testid={testId} className={cn(done && 'border-primary')}>
+    <Card data-testid={testId} tone={done ? 'primary' : undefined}>
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-semibold tracking-wide text-primary uppercase">{title}</h2>
         <span className="flex shrink-0 items-center gap-1 text-sm">
@@ -397,7 +397,7 @@ function PlanCard({
 
 function VariantSwitch({ value, onChange }: { value: Variant; onChange: (v: Variant) => void }) {
   return (
-    <fieldset className="mt-3 flex rounded-xl border border-line p-1" aria-label="Where">
+    <fieldset className="mt-3 flex rounded-xl border border-edge bg-field p-1" aria-label="Where">
       {(['outdoor', 'indoor'] as const).map((v) => (
         <button
           key={v}
@@ -436,7 +436,7 @@ function HabitsCard({ day, t }: { day: DayRecord | undefined; t: LocalDate }) {
             defaultValue={habits.steps ?? ''}
             key={`steps-${t}-${habits.steps ?? ''}`}
             onBlur={(e) => save({ steps: num(e.target.value) })}
-            className="mt-1 block min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text"
+            className="mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
           />
         </label>
         <label className="text-sm">
@@ -446,7 +446,7 @@ function HabitsCard({ day, t }: { day: DayRecord | undefined; t: LocalDate }) {
             defaultValue={habits.outdoorMin ?? ''}
             key={`out-${t}-${habits.outdoorMin ?? ''}`}
             onBlur={(e) => save({ outdoorMin: num(e.target.value) })}
-            className="mt-1 block min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text"
+            className="mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
           />
         </label>
       </div>

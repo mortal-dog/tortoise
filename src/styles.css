@@ -21,6 +21,22 @@
   --on-primary: #ffffff;
   /* Only for disabled controls (design §1, principle 8). */
   --disabled: #9b9b9b;
+  /* Glass (D-048): translucent panels over a backdrop of soft colour fields. The contrast guard checks every text
+     token on each panel composited over every overlap of the glows. `surface` stays the solid panel colour for
+     reduced transparency. */
+  --glass: rgb(255 255 255 / 0.55);
+  --glass-strong: rgb(255 255 255 / 0.72);
+  --glass-active: rgb(255 255 255 / 0.9);
+  --field: rgb(255 255 255 / 0.7);
+  --edge: rgb(30 43 30 / 0.12);
+  --shine: rgb(255 255 255 / 0.95);
+  --shade: rgb(30 43 30 / 0.14);
+  --glow-moss: rgb(234 246 234 / 1);
+  --glow-sky: rgb(234 244 252 / 1);
+  --glow-amber: rgb(253 240 220 / 1);
+  --glow-light: rgb(255 255 255 / 0.8);
+  --drop-rim: rgb(30 43 30 / 0.22);
+  --drop-shine: rgb(255 255 255 / 0.95);
   color-scheme: light;
 }
 
@@ -37,6 +53,19 @@
     --line: #2c3b2e;
     --on-primary: #0f1a12;
     --disabled: #6b6b6b;
+    --glass: rgb(23 37 26 / 0.5);
+    --glass-strong: rgb(17 29 20 / 0.75);
+    --glass-active: rgb(243 236 218 / 0.06);
+    --field: rgb(8 14 10 / 0.35);
+    --edge: rgb(243 236 218 / 0.12);
+    --shine: rgb(243 236 218 / 0.14);
+    --shade: rgb(4 10 6 / 0.5);
+    --glow-moss: rgb(28 74 50 / 0.3);
+    --glow-sky: rgb(23 61 92 / 0.34);
+    --glow-amber: rgb(74 53 18 / 0.34);
+    --glow-light: rgb(28 74 50 / 0);
+    --drop-rim: rgb(243 236 218 / 0.16);
+    --drop-shine: rgb(243 236 218 / 0.62);
     color-scheme: dark;
   }
 }
@@ -53,6 +82,8 @@
   --color-line: var(--line);
   --color-on-primary: var(--on-primary);
   --color-disabled: var(--disabled);
+  --color-field: var(--field);
+  --color-edge: var(--edge);
   --color-transparent: transparent;
   --color-current: currentColor;
 }
@@ -69,6 +100,142 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   min-height: 100dvh;
+}
+
+/* Glass panels (D-048). The blur softens the backdrop's glows and raindrops behind a panel; `saturate` keeps their
+   colour, and it roughly keeps their luminance, so the contrast guard's composites still hold. */
+@utility glass {
+  background-color: var(--glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 0 var(--shine),
+    0 12px 32px -16px var(--shade);
+}
+
+/* The tab bar and banners: more opaque, so they read above everything else. */
+@utility glass-strong {
+  background-color: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 var(--shine),
+    0 16px 40px -18px var(--shade);
+}
+
+/* The primary button: a highlight along the top and a soft glow of its own colour; none when disabled. These plain
+   rules sit outside Tailwind's layers, so they beat its utilities: a state belongs in the selector. */
+.button-primary:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    0 8px 20px -10px color-mix(in srgb, var(--primary) 80%, transparent);
+}
+
+/* The open tab's pill glides from tab to tab. */
+.tab-pill {
+  background-color: var(--glass-active);
+  box-shadow: inset 0 1px 0 var(--shine);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.2s;
+}
+
+/* A frosted veil over a whole screen: the pocket lock. */
+@utility veil {
+  background-color: color-mix(in srgb, var(--background) 65%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* The big timer glows softly in its own colour. */
+.timer-glow {
+  text-shadow: 0 0 28px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+/* The day ring's arc glides to its new length. */
+.ring-arc {
+  transition:
+    stroke-dasharray 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    stroke 0.4s,
+    opacity 0.3s;
+}
+
+/* The backdrop (D-048): soft colour fields that drift over minutes, behind everything. */
+.backdrop-glow {
+  position: absolute;
+  width: 95vmax;
+  height: 95vmax;
+  border-radius: 50%;
+  will-change: transform;
+  animation: 80s ease-in-out infinite alternate;
+}
+.backdrop-glow-moss {
+  left: -40vmax;
+  top: -35vmax;
+  background: radial-gradient(closest-side, var(--glow-moss), transparent);
+  animation-name: drift-a;
+}
+.backdrop-glow-sky {
+  right: -45vmax;
+  top: 15vh;
+  background: radial-gradient(closest-side, var(--glow-sky), transparent);
+  animation-name: drift-b;
+  animation-duration: 97s;
+}
+.backdrop-glow-amber {
+  left: -20vmax;
+  bottom: -50vmax;
+  background: radial-gradient(closest-side, var(--glow-amber), transparent);
+  animation-name: drift-c;
+  animation-duration: 113s;
+}
+.backdrop-glow-light {
+  left: 10vmax;
+  top: -55vmax;
+  width: 70vmax;
+  height: 70vmax;
+  background: radial-gradient(closest-side, var(--glow-light), transparent);
+  animation-name: drift-b;
+  animation-duration: 131s;
+  animation-direction: alternate-reverse;
+}
+[data-still] .backdrop-glow {
+  animation: none;
+}
+@keyframes drift-a {
+  to {
+    transform: translate3d(14vmax, 12vmax, 0) scale(1.12);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate3d(-12vmax, 16vmax, 0) scale(0.9);
+  }
+}
+@keyframes drift-c {
+  to {
+    transform: translate3d(16vmax, -10vmax, 0) scale(1.1);
+  }
+}
+
+/* A screen settles in: a short lift when it opens. Transform only: an opacity below 1 would cut the glass panels
+   off from the backdrop they blur until the animation ends. No fill afterwards, so nothing stays transformed. */
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+  }
+}
+.animate-rise {
+  animation: rise 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* Less transparency asked for (Safari and Chrome read it): solid panels, no blur. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass: var(--surface);
+    --glass-strong: var(--surface);
+    --field: var(--background);
+  }
 }
 
 /* An empty time field: WebKit draws a grey sample time in it; show nothing until it has focus (no grey, D-024). */
@@ -100,6 +267,11 @@ input[type="date"]::-webkit-datetime-edit {
     /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component style */
     animation-duration: 0.01ms !important;
     /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component style */
+    animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component style */
     transition-duration: 0.01ms !important;
+  }
+  .backdrop-glow {
+    animation: none;
   }
 }

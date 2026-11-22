@@ -238,7 +238,7 @@ function Numbers({
   }
 
   const tile = (label: string, value: number, tone = 'text-primary', id?: string) => (
-    <div className="rounded-2xl border border-line bg-surface p-4">
+    <div className="glass rounded-2xl border border-edge p-4">
       <dt className="text-sm text-primary-strong">{label}</dt>
       <dd className={`font-semibold text-3xl ${tone}`} data-testid={id}>
         {value}

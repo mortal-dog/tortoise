@@ -163,7 +163,7 @@ function LadderCard({
               aria-current={isCurrent ? 'step' : undefined}
               className={cn(
                 'flex items-start gap-3 rounded-xl border p-2',
-                isCurrent ? 'border-primary bg-background' : 'border-transparent',
+                isCurrent ? 'border-primary bg-field' : 'border-transparent',
               )}
             >
               <span
@@ -267,7 +267,7 @@ function BackLink() {
         router.history.back()
       }}
       aria-label="Back to the library"
-      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-line px-3 text-sm font-semibold text-primary"
+      className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-edge bg-field px-3 text-sm font-semibold text-primary"
     >
       <ChevronLeft aria-hidden className="size-4" /> Library
     </Link>

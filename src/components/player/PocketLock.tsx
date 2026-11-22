@@ -31,7 +31,7 @@ export function PocketLock({ onUnlock }: { onUnlock: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex touch-none select-none flex-col [-webkit-touch-callout:none] items-center justify-end bg-background/70 pb-[calc(env(safe-area-inset-bottom)+2rem)]"
+      className="fixed inset-0 z-50 flex touch-none select-none flex-col [-webkit-touch-callout:none] items-center justify-end veil pb-[calc(env(safe-area-inset-bottom)+2rem)]"
       data-testid="pocket-lock"
     >
       <button
@@ -41,7 +41,7 @@ export function PocketLock({ onUnlock }: { onUnlock: () => void }) {
         onPointerUp={cancel}
         onPointerLeave={cancel}
         onPointerCancel={cancel}
-        className="relative flex size-28 select-none flex-col items-center justify-center rounded-full border-4 border-primary bg-surface text-primary"
+        className="relative flex size-28 select-none flex-col items-center justify-center glass-strong rounded-full border-4 border-primary text-primary"
       >
         <span
           aria-hidden

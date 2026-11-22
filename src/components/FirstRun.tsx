@@ -54,7 +54,7 @@ function PickMonday() {
           min={t}
           step={7}
           onChange={(e) => setMonday(e.target.value)}
-          className="mt-3 min-h-11 w-full rounded-xl border border-line bg-background px-3 text-text"
+          className="mt-3 min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
         />
         {!valid && (
           <p className="mt-2 text-sm text-brick">Pick today if it is a Monday, or a coming Monday.</p>

@@ -44,7 +44,7 @@ export function UnitRunner(props: RunnerProps) {
 function BigTime({ ms, label }: { ms: number; label?: string }) {
   return (
     <p
-      className="text-center font-semibold text-7xl text-primary tabular-nums"
+      className="timer-glow text-center font-semibold text-7xl text-primary tabular-nums"
       data-testid="timer"
       role="timer"
       aria-label={label}
