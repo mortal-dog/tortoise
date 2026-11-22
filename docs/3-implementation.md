@@ -223,7 +223,8 @@ iPhone, sound, wake lock and background catch-up have been checked by hand.
 
 **Goal:** the app live at its permanent address and installed on the phone.
 
-**Owner steps** (one time):
+**Owner steps** (one time). Do them only when Phase 8 begins, right before the repo claims the domain in its Pages
+settings. A CNAME that points at GitHub before any site claims it can be taken over by someone else's site.
 
 | # | Step |
 |---|---|
