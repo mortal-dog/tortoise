@@ -10,11 +10,11 @@
 - [x] Phase 1: the plan content schema `4355376`; the data, content tests and debug week `4ae93a6` (a subagent in a
   worktree, cherry-picked)
 - [x] Phase 2: storage and core logic — `491994c`
-- [x] Phase 3: Today and Week, the e2e daily loop, screenshots reviewed in both themes; docs D-037 and D-038 — the
-  commit after `4ae93a6`
+- [x] Phase 3: Today and Week, the e2e daily loop, screenshots reviewed in both themes; docs D-037 and D-038 — `f63c61d`
 - [x] all four gates green on the final tree
-- [ ] ⛔ push to origin/main: waits for the owner's picker (public repo); the CI secret TORTOISE_GUARD_KEY is the
-  owner's step as well
+- [x] ⛔ pushed `f63c61d` to origin/main on the owner's picker yes (2026-11-22); CI green at 08:38 ET — **do not push
+  again**
+- [x] ⛔ CI secret TORTOISE_GUARD_KEY set from `.guard-key` on the owner's picker yes
 
 **Don't forget:** the next D-number is D-039; Phase 4 (the session player) is next, when the owner asks.
 
