@@ -219,6 +219,14 @@ export const TestDef = z.object({
   calculator: Calculator,
   /** Asked only once a year (height). */
   yearly: z.boolean().optional(),
+  /** The aim as a line on the trend chart: a value from the aim text, or the person's height (the broad jump). */
+  aimLine: z
+    .object({
+      value: z.number().optional(),
+      ofHeight: z.boolean().optional(),
+      direction: z.enum(['atLeast', 'atMost']),
+    })
+    .optional(),
   ...evidence,
 })
 export type TestDef = z.infer<typeof TestDef>

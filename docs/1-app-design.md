@@ -137,8 +137,8 @@ and the test wizard open full screen above the tabs.
 
 ### 3.4 Progress
 
-- **The Shell:** the year as a honeycomb of hexagons, one per day, coloured by status. Over a year it fills like a
-  tortoise's shell. Tapping a hexagon opens that day.
+- **The Shell:** the year as a honeycomb of hexagons, one per day, coloured by status, two weeks to a row (D-041). Over
+  a year it fills like a tortoise's shell. Tapping a hexagon opens that day.
 - **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; outdoor sessions; minutes per
   pillar (strength, aerobic, skills, mobility) this week against the plan.
 - **Test trends:** a small line chart for every test of the Tortoise Test (the VO2max estimate for the Rockport walk),

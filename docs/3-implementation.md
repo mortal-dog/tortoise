@@ -243,6 +243,15 @@ are in the Phase 8 checklist.
 - milestones are awarded correctly from fixtures;
 - the charts render with 0, 1 and 300 tests (60 years of tests is about 260).
 
+**Done (2026-11-22):** the wizard (`/test/<Day 1 date>`) opens from the test-day cards and from Progress; it has the
+stopwatches (the mile, the 15-s pulse, one-leg stance capped at 60 s, the hang, the farmer and squat holds), the
+sit-to-rise steppers, the Rockport estimate with the age range flag, the height check against the tallest earlier record
+(asked once 48 weeks have passed) and Week 0's three start questions. `tests/e2e/test-wizard.spec.ts` completes Week 0's
+test, sees the starting levels on Week 1's cards and the results on Progress. `tests/db/test-repo.test.ts` covers the
+records, the starting levels and milestones awarded from fixtures; `tests/component/trend-chart.test.tsx` renders 0, 1
+and 300 tests. Progress has the Shell, the numbers and the minutes per pillar, the milestones (next up and earned), the
+At-99 board, the test trends with aim lines and the level steps. Construction choices: D-041.
+
 ### Phase 7 — Settings, backup and reminders (M)
 
 **Goal:** the app can be trusted with decades of data.

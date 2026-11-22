@@ -13,8 +13,9 @@
   (4) Phase 6. (5) Phase 8 code parts; the domain steps and the push wait for the owner's picker. (6) Phase 9: progress
   photos and spoken coaching (offline); the weather hint is an owner decision (D-020, a third-party request).
 - **Done:** step 1 committed `35f88ff` (not pushed). Step 3 started ~09:05 ET: agents in worktrees under `.claude/worktrees/`, Phase 7 (e2e port 4181) and Phase 5 (port 4182); their decision entries get renumbered at merge to follow main's; they commit on their own branches, never push.
-- **Done:** step 2, Phase 4 (player), decision entry on main; commit follows the gates.
-- **Next:** cherry-pick the agents' branches when they report; renumber their decision entries.
+- **Done:** step 2, Phase 4 committed `d8e112c` (D-040; not pushed).
+- **Done:** Phase 7 agent finished: branch `worktree-agent-a8de0d5cbc53c2691`, commit `bbc2824` (its decision entry and a placeholder entry need renumbering at merge).
+- **Next:** commit Phase 6 (decision entry on main after Phase 4's), then cherry-pick `bbc2824`, then Phase 5's branch when it reports.
 - **Don't forget:** gates before every code commit; no push without a picker; e2e port per worktree
   (`TORTOISE_E2E_PORT`); check `git log` before redoing any step.
 

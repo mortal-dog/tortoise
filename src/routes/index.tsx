@@ -208,6 +208,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
             ]}
             done={mainDone}
             onDone={() => void markMain(TEST_SESSION_ID[tmpl.testDay as 1 | 2])}
+            startTest={{ date: tmpl.testDay === 1 ? t : addDays(t, -1), day: tmpl.testDay }}
             onUndo={() => void updateDay(t, (d) => ({ ...d, main: null }))}
           />
         ) : (
@@ -320,10 +321,23 @@ interface PlanCardProps {
   onUndo: () => void
   /** Opens the player for this card (design §3.1). */
   start?: { date: LocalDate; slot: Slot; variant?: Variant }
+  /** Opens the Tortoise Test wizard on a test day (design §3.5); the test is keyed by its Day 1 date. */
+  startTest?: { date: LocalDate; day: 1 | 2 }
   children?: ReactNode
 }
 
-function PlanCard({ testId, title, minutes, lines, done, onDone, onUndo, start, children }: PlanCardProps) {
+function PlanCard({
+  testId,
+  title,
+  minutes,
+  lines,
+  done,
+  onDone,
+  onUndo,
+  start,
+  startTest,
+  children,
+}: PlanCardProps) {
   return (
     <Card data-testid={testId} className={cn(done && 'border-primary')}>
       <div className="flex items-baseline justify-between gap-3">
@@ -354,6 +368,17 @@ function PlanCard({ testId, title, minutes, lines, done, onDone, onUndo, start, 
                 to="/play/$date/$slot"
                 params={{ date: start.date, slot: start.slot }}
                 search={start.variant ? { v: start.variant } : {}}
+                aria-label={`Start ${title}`}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
+              >
+                <Play aria-hidden className="size-4" /> Start
+              </Link>
+            )}
+            {startTest && (
+              <Link
+                to="/test/$date"
+                params={{ date: startTest.date }}
+                search={{ day: startTest.day }}
                 aria-label={`Start ${title}`}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
               >
