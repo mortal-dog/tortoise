@@ -1,6 +1,29 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## Phases 4 to 9 and scheduled CI/CD — started 2026-11-22 08:54 ET, done 2026-11-22
+
+**Why:** owner 2026-11-22: "do all the remaining phases" (in Chinese), and CI/CD "twice a day like the other repos,
+plus manual, so pushes never trigger a run".
+
+**Done**
+- [x] CI/CD on a schedule (13:07 and 23:07 UTC) and by hand, one workflow `ci.yml` — `35f88ff` (D-039)
+- [x] Phase 4, the session player — `d8e112c` (D-040)
+- [x] Phase 6, the Tortoise Test wizard, Progress and milestones — `97cd9a1` (D-041)
+- [x] Phase 7, settings, backup and reminders (worktree agent, merged) — `c332503` (D-042)
+- [x] Phase 5, library and content (worktree agent, merged) — `7f3b5be` (D-043)
+- [x] Phase 9 offline parts: spoken coaching, progress photos — `a9153fc` (D-044)
+- [x] Owner pickers: push yes; Pages yes; no weather hint; video links kept — `bd7a9b8` (D-045); pushed to origin/main
+- [x] GitHub Pages enabled: source GitHub Actions, custom domain `tortoise.doctornova.net` (domain state "unverified")
+
+**Left, the owner's steps (Phase 8):**
+- verify doctornova.net for GitHub Pages in the account settings (a TXT record), as protection;
+- add the GoDaddy CNAME `tortoise` → `mortal-dog.github.io`;
+- the first deploy comes with the scheduled run at 23:07 UTC; a manual `gh workflow run ci.yml` was refused by the
+  auto-mode classifier, so the owner runs it if wanted;
+- once the certificate is issued, tick "Enforce HTTPS" (builder, on request);
+- the real-phone checklist in `docs/3-implementation.md` Phase 8.
+
 ## Phases 0 to 3 — started 2026-11-22 07:24 ET, done 2026-11-22
 
 **Why:** owner 2026-11-22: "implement phase 0 to 3".
