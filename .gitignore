@@ -7,3 +7,5 @@ playwright-report/
 .DS_Store
 # The personal-term guard key (D-034). Never commit it.
 .guard-key
+# Agent worktrees and local tool state
+.claude/
