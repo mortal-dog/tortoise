@@ -3,7 +3,7 @@
 Tortoise is a private, offline iPhone app (a PWA) for a 60-year exercise plan: the goal is a straight back, jumping and
 running at 99, plus a handstand and the splits. It covers exercise only.
 
-**Status:** planning. No code until the owner starts Phase 0 of `docs/3-implementation.md` (D-021).
+**Status:** building. The owner started Phase 0 on 2026-11-22 ("implement phase 0 to 3"); see `docs/3-implementation.md`.
 
 ## Map
 
@@ -24,7 +24,8 @@ running at 99, plus a handstand and the splits. It covers exercise only.
    values live only on the phone (D-022). When `compact-ai` runs here, `ai/now.md` and `ai/memory/` hold project facts
    only.
 2. **English only** in committed files.
-3. **No code yet** (D-021). Until the owner starts Phase 0, work stays in `docs/`.
+3. **Gates before every commit of code:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&`.
+   The personal-term guard needs the untracked key file `.guard-key` (D-034); add a term with `pnpm guard:hash`.
 4. **Numbers need sources.**
    - A number in the plan names a source in `docs/sources.md`.
    - The source must be read in its raw text (a PubMed abstract via E-utilities, a full text or a guideline), never a
@@ -44,4 +45,12 @@ running at 99, plus a handstand and the splits. It covers exercise only.
 
 ## Commands
 
-None yet; Phase 0 adds `pnpm check`, `pnpm test`, `pnpm build` and `pnpm e2e`.
+| Command | Does |
+|---|---|
+| `pnpm dev` | The dev server (no service worker, no Content Security Policy) |
+| `pnpm check` | Biome, then TypeScript for the app and for the service worker |
+| `pnpm test` | Vitest: unit, content, database, component and guard tests |
+| `pnpm build` | The production build in `dist/`, with the precache list and the security policy |
+| `pnpm e2e` | Playwright on WebKit's iPhone profile; it builds and serves `dist/` itself |
+| `pnpm icons` | Redraws the app icons in `public/` |
+| `pnpm guard:hash < file` | Adds banned personal terms, one per line, to the guard list as keyed hashes |

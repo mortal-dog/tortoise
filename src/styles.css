@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Design §12. Tailwind's default palette is removed, so no grey utility class exists at all (D-024). */
+@theme {
+  --color-*: initial;
+  --font-sans: system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Theme tokens: light by default, dark when the system asks for it. */
+:root {
+  --background: #fbf7ee;
+  --surface: #ffffff;
+  --text: #1e2b1e;
+  --primary: #3e6b3f;
+  --primary-strong: #2e5230;
+  --shell: #9a6212;
+  --sky: #2a72ab;
+  --brick: #b23a2a;
+  --line: #e4dcc8;
+  --on-primary: #ffffff;
+  /* Only for disabled controls (design §1, principle 8). */
+  --disabled: #9b9b9b;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f1a12;
+    --surface: #17251a;
+    --text: #f3ecda;
+    --primary: #7fb77e;
+    --primary-strong: #a6d3a3;
+    --shell: #e0a955;
+    --sky: #6db3e8;
+    --brick: #e07a6a;
+    --line: #2c3b2e;
+    --on-primary: #0f1a12;
+    --disabled: #6b6b6b;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-shell: var(--shell);
+  --color-sky: var(--sky);
+  --color-brick: var(--brick);
+  --color-line: var(--line);
+  --color-on-primary: var(--on-primary);
+  --color-disabled: var(--disabled);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component style */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every component style */
+    transition-duration: 0.01ms !important;
+  }
+}

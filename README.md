@@ -11,7 +11,7 @@ Tortoise is a private, offline phone app (a PWA) for a lifelong exercise plan. I
 The plan's goal: at 99, a straight back, still able to jump and run; on the way, a handstand and the splits. The app
 covers exercise only.
 
-- **Status:** planning. Start at [docs/plan.md](docs/plan.md).
+- **Status:** being built. Start at [docs/plan.md](docs/plan.md); the commands are in [CLAUDE.md](CLAUDE.md).
 - **Privacy:** all data stays on the phone. No account, no server, no tracking.
 - **Evidence:** every number the plan takes from a study or guideline names its source in
   [docs/sources.md](docs/sources.md); the plan's own choices are marked as such.

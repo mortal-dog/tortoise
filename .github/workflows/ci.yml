@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # The personal-term guard's key (D-034). Without it, as in a fork's pull request, that one test is skipped.
+      TORTOISE_GUARD_KEY: ${{ secrets.TORTOISE_GUARD_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps webkit
+      - name: Gates
+        run: pnpm check && pnpm test && pnpm build && pnpm e2e

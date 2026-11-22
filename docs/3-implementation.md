@@ -1,6 +1,6 @@
 # 3 · Implementation plan
 
-**Status (2026-11-21):** planning only. No code is written until the owner starts Phase 0 (D-021).
+**Status (2026-11-22):** building. The owner started Phase 0 on 2026-11-22 (D-021); Phase 0 is done.
 
 This plan turns [1-app-design.md](1-app-design.md) and [2-exercise-plan.md](2-exercise-plan.md) into a working iPhone app
 in nine phases, 0 to 8, with an optional Phase 9 for later extras. Each phase ends in something that runs and is tested.
@@ -108,6 +108,9 @@ Sizes are relative: S is small, M medium, L large.
 
 **Done when:** the gates pass; the local preview is installable (manifest and service worker valid); and the WebKit e2e
 smoke test loads the app with the network off.
+
+**Done (2026-11-22):** all four gates pass; the WebKit smoke test checks the manifest, the icons and the security
+policy, then reloads the app with the network off (proved by a fetch that fails) and serves it from the service worker.
 
 ### Phase 1 — The plan as data (M)
 
@@ -301,7 +304,7 @@ name lets someone else's site claim it (D-035).
 | Losing the data on the phone (app deleted, storage cleared) | Persistent storage; the 30-day backup reminder; one-tap export |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
 | The calendar file does not import from a home-screen app | Phase 7 tries the share sheet and opening the file on the phone; the reminder times are also shown as text |
-| Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0. If so, that one test runs in Chromium, and the phone check of Phase 8 covers Safari |
+| Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0: WebKit does serve it, so the offline test runs on WebKit (D-036). The phone check of Phase 8 still covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |
 | The data drifting from the plan | Phase 1 content tests; the rule that docs and data change in one commit |
 | Personal facts leaking into the public repo | The guard test, with its list kept as keyed hashes (D-034); the `CLAUDE.md` rule; ai/ files reviewed before each commit |

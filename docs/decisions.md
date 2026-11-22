@@ -7,7 +7,7 @@ Every choice in the Tortoise plan, with who made it and why. New entries take th
 - *Builder's ruling* means the building session decided it as a construction choice (under the owner's delegation, where
   that is noted). The owner may overturn any builder's ruling.
 
-**Next number: D-036**
+**Next number: D-037**
 
 ---
 
@@ -17,7 +17,7 @@ Every choice in the Tortoise plan, with who made it and why. New entries take th
 |---|---|---|---|---|
 | D-001 | **Exercise only.** The app tracks exercise; no nutrition, sleep or medicine | Owner ("this app only do exercise monitor, no nutrition monitor") | 2026-11-21 | A focused app; longevity nutrition is acknowledged but out of scope |
 | D-002 | **Goals:** at 99, a straight back and still able to jump and run. On the way: a handstand and both splits (side and front) | Owner | 2026-11-21 | The owner's goals; the handstand and the splits were added the same evening |
-| D-021 | **No code until the owner starts Phase 0.** Every plan document and all non-code groundwork comes first | Owner ("don't write any code; write all the plan documents first; prepare everything except code") | 2026-11-21 | Plan before building |
+| D-021 | **No code until the owner starts Phase 0.** Every plan document and all non-code groundwork comes first. The owner started Phase 0 on 2026-11-22 ("implement phase 0 to 3") | Owner ("don't write any code; write all the plan documents first; prepare everything except code") | 2026-11-21 | Plan before building |
 
 ## Equipment and training
 
@@ -58,10 +58,11 @@ Every choice in the Tortoise plan, with who made it and why. New entries take th
 
 | D | Decision | By | Date | Why |
 |---|---|---|---|---|
-| D-016 | **Stack:** TypeScript, React 19, Vite 8, Tailwind 4, TanStack Router, zod 4, lucide-react, Biome, Vitest 4, Playwright (WebKit), pnpm, GitHub Pages | Builder's ruling | 2026-11-21 | The owner's existing frontend stack, minus what an offline single-user app does not need (no server-state or mocking libraries) |
+| D-016 | **Stack:** TypeScript, React 19, Vite 8, Tailwind 4, TanStack Router, zod 4, lucide-react, Biome, Vitest, Playwright (WebKit), pnpm, GitHub Pages. **Pinned in Phase 0 (2026-11-22):** TypeScript 7.0.2, React 19.3.1, Vite 8.3.8, Tailwind CSS 4.3.5, TanStack Router 1.170.46 (plugin 1.169.0), zod 4.6.7, lucide-react 1.77.0, Biome 2.6.8, Vitest 5.1.1, Playwright 1.65.1, jsdom 31.0.1, fake-indexeddb 6.2.8, Node 24, pnpm 11.20.0 | Builder's ruling | 2026-11-21 | The owner's existing frontend stack, minus what an offline single-user app does not need (no server-state or mocking libraries). Phase 0 took what was current, as planned: Vitest 5 and TypeScript 7 instead of the 4 and 6 of the owner's frontend |
 | D-017 | **A first-party service worker,** with its precache list written at build by a small Vite plugin; no Workbox | Builder's ruling | 2026-11-21 | Auditable, and small enough to read in full |
 | D-019 | **Hand-made SVG charts;** no chart library | Builder's ruling | 2026-11-21 | A few small charts; fewer dependencies |
 | D-022 | **Public repo, private life:** no personal facts in any committed file, including `ai/` and commit messages. Profile values live only on the phone. A guard test bans personal terms (its list: D-034) | Builder's ruling | 2026-11-21 | The repo is public; the owner's household facts never go on a public site |
 | D-023 | **English** for the UI and for everything committed | Owner (global rule) | 2026-11-21 | The owner's rule for all repos |
 | D-034 | **The personal-term guard keeps its list as keyed hashes** (HMAC-SHA-256). The key stays outside the repo, in an untracked local file and a CI secret (refines D-022) | Builder's ruling | 2026-11-21 | A public repo cannot hold the list in plain text, and a plain hash of a city or a first name falls to a dictionary attack |
 | D-035 | **Phase 8 order:** verify the domain, then claim it in the repo's Pages settings, and only then add the DNS record | Builder's ruling | 2026-11-21 | GitHub's documentation: a DNS record that exists before a site has claimed the name lets someone else's site claim it. The first plan put the DNS record first |
+| D-036 | **Phase 0 construction:** (1) Tailwind's default colour palette is removed, so no grey utility class exists at all, and only the design tokens (plus a `disabled` grey) are colours; (2) the service worker is built as a second Vite entry, and the plugin replaces its precache list and version at build; navigations are answered with the cached app shell; (3) the build copies `index.html` to `404.html`, so a deep link loads the app on GitHub Pages before the worker is installed; (4) `robots.txt` asks search engines not to index the private app; (5) Playwright's WebKit does serve the app from its service worker with the network off, so the offline test runs on WebKit | Builder's ruling | 2026-11-22 | (1) and (2) enforce D-024 and D-017 by construction; (3) GitHub Pages has no rewrite rules; (4) the app holds nothing for search; (5) answers the open risk of the implementation plan, §6 |
