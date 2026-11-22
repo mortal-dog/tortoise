@@ -125,6 +125,8 @@ export const Step = z
     /** The dose as the plan's table writes it: "3 × 8–12", "30 s per side". */
     dose: z.string(),
     why: z.string().optional(),
+    /** The plan's own words around the step that the dose cannot hold: a fallback, a condition, a later form. */
+    note: z.string().optional(),
     ...evidence,
   })
   .refine(
@@ -281,8 +283,9 @@ export const At99Line = z.object({
 export type At99Line = z.infer<typeof At99Line>
 
 /**
- * A start rule (plan §8): a tested or asked value in [min, max] (max null: no upper end) sets a ladder's starting level
- * code. When several rules match one ladder, the highest level wins. The answer `negative` is 1 for yes, 0 for no.
+ * A start rule (plan §8): a tested or asked value v sets a ladder's starting level code. A band matches when
+ * min ≤ v and (max is null or v < max): half-open, so bands meet without a gap for any value, whole or not. When
+ * several rules match one ladder, the highest level wins. The answer `negative` is 1 for yes, 0 for no.
  */
 export const StartRule = z.object({
   ladderId: z.string(),
@@ -296,6 +299,21 @@ export const StartRule = z.object({
   ...evidence,
 })
 export type StartRule = z.infer<typeof StartRule>
+
+/**
+ * A piece of the plan's reasoning that has no other home in the data: the evidence behind the goals (plan §1), the
+ * effort scale (§3), the week against the benchmarks (§5), the stretching notes (§6.9), vitamin D (§12) and safety
+ * (§13). The text is the plan's own, verbatim, with its citations; it gives every source a place in the data.
+ */
+export const Rationale = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  topic: z.string(),
+  /** The plan section, e.g. "1". */
+  section: z.string(),
+  text: z.string(),
+  ...evidence,
+})
+export type Rationale = z.infer<typeof Rationale>
 
 export const Plan = z.object({
   /** A date, shown in About and written into every backup. */
@@ -311,6 +329,7 @@ export const Plan = z.object({
   habits: z.array(Habit),
   at99: z.array(At99Line),
   startRules: z.array(StartRule),
+  rationale: z.array(Rationale).default([]),
   /** The plan's own doses, ladder steps, pass targets, test aims and milestones are our rule as a whole (plan, "How to read the numbers"). */
   ourRule: z.literal(true),
 })

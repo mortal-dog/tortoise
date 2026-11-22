@@ -1,0 +1,471 @@
+// The plan data's rules (design §7, docs/3-implementation.md Phase 1): it parses, ids are unique and references
+// resolve, digits name a source or carry "our rule", every source is used, and the minutes per day match the plan.
+import { describe, expect, it } from 'vitest'
+import { exerciseById, ladderById, plan, planInput, sessionById } from '@/data/plan'
+import { Plan, type Session, type StartRule, WEEKDAYS } from '@/data/schema'
+import { definedSources, readRepoFile } from '../guard/repo'
+
+const sourceIds = new Set(plan.sources.map((s) => s.id))
+
+function duplicates(ids: string[]): string[] {
+  return ids.filter((id, i) => ids.indexOf(id) !== i)
+}
+
+function session(id: string): Session {
+  const s = sessionById.get(id)
+  if (!s) throw new Error(`no session ${id}`)
+  return s
+}
+
+function ladderCodes(id: string): string[] {
+  return (ladderById.get(id)?.levels ?? []).map((l) => l.code)
+}
+
+/** Every object in the plan, with its path, except the source list itself. */
+function* objects(): Generator<{ path: string; obj: Record<string, unknown>; inherited: boolean }> {
+  function* walk(
+    node: unknown,
+    path: string,
+    inherited: boolean,
+  ): Generator<{ path: string; obj: Record<string, unknown>; inherited: boolean }> {
+    if (Array.isArray(node)) {
+      for (const [i, v] of node.entries()) yield* walk(v, `${path}[${i}]`, inherited)
+    } else if (node && typeof node === 'object') {
+      const obj = node as Record<string, unknown>
+      yield { path, obj, inherited }
+      const here = inherited || covered(obj)
+      for (const [k, v] of Object.entries(obj)) if (k !== 'sources') yield* walk(v, `${path}.${k}`, here)
+    }
+  }
+  // The plan's own `ourRule: true` covers the plan as a whole; counting it here would make the rule pass for every
+  // object, so each part must carry its own flag or sources.
+  for (const [k, v] of Object.entries(plan)) if (k !== 'sources') yield* walk(v, k, false)
+}
+
+function covered(obj: Record<string, unknown>): boolean {
+  return obj.ourRule === true || (Array.isArray(obj.sources) && obj.sources.length > 0)
+}
+
+describe('the plan', () => {
+  it('parses with the schema', () => {
+    const result = Plan.safeParse(planInput)
+    expect(result.success ? [] : result.error.issues).toEqual([])
+  })
+
+  it('has unique ids within each kind', () => {
+    expect(duplicates(plan.sources.map((s) => s.id))).toEqual([])
+    expect(duplicates(plan.exercises.map((e) => e.id))).toEqual([])
+    expect(duplicates(plan.ladders.map((l) => l.id))).toEqual([])
+    expect(duplicates(plan.sessions.map((s) => s.id))).toEqual([])
+    expect(duplicates(plan.tests.map((t) => t.id))).toEqual([])
+    expect(duplicates(plan.milestones.map((m) => m.id))).toEqual([])
+    expect(duplicates(plan.habits.map((h) => h.id))).toEqual([])
+    expect(duplicates(plan.rationale.map((r) => r.id))).toEqual([])
+  })
+
+  it('has unique step ids within each session', () => {
+    for (const s of plan.sessions) expect(duplicates(s.steps.map((st) => st.id)), s.id).toEqual([])
+  })
+
+  it('numbers ladder levels 1..n with unique codes', () => {
+    for (const l of plan.ladders) {
+      expect(
+        l.levels.map((lv) => lv.level),
+        l.id,
+      ).toEqual(l.levels.map((_, i) => i + 1))
+      expect(duplicates(l.levels.map((lv) => lv.code)), l.id).toEqual([])
+    }
+  })
+
+  it('numbers each test day 1..n', () => {
+    for (const day of [1, 2] as const) {
+      const orders = plan.tests.filter((t) => t.day === day).map((t) => t.order)
+      expect(orders).toEqual(orders.map((_, i) => i + 1))
+    }
+  })
+})
+
+describe('references', () => {
+  it('from steps resolve', () => {
+    const bad: string[] = []
+    for (const s of plan.sessions) {
+      for (const st of s.steps) {
+        if (st.ladderId && !ladderById.has(st.ladderId)) bad.push(`${s.id}.${st.id}: ${st.ladderId}`)
+        if (st.exerciseId && !exerciseById.has(st.exerciseId)) bad.push(`${s.id}.${st.id}: ${st.exerciseId}`)
+        if (st.pairedWith) {
+          const other = s.steps.find((o) => o.id === st.pairedWith)
+          if (other?.pairedWith !== st.id) bad.push(`${s.id}.${st.id}: pairedWith ${st.pairedWith}`)
+        }
+      }
+    }
+    expect(bad).toEqual([])
+  })
+
+  it('from ladder levels resolve', () => {
+    const bad = plan.ladders.flatMap((l) =>
+      l.levels.filter((lv) => !exerciseById.has(lv.exerciseId)).map((lv) => `${l.id} ${lv.code}`),
+    )
+    expect(bad).toEqual([])
+  })
+
+  it('from the week template resolve to sessions of the right kind', () => {
+    for (const day of WEEKDAYS) {
+      const d = plan.week[day]
+      expect(session(d.morning).kind, day).toBe('morning')
+      expect(['morning', 'split']).not.toContain(session(d.main).kind)
+      if (d.split !== null) expect(session(d.split).kind, day).toBe('split')
+    }
+  })
+
+  it('from start rules resolve to ladders and their codes', () => {
+    for (const r of plan.startRules) {
+      expect(ladderById.has(r.ladderId), r.ladderId).toBe(true)
+      for (const b of r.bands) expect(ladderCodes(r.ladderId), r.ladderId).toContain(b.code)
+    }
+  })
+
+  it('leave no ladder unused and no added exercise unused', () => {
+    const usedLadders = new Set(plan.sessions.flatMap((s) => s.steps.map((st) => st.ladderId)))
+    expect(plan.ladders.map((l) => l.id).filter((id) => !usedLadders.has(id))).toEqual([])
+    const appendix = new Set(appendixRows().map((r) => r.name))
+    const usedExercises = new Set([
+      ...plan.sessions.flatMap((s) => s.steps.map((st) => st.exerciseId)),
+      ...plan.ladders.flatMap((l) => l.levels.map((lv) => lv.exerciseId)),
+    ])
+    const added = plan.exercises.filter((e) => !appendix.has(e.name))
+    expect(added.filter((e) => !usedExercises.has(e.id)).map((e) => e.id)).toEqual([])
+  })
+})
+
+describe('sources', () => {
+  it('match docs/sources.md exactly', () => {
+    expect(plan.sources.map((s) => s.id)).toEqual(definedSources())
+  })
+
+  it('copy the citation, link and finding of docs/sources.md verbatim', () => {
+    const doc = readRepoFile('docs/sources.md')
+    for (const s of plan.sources) {
+      expect(doc, s.id).toContain(`| ${s.id} | ${s.citation} <${s.url}> | ${s.finding} |`)
+    }
+  })
+
+  it('cited in the data all exist', () => {
+    const unknown: string[] = []
+    for (const { path, obj } of objects()) {
+      for (const id of (obj.sources as string[] | undefined) ?? [])
+        if (!sourceIds.has(id)) unknown.push(`${path}: ${id}`)
+    }
+    expect(unknown).toEqual([])
+  })
+
+  it('are each used in the data outside the source list', () => {
+    const used = new Set<string>()
+    for (const { obj } of objects())
+      for (const id of (obj.sources as string[] | undefined) ?? []) used.add(id)
+    expect(plan.sources.map((s) => s.id).filter((id) => !used.has(id))).toEqual([])
+  })
+
+  it('cited in brackets in a text are in the same object’s sources', () => {
+    const bad: string[] = []
+    for (const { path, obj } of objects()) {
+      const own = new Set((obj.sources as string[] | undefined) ?? [])
+      for (const [k, v] of Object.entries(obj)) {
+        if (typeof v !== 'string') continue
+        for (const m of v.matchAll(/\[([a-z][a-z0-9]*)\]/g)) {
+          const id = m[1] ?? ''
+          if (sourceIds.has(id) && !own.has(id)) bad.push(`${path}.${k}: ${id}`)
+        }
+      }
+    }
+    expect(bad).toEqual([])
+  })
+})
+
+describe('the evidence rule (D-018)', () => {
+  // Keys that hold ids, labels and references, not claims.
+  const IGNORED = new Set([
+    'id',
+    'code',
+    'exerciseId',
+    'ladderId',
+    'pairedWith',
+    'label',
+    'url',
+    'version',
+    'section',
+  ])
+
+  it('gives every text with a digit a source or "our rule", on itself or an enclosing object', () => {
+    const bad: string[] = []
+    for (const { path, obj, inherited } of objects()) {
+      if (inherited || covered(obj)) continue
+      for (const [k, v] of Object.entries(obj)) {
+        if (!IGNORED.has(k) && typeof v === 'string' && /\d/.test(v)) bad.push(`${path}.${k}: ${v}`)
+      }
+    }
+    expect(bad).toEqual([])
+  })
+
+  it('gives every "why" with a digit its own source or "our rule"', () => {
+    const bad: string[] = []
+    for (const { path, obj } of objects()) {
+      if (typeof obj.why === 'string' && /\d/.test(obj.why) && !covered(obj)) bad.push(`${path}.why`)
+    }
+    expect(bad).toEqual([])
+  })
+
+  it('catches a digit without a source (the rule itself)', () => {
+    const before = plan.habits[0]
+    expect(before?.sources).toEqual(['paluch2022'])
+    expect(covered({ target: '8,000', sources: [] })).toBe(false)
+    expect(covered({ target: '8,000', ourRule: true })).toBe(true)
+  })
+
+  it('keeps the brackets out of the test texts', () => {
+    for (const t of plan.tests) {
+      expect(t.how, t.id).not.toMatch(/\[[a-z]+\d{4}[a-z]?\]/)
+      expect(t.aim, t.id).not.toMatch(/\[[a-z]+\d{4}[a-z]?\]/)
+    }
+  })
+})
+
+describe('minutes', () => {
+  const mid = (r: { min: number; max: number }) => (r.min + r.max) / 2
+
+  it('per day lie within the week table, allowing 5 min for its "~"', () => {
+    for (const day of WEEKDAYS) {
+      const d = plan.week[day]
+      const parts = [session(d.morning), session(d.main), ...(d.split ? [session(d.split)] : [])]
+      const total = {
+        min: parts.reduce((a, s) => a + s.minutes.min, 0),
+        max: parts.reduce((a, s) => a + s.minutes.max, 0),
+      }
+      expect(mid(total), day).toBeGreaterThanOrEqual(d.expectedMinutes.min - 5)
+      expect(mid(total), day).toBeLessThanOrEqual(d.expectedMinutes.max + 5)
+    }
+  })
+
+  it('per pillar add up to the middle of each session', () => {
+    for (const s of plan.sessions) {
+      const sum = Object.values(s.pillars).reduce((a, n) => a + n, 0)
+      expect(sum, s.id).toBe(mid(s.minutes))
+    }
+  })
+})
+
+/** The rows of the plan's Appendix A: name, how, cue, mistake. */
+function appendixRows(): { name: string; how: string; cue: string; mistake: string }[] {
+  const text = readRepoFile('docs/2-exercise-plan.md')
+  const appendix = text.slice(text.indexOf('## Appendix A'))
+  const rows: { name: string; how: string; cue: string; mistake: string }[] = []
+  for (const line of appendix.split('\n')) {
+    if (!line.startsWith('| ') || line.startsWith('| Exercise |')) continue
+    const [name = '', how = '', cue = '', mistake = ''] = line
+      .slice(2, -2)
+      .split(' | ')
+      .map((c) => c.trim())
+    rows.push({ name, how, cue, mistake })
+  }
+  return rows
+}
+
+describe('against the plan text', () => {
+  it('has an exercise for every row of Appendix A, with its texts verbatim', () => {
+    const rows = appendixRows()
+    expect(rows.length).toBe(74)
+    const byName = new Map(plan.exercises.map((e) => [e.name, e]))
+    for (const r of rows) {
+      const e = byName.get(r.name)
+      expect(e, r.name).toBeDefined()
+      expect({ how: e?.how, cue: e?.cue, mistake: e?.mistake }, r.name).toEqual({
+        how: r.how,
+        cue: r.cue,
+        mistake: r.mistake,
+      })
+    }
+  })
+
+  it('has the ladders of §7 with their levels', () => {
+    expect(ladderCodes('squat')).toEqual(['1', '2', '3', '4', '5', '6', '7'])
+    expect(ladderById.get('squat')?.levels.at(-1)?.name).toMatch(/^Full pistol squat/)
+    expect(ladderCodes('hinge')).toHaveLength(5)
+    expect(ladderCodes('nordic')).toHaveLength(5)
+    expect(ladderCodes('push')).toHaveLength(7)
+    expect(ladderCodes('handstand-skill')).toEqual(['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8'])
+    expect(ladderCodes('handstand-strength')).toEqual(['S1', 'S2', 'S3', 'S4', 'S5'])
+    expect(ladderCodes('pull')).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'])
+    expect(ladderCodes('back-extension')).toHaveLength(5)
+    expect(ladderById.get('back-extension')?.sources).toContain('katzman2010')
+    expect(ladderCodes('core')).toHaveLength(6)
+    expect(ladderCodes('run')).toEqual(['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'])
+    expect(ladderCodes('rope')).toEqual(['J1', 'J2', 'J3', 'J4', 'J5', 'J6'])
+    expect(ladderCodes('jumps')).toHaveLength(5)
+    expect(ladderCodes('grip')).toEqual(['G1', 'G2', 'G3', 'G4'])
+    expect(ladderCodes('balance')).toEqual(['Ba1', 'Ba2', 'Ba3', 'Ba4', 'Ba5', 'Ba6'])
+    for (const l of plan.ladders) expect(l.ourRule, l.id).toBe(true)
+  })
+
+  it('has the run and rope steps as written', () => {
+    const run = ladderById.get('run')?.levels ?? []
+    expect(run[0]?.pass.repeats).toEqual({
+      repeats: 8,
+      workS: 60,
+      restS: 120,
+      workLabel: 'run',
+      restLabel: 'walk',
+    })
+    expect(run[2]?.pass.repeats).toMatchObject({ repeats: 5, workS: 180, restS: 90 })
+    expect(run[7]?.pass).toMatchObject({ minutes: 30 })
+    expect(run[7]?.pass.repeats).toBeUndefined()
+    expect(run[7]?.pass.text).toMatch(/^30 min continuous/)
+    const rope = ladderById.get('rope')?.levels ?? []
+    expect(rope[5]?.pass.text).toContain('at most 10% a week')
+  })
+
+  it('has the interval stages of §6.7', () => {
+    const stages = plan.blockRules.intervalStages
+    expect(stages.map((s) => [s.stage, s.fromBlock])).toEqual([
+      [1, 1],
+      [2, 2],
+      [3, 3],
+      [4, 4],
+    ])
+    expect(stages[0]?.set).toMatchObject({ repeats: 10, workS: 30, restS: 60 })
+    expect(stages[3]?.set).toMatchObject({ repeats: 4, workS: 240, restS: 180 })
+    expect(stages[3]?.sources).toEqual(['helgerud2007'])
+    const main = session('intervals').steps.filter((st) => st.intervalStage)
+    expect(main).toHaveLength(1)
+  })
+
+  it('has the week of §5', () => {
+    expect(plan.week.mon).toMatchObject({ main: 'strength-a', split: 'split-front' })
+    expect(plan.week.tue).toMatchObject({ main: 'easy-run', split: 'split-side' })
+    expect(plan.week.wed).toMatchObject({ main: 'strength-b', split: 'split-front' })
+    expect(plan.week.thu).toMatchObject({ main: 'intervals', split: 'split-side' })
+    expect(plan.week.fri).toMatchObject({ main: 'strength-c', split: 'split-short' })
+    expect(plan.week.sat).toMatchObject({ main: 'long', split: 'split-short' })
+    expect(plan.week.sun).toMatchObject({ main: 'light', split: null })
+    for (const day of WEEKDAYS) expect(plan.week[day].morning).toBe('morning')
+  })
+
+  it('has the sessions of §6 in their shape', () => {
+    expect(session('morning').steps.map((s) => s.label)).toEqual([
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+    ])
+    for (const id of ['strength-a', 'strength-b', 'strength-c']) {
+      const parts = session(id).steps.map((s) => s.part)
+      expect(parts.slice(0, 5), id).toEqual(['warmup', 'warmup', 'warmup', 'warmup', 'warmup'])
+      expect(session(id).minutes, id).toEqual({ min: 35, max: 35 })
+    }
+    expect(
+      session('strength-a')
+        .steps.map((s) => s.label)
+        .slice(5),
+    ).toEqual(['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
+    expect(session('strength-a').steps.find((s) => s.id === 'a1')?.restS).toBeUndefined()
+    expect(session('strength-a').steps.find((s) => s.id === 'a2')?.restS).toBe(75)
+    expect(session('easy-run').minutes).toEqual({ min: 38, max: 48 })
+    expect(session('easy-run').steps.find((s) => s.id === 'strides')?.fromBlock).toBe(2)
+    for (const id of ['easy-run', 'intervals', 'long']) expect(session(id).hasVariants, id).toBe(true)
+    const light = session('light')
+    expect(light.minutes).toEqual({ min: 30, max: 30 })
+    expect(light.steps[0]).toMatchObject({ exerciseId: 'walk', part: 'warmup' })
+    expect(light.steps[0]?.minutes).toBeUndefined()
+    for (const id of ['split-front', 'split-side', 'split-short']) {
+      expect(session(id).minutes, id).toEqual({ min: 10, max: 10 })
+    }
+    for (const s of plan.sessions) expect(s.ourRule, s.id).toBe(true)
+  })
+
+  it('has the Tortoise Test of §10 in its order', () => {
+    const day = (n: 1 | 2) =>
+      plan.tests
+        .filter((t) => t.day === n)
+        .sort((a, b) => a.order - b.order)
+        .map((t) => t.id)
+    expect(day(1)).toEqual(['rockport', 'broad-jump', 'dead-hang'])
+    expect(day(2)).toEqual([
+      'resting-hr',
+      'height',
+      'wall',
+      'sit-to-rise',
+      'one-leg',
+      'push-ups',
+      'handstand',
+      'farmer',
+      'deep-squat',
+      'splits',
+    ])
+    expect(plan.tests.find((t) => t.id === 'height')).toMatchObject({ yearly: true, calculator: 'height' })
+  })
+
+  it('has the milestones and the At-99 board of §11', () => {
+    const ids = plan.milestones.map((m) => m.id)
+    expect(ids).toContain('hatchling')
+    expect(ids).toContain('ancient')
+    expect(plan.milestones.find((m) => m.id === 'side-split-flat')).toMatchObject({
+      direction: 'atMost',
+      threshold: 0,
+    })
+    for (const m of plan.milestones) expect(m.ourRule, m.id).toBe(true)
+    expect(plan.at99.find((l) => l.metric === 'sitRise')).toMatchObject({ value: 8, sources: ['brito2014'] })
+  })
+})
+
+describe('start rules', () => {
+  // A band matches when min ≤ v and (max is null or v < max); the highest matching level wins (schema.ts).
+  function startCode(ladderId: string, inputs: Partial<Record<StartRule['input'], number>>): string {
+    const codes = ladderCodes(ladderId)
+    let best = codes[0] ?? ''
+    for (const r of plan.startRules.filter((r) => r.ladderId === ladderId)) {
+      const v = inputs[r.input]
+      if (v === undefined) continue
+      if (r.onlyIf && (inputs[r.onlyIf.input] ?? -1) < r.onlyIf.min) continue
+      const band = r.bands.find((b) => b.min <= v && (b.max === null || v < b.max))
+      if (band && codes.indexOf(band.code) > codes.indexOf(best)) best = band.code
+    }
+    return best
+  }
+
+  it('follow the table of §8', () => {
+    expect([0, 4, 5, 9, 10, 19, 20, 29, 30, 60].map((n) => startCode('push', { pushups: n }))).toEqual([
+      '1',
+      '1',
+      '2',
+      '2',
+      '3',
+      '3',
+      '4',
+      '4',
+      '5',
+      '5',
+    ])
+    expect([0, 9.5, 10, 29, 30, 45].map((n) => startCode('run', { runMin: n }))).toEqual([
+      'R1',
+      'R1',
+      'R4',
+      'R4',
+      'R8',
+      'R8',
+    ])
+    expect([0, 0.5, 1, 2.5, 3].map((n) => startCode('rope', { ropeMin: n }))).toEqual([
+      'J1',
+      'J1',
+      'J2',
+      'J2',
+      'J3',
+    ])
+    expect(startCode('pull', { deadHangS: 29.9, negative: 1 })).toBe('P1')
+    expect(startCode('pull', { deadHangS: 30, negative: 0 })).toBe('P2')
+    expect(startCode('pull', { deadHangS: 30, negative: 1 })).toBe('P3')
+  })
+})
