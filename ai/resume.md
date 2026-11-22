@@ -20,9 +20,10 @@ workflow's concurrency group queues runs one at a time). Delete `ci-probe` at th
 - [x] probes: 1x on CI 18/32/21 s, no timeout; 1x and a still backdrop 18/27/18 s (within the spread, not taken)
 - [x] `5a32c8d` CI: render the e2e tests at 1x (D-049); gates green (311 Vitest in 33 files, 22 e2e); `ci-probe`
   deleted
+- [x] `3fa4a81` Phase 8 checklist row for the glass; pushed to main on the owner's picker (push, then check); CI on
+  main with deploy off green (run 45066211124: e2e 20/28/22 s, no retry)
 
 **Next**
-- [ ] ⛔ push to main only after the owner's picker (main deploys)
 - [ ] ♻️ run compact-ai at the end (the owner asked)
 
 ---
