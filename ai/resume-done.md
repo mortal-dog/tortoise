@@ -1,6 +1,33 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## Review all docs and fix every issue found — started 2026-11-21 21:30 ET, done 22:11 ET
+
+**Why:** owner 2026-11-21: "review all docs and fix all issues."
+
+**Done**
+- [x] ♻️ read every doc in full: README.md, CLAUDE.md, docs/*.md, ai/*.md, ai/memory/*.md
+- [x] ♻️ mechanical checks from the session scratchpad: sources defined and cited, links and anchors, D-numbers, table
+  shapes, CJK, personal terms, theme contrast, mock widths
+- [x] ♻️ every source re-read in raw text: 41 PubMed abstracts (efetch), 4 PMC full texts (ros2022, oc2023, sheaf2017,
+  katzman2010), the oc2023 Appendix 1 (Europe PMC supplementary files), the octftf page; also GitHub's Pages
+  custom-domain docs (raw markdown) and the npm versions of the stack
+- [x] ⚠️ docs/sources.md: how each source was read; findings tightened (helgerud2007, pedisic2020, nielsen2014,
+  afonso2021, ros2022, oc2023, liftmor2018/2019, harding2020, lanyon1984, ma2013, howe2011, kado2004, sheaf2017,
+  green2004); katzman2010 links to its full text
+- [x] ⚠️ docs/2-exercise-plan.md: evidence wording; doses declared our rule; hours recounted (about 7½ h a week);
+  the 10% rule's scope; fallbacks; ladders; Week 0, start rules and test weekends; milestone Adult; library entries
+- [x] ⚠️ docs/1-app-design.md: Today mock; day status and streak; first run; data model; reminders; theme tokens
+- [x] ⚠️ docs/3-implementation.md: Phase 8 order (verify, claim in Pages, then DNS); guard tests; risks
+- [x] ⚠️ docs/decisions.md: D-029 to D-035; D-009 and D-015 corrected; the next number is D-036
+- [x] ⚠️ committed `fbf692e` (docs: review of all documents) — **do not commit it again**
+- [ ] ⛔ push of `fbf692e` and of the commit that closes this entry: asked in a picker when the entry closed. Check
+  `git status -sb`; push only on the owner's yes (public repo)
+
+**Don't forget:** ai/now.md and ai/memory/ are written only by compact-ai, and this job left them stale: the next
+D-number is D-036; a full week is about 7½ hours; Phase 8 runs verify, claim in Pages, then DNS (D-035); the guard
+list is kept as keyed hashes (D-034). The owner should run compact-ai.
+
 ## Write the general plan docs (app design, exercise plan, implementation phases) — started 2026-11-21 20:40 ET, done 21:18 ET
 
 **Why:** owner 2026-11-21: "first we need a general plan md file ... 1 app design md file 2. daily excercise plan monday
