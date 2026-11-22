@@ -1,16 +1,19 @@
 // The exercise library (plan Appendix A): every row, with how, cue and mistake verbatim. A harder or easier
 // variant lives in its base exercise's entry, so ladder levels point at the base id. `why` is the one-line why
-// from the session tables (plan §6) where the exercise first appears. The last few entries are exercises the
-// sessions name that have no appendix row (walking, marching, stairs); their texts are plain and number-free.
+// from the session tables (plan §6) where the exercise first appears, otherwise from the appendix's why table.
+// The four walking entries (brisk walk, easy walk, marching in place, cool-down) got their appendix rows in Phase 5
+// (D-043); before that the data alone held them (D-038).
 //
-// `ourRule` marks an entry whose text holds a number: the appendix's technique numbers are the plan's own.
+// `ourRule` marks an entry whose text holds a number: the appendix's technique numbers are the plan's own. The
+// teaching links live in videos.ts and are joined here.
 import type { z } from 'zod'
 import type { Exercise } from './schema'
+import { videos } from './videos'
 
 type ExerciseInput = z.input<typeof Exercise>
 
 /** The appendix rows, by section, in the order of the plan. */
-export const appendixExercises: ExerciseInput[] = [
+const appendixExercises: ExerciseInput[] = [
   // Spine and posture
   {
     id: 'cat-camel',
@@ -117,6 +120,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: "Back to the wall, hands a leg's length from it; walk the feet up to hip height",
     cue: 'Push the floor away',
     mistake: 'Sagging shoulders',
+    why: 'The first handstand step: the shoulders learn to carry the body upside down, with the feet on the wall',
     unit: 'seconds',
   },
   {
@@ -126,6 +130,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Face down with the feet at the wall; walk the feet up and the hands in; walk out under control',
     cue: 'Stop where you can still hold the line',
     mistake: 'Arched back',
+    why: 'Builds the strength and the straight line of the handstand, step by step, with the wall for support',
     unit: 'reps',
   },
   {
@@ -135,6 +140,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Hands 10–20 cm from the wall; body straight, ribs in, glutes tight; push tall through the shoulders',
     cue: 'Look at the floor between the hands',
     mistake: 'Banana back',
+    why: "Teaches the straight, hollow handstand line and builds the shoulders' endurance",
     unit: 'seconds',
     ourRule: true,
   },
@@ -145,6 +151,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Lunge stance, hands down, swing the back leg up and push with the front leg',
     cue: 'Soft, controlled kicks',
     mistake: 'Kicking hard into the wall',
+    why: 'The way into every freestanding handstand; soft kicks teach how much push is enough',
     unit: 'reps',
   },
   {
@@ -154,6 +161,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'When falling forward, turn one hand and step down sideways, a cartwheel exit',
     cue: 'Practise it before you need it',
     mistake: 'Falling flat onto the back',
+    why: 'A safe way out of a falling handstand is what makes practice in open space safe',
     unit: 'reps',
   },
   {
@@ -163,6 +171,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'In a back-to-wall handstand with the hands about 20 cm from the wall, press through the fingertips until the heels float off the wall, and hold',
     cue: 'The fingers steer the balance',
     mistake: 'Pushing off the wall with the feet',
+    why: 'Teaches the fingers to steer the balance before the wall is taken away',
     unit: 'seconds',
     ourRule: true,
   },
@@ -173,6 +182,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Kick up in open space with a clear floor around; balance with the fingers and a tight body; bail sideways when it tips over',
     cue: 'Hips stacked over the shoulders',
     mistake: 'Arching the back to catch the balance',
+    why: "One of the plan's goals on the way: balance on the hands, with no wall",
     unit: 'seconds',
   },
   {
@@ -193,6 +203,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'In a chest-to-wall handstand over a cushion, lower the head to the cushion under control. The negative ends there: walk the feet down the wall. Later, press back up',
     cue: 'Elbows in, about 45°',
     mistake: 'Dropping onto the head',
+    why: 'The top of the strength track: pressing the whole body weight upside down',
     unit: 'reps',
     ourRule: true,
   },
@@ -224,6 +235,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'A long stance (rear foot on a chair for Bulgarian); lower straight down until the back knee nearly touches',
     cue: 'The front knee may pass the toes',
     mistake: 'Too short a stance',
+    why: 'One leg does most of the work, so the fixed dumbbells stay heavy enough as the legs grow stronger',
     unit: 'reps',
   },
   {
@@ -233,6 +245,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'On one leg with the other leg forward, sit slowly to a chair and stand without rocking. The full pistol goes to the bottom with no chair',
     cue: 'Slow on the way down',
     mistake: 'Collapsing onto the chair',
+    why: 'The whole body on one leg: leg strength and balance with no heavier weights',
     unit: 'reps',
   },
   {
@@ -264,6 +277,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Hands wide; lower toward one hand while the other arm stays straight; alternate sides',
     cue: 'Chest to the working hand',
     mistake: 'Twisting the hips',
+    why: 'Shifts most of the load onto one arm, so the push-up keeps getting harder without equipment',
     unit: 'reps',
   },
   {
@@ -273,6 +287,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Hands by the waist, fingers turned out; lean the shoulders forward of the hands and keep the lean through every rep',
     cue: 'Lean first, then bend',
     mistake: 'Losing the lean on the way up',
+    why: 'The forward lean loads the shoulders more, toward the pressing strength of the handstand',
     unit: 'reps',
   },
   {
@@ -304,6 +319,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'As above on one leg; the free leg reaches back in line with the body. In the kickstand version its toes stay on the floor for balance',
     cue: 'Hips square to the floor',
     mistake: 'Opening the hip',
+    why: 'The hip hinge on one leg: more load from the same dumbbells, with balance and hip control',
     unit: 'reps',
   },
   {
@@ -456,6 +472,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'On the back, lower back pressed down; arms by the ears, legs straight and low (bend the knees to make it easier)',
     cue: 'Ribs down',
     mistake: 'Lower back lifting',
+    why: 'Trains the front of the trunk to hold the hollow line, which is the handstand line',
     unit: 'seconds',
   },
   {
@@ -465,6 +482,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From the hollow hold, rock forward and back like a rocking chair, the shape unchanged',
     cue: 'Hold the shape, then rock',
     mistake: 'Bending at the hips to rock',
+    why: 'Holds the hollow shape while moving, a harder step for the trunk',
     unit: 'reps',
   },
   {
@@ -474,6 +492,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Sit with the hands beside the hips and press down until the hips lift: knees tucked to the chest at first, later legs straight out',
     cue: 'Shoulders pressed down',
     mistake: 'Shrugging and leaning back',
+    why: 'Trunk and hip strength with the shoulders pressed down, as in the handstand',
     unit: 'seconds',
   },
   {
@@ -483,6 +502,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'On the back, knees bent; drive the hips up and squeeze the glutes. The single-leg version holds one knee to the chest',
     cue: 'Ribs down at the top',
     mistake: 'Overarching',
+    why: 'Strong glutes for the hip hinge, running and jumping; the first step of the hinge ladder',
     unit: 'reps',
   },
   // Jumps, rope and running
@@ -505,7 +525,9 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Quarter squat, jump straight up, land softly',
     cue: 'Quiet landing',
     mistake: 'Knees caving in',
+    why: 'The first jump step: learning to land softly before jumping far; landings load bone [ros2022]',
     unit: 'reps',
+    sources: ['ros2022'],
   },
   {
     id: 'single-leg-hop',
@@ -514,6 +536,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From one leg, hop forward, land on the same leg and hold 2 s',
     cue: 'Knee over the toes on landing',
     mistake: 'Hopping farther than the landing can hold',
+    why: 'Power and landing control on one leg, the way running lands',
     unit: 'reps',
     ourRule: true,
   },
@@ -524,6 +547,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Small, quick hops off the ankles, knees nearly straight',
     cue: 'Short ground contact',
     mistake: 'Sinking into the knees',
+    why: 'Quick, springy contacts train the ankles and calves for running, rope and jumping',
     unit: 'reps',
   },
   {
@@ -533,6 +557,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Leap sideways from one leg to the other; land and balance. Lateral bounds are the same leap for distance',
     cue: 'Stick each landing',
     mistake: 'Falling into the next hop',
+    why: 'Sideways power and landing control, which running straight ahead does not train',
     unit: 'reps',
   },
   {
@@ -554,6 +579,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Alternate-foot step: run in place over the rope. High knees: the same with the knees at hip height. Double-under: one higher jump and two turns of the rope',
     cue: 'The wrists turn the rope',
     mistake: 'Big arm circles',
+    why: 'The running step and high knees carry the indoor intervals; new skills keep the rope interesting',
     unit: 'minutes',
   },
   {
@@ -563,6 +589,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Alternate the run and walk parts of your step (§7.8); the walk is brisk',
     cue: 'Run slower than feels needed',
     mistake: 'Running the run parts hard',
+    why: 'The way into running: walk breaks let the legs adapt before the runs grow longer',
     unit: 'minutes',
     ourRule: true,
   },
@@ -585,8 +612,49 @@ export const appendixExercises: ExerciseInput[] = [
     how: '20 s accelerating to fast but relaxed; walk back',
     cue: 'Relaxed speed',
     mistake: 'Sprinting all-out',
+    why: 'Short, relaxed speed keeps the running quick and light without the cost of hard running',
     unit: 'reps',
     ourRule: true,
+  },
+  {
+    id: 'brisk-walk',
+    name: 'Brisk walk',
+    area: 'cardio',
+    how: 'Walk briskly, upright, with the arms swinging',
+    cue: 'Brisk, not a stroll',
+    mistake: 'Strolling',
+    why: 'Warms up the legs, heart and breathing before the run',
+    unit: 'minutes',
+  },
+  {
+    id: 'walk',
+    name: 'Easy walk',
+    area: 'cardio',
+    how: 'Walk at an easy pace, upright and relaxed',
+    cue: 'Easy enough to talk',
+    mistake: 'Hurrying',
+    why: 'Easy movement on the light day; it warms up the flexibility session',
+    unit: 'minutes',
+  },
+  {
+    id: 'marching-in-place',
+    name: 'Marching in place',
+    area: 'cardio',
+    how: 'March on the spot, lifting the knees, the arms swinging',
+    cue: 'A light, steady rhythm',
+    mistake: 'Stamping',
+    why: 'Keeps the easy parts moving when there is no room to walk',
+    unit: 'minutes',
+  },
+  {
+    id: 'easy-cool-down',
+    name: 'Easy cool-down',
+    area: 'cardio',
+    how: 'An easy bounce, marching in place or a walk',
+    cue: 'Let the breathing settle',
+    mistake: 'Stopping dead',
+    why: 'Lets the heart rate and breathing come down slowly after hard work',
+    unit: 'minutes',
   },
   // Playground
   {
@@ -596,6 +664,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Overhand grip, arms straight, shoulders slightly engaged',
     cue: 'Long body, still',
     mistake: 'Shrugging to the ears',
+    why: 'Grip and shoulder strength; the first step toward the pull-up',
     unit: 'seconds',
   },
   {
@@ -605,6 +674,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From a hang, pull the shoulder blades down without bending the elbows',
     cue: 'Small movement',
     mistake: 'Bending the arms',
+    why: 'Teaches the shoulder blades to start every pull',
     unit: 'reps',
   },
   {
@@ -614,6 +684,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Start with the chin over the bar (jump or step up); lower as slowly as possible',
     cue: 'Control to the bottom',
     mistake: 'Dropping the last third',
+    why: 'Lowering slowly builds the strength for the first full pull-up',
     unit: 'reps',
   },
   {
@@ -623,6 +694,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From a dead hang with an overhand grip, pull until the chin is over the bar; lower under control',
     cue: 'Shoulder blades down first',
     mistake: 'Kicking or swinging up',
+    why: 'The pull that lifts the whole body: back, arms and grip together',
     unit: 'reps',
   },
   {
@@ -632,6 +704,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From a still hang, lift the knees to the chest; later lift straight legs to hip height',
     cue: 'No swing',
     mistake: 'Swinging',
+    why: 'Trunk strength while hanging, with the shoulders working too',
     unit: 'reps',
   },
   // Splits and flexibility
@@ -662,6 +735,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From a lunge, shift the hips back over the back knee; front leg straight, toes up, back flat',
     cue: 'Hinge from the hips',
     mistake: 'Rounding the back',
+    why: 'Stretches the hamstrings of the front leg, the first part of the front split',
     unit: 'seconds',
   },
   {
@@ -671,6 +745,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'From the half split, slide the front heel forward with hands on chairs or books; back leg straight behind',
     cue: 'Hips square',
     mistake: 'Twisting the hips open',
+    why: 'The front split itself, with supports that come down as the range grows',
     unit: 'seconds',
   },
   {
@@ -680,6 +755,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Sit tall with the legs straight; lift one heel just off the floor with the thigh',
     cue: 'Tall spine',
     mistake: 'Leaning back',
+    why: 'Strength at the end of the range, so the range can be controlled, not only reached',
     unit: 'reps',
   },
   {
@@ -689,6 +765,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'On hands and knees, knees wide, shins parallel; rock the hips back',
     cue: 'Slow rocking',
     mistake: 'Forcing the depth',
+    why: 'Opens the inner thighs and hips for the side split',
     unit: 'seconds',
   },
   {
@@ -698,6 +775,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Feet wide, toes out; sit until the thighs are level; knees over the toes',
     cue: 'Chest up',
     mistake: 'Knees caving in',
+    why: 'Strength in a wide stance, toward the side split',
     unit: 'seconds',
   },
   {
@@ -707,6 +785,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Sit with the legs wide, knees pointing up; lean forward from the hips with a flat back',
     cue: 'Chest forward, not head down',
     mistake: 'Rounding the back',
+    why: 'Hamstrings and inner thighs; a press to handstand needs this pancake later',
     unit: 'seconds',
   },
   {
@@ -716,6 +795,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Slide the feet apart with hands on chairs; hips square; knees pointing up',
     cue: 'Small slides',
     mistake: 'Rolling the knees forward',
+    why: 'The side split itself, with chairs carrying part of the weight',
     unit: 'seconds',
   },
   {
@@ -725,6 +805,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Lying on one side, lift the top leg straight, toes forward',
     cue: 'Lead with the heel',
     mistake: 'Rolling back',
+    why: "Strength to lift the leg to the side, the side split's working range",
     unit: 'reps',
   },
   {
@@ -734,6 +815,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Sitting, both knees bent at 90°; rotate both knees to the other side',
     cue: 'Tall spine',
     mistake: 'Slumping',
+    why: 'Turns the hips in and out, a rotation that sitting rarely uses',
     unit: 'reps',
     ourRule: true,
   },
@@ -744,6 +826,7 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Hands on a chair seat or wall, arms straight; hinge and let the chest sink between the arms',
     cue: 'Ribs in',
     mistake: 'Arching the lower back',
+    why: 'Opens the shoulders overhead for a straight handstand line',
     unit: 'seconds',
   },
   {
@@ -753,51 +836,13 @@ export const appendixExercises: ExerciseInput[] = [
     how: 'Heels down, chest up, elbows pushing the knees out',
     cue: 'Breathe and relax',
     mistake: 'Heels lifting',
+    why: 'Ankles, knees and hips through a full squat, a position worth keeping for life',
     unit: 'seconds',
   },
 ]
 
-/**
- * Exercises the sessions name that have no row in Appendix A (a gap in the plan's library). Their texts are plain,
- * number-free and not taken from the plan; the plan's library should give them entries.
- */
-export const extraExercises: ExerciseInput[] = [
-  {
-    id: 'brisk-walk',
-    name: 'Brisk walk',
-    area: 'cardio',
-    how: 'Walk briskly, upright, with the arms swinging',
-    cue: 'Brisk, not a stroll',
-    mistake: 'Strolling',
-    unit: 'minutes',
-  },
-  {
-    id: 'walk',
-    name: 'Easy walk',
-    area: 'cardio',
-    how: 'Walk at an easy pace, upright and relaxed',
-    cue: 'Easy enough to talk',
-    mistake: 'Hurrying',
-    unit: 'minutes',
-  },
-  {
-    id: 'marching-in-place',
-    name: 'Marching in place',
-    area: 'cardio',
-    how: 'March on the spot, lifting the knees, the arms swinging',
-    cue: 'A light, steady rhythm',
-    mistake: 'Stamping',
-    unit: 'minutes',
-  },
-  {
-    id: 'easy-cool-down',
-    name: 'Easy cool-down',
-    area: 'cardio',
-    how: 'An easy bounce, marching in place or a walk',
-    cue: 'Let the breathing settle',
-    mistake: 'Stopping dead',
-    unit: 'minutes',
-  },
-]
-
-export const exercises: ExerciseInput[] = [...appendixExercises, ...extraExercises]
+/** The library: the appendix rows, each with its teaching link where one was found (videos.ts). */
+export const exercises: ExerciseInput[] = appendixExercises.map((e) => {
+  const video = videos[e.id]
+  return video ? { ...e, video } : e
+})

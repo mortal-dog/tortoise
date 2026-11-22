@@ -29,6 +29,19 @@ export const Source = z.object({
 })
 export type Source = z.infer<typeof Source>
 
+/**
+ * A teaching link, never an embed (D-026): a YouTube video, recorded with the title and channel exactly as YouTube's
+ * oEmbed returned them, or a health body's own page, with its page title and the body as `channel`. `checked` is the
+ * day the link was last confirmed to answer (oEmbed 200, or HTTP 200 after redirects).
+ */
+export const VideoLink = z.object({
+  url: z.url(),
+  title: z.string().min(1),
+  channel: z.string().min(1),
+  checked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+})
+export type VideoLink = z.infer<typeof VideoLink>
+
 export const Area = z.enum(['spine', 'strength', 'handstand', 'splits', 'cardio', 'playground'])
 export type Area = z.infer<typeof Area>
 
@@ -39,10 +52,13 @@ export const Exercise = z.object({
   how: z.string(),
   cue: z.string(),
   mistake: z.string(),
-  /** One line of why (design §1, principle 6); from the session tables' "Why" column where there is one. */
-  why: z.string().optional(),
+  /**
+   * One line of why (design §1, principle 6): from the session tables' "Why" column where there is one, otherwise from
+   * the plan's Appendix A why table. Every exercise has one.
+   */
+  why: z.string().min(1),
   unit: z.enum(['reps', 'seconds', 'minutes']),
-  video: z.object({ url: z.url(), title: z.string(), channel: z.string() }).optional(),
+  video: VideoLink.optional(),
   ...evidence,
 })
 export type Exercise = z.infer<typeof Exercise>

@@ -165,10 +165,15 @@ and the test wizard open full screen above the tabs.
 
 ### 3.6 Library
 
-- Search, plus filters by area (spine, strength, handstand, splits, cardio, playground).
-- **Exercise page:** how to do it, the key cue, the common mistake; the why line with source chips (a chip opens the
-  finding and its link); the ladder, with the current level marked and pass targets shown (another level can be set by
-  hand, after a confirmation); the last 10 logs; and a video link where one exists (it opens outside the app).
+- Search, plus filters by area (spine, strength, handstand, splits, cardio, playground) and "with video". The search
+  and filters are kept in the address (`/library?q=…&area=…`), so going back from an exercise returns to the same list.
+  A search needs every word in the name, the texts or a ladder level's name; name matches come first.
+- **Exercise page** (`/library/<id>`): how to do it, the key cue, the common mistake; the why line with source chips (a
+  chip opens the finding and its link); each ladder the exercise is on, with the current level marked and pass targets
+  shown (another level can be set by hand, after a confirmation); the last 10 logs; and a video link where one exists
+  (it opens outside the app, with the title, the channel and the day the link was checked).
+- **Source page** (`/library/sources/<id>`): the citation, the finding, the link, and the exercises and ladders citing
+  it.
 
 ### 3.7 Settings
 
@@ -297,7 +302,7 @@ One typed data module, validated by a schema in the tests and at start-up:
 | Part | Holds |
 |---|---|
 | sources | id, citation, url, finding: mirrors [sources.md](sources.md) |
-| exercises | id, name, area, how, cue, mistake, why, sources, video link (optional), unit (reps, seconds or minutes) |
+| exercises | id, name, area, how, cue, mistake, why (required), sources, video link (optional: url, title, channel, the day it was checked), unit (reps, seconds or minutes) |
 | ladders | id, name, levels [{level, exerciseId, target (sets × reps or seconds, per side), pass rule}] |
 | sessions | id, kind (morning, strength, run, intervals, long, light, split), minutes (in total and per pillar), steps [{ladderId or exerciseId, sets, reps / seconds / minutes, rest, paired with}], variants {outdoor, indoor}. A main session's steps begin with its warm-up |
 | week template | Monday–Sunday → {morning, main, split (none on Sunday)} |

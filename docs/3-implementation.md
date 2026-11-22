@@ -230,6 +230,14 @@ are in the Phase 8 checklist.
 
 **Done when:** every exercise has how, cue, mistake and why; every link is verified; the content tests pass.
 
+**Done (2026-11-22):** all 78 exercises have how, cue, mistake and why (the schema requires the why;
+`tests/content/library.test.ts` checks the four texts and the plan's new why table). 48 exercises link to a video or
+page, each checked that day (YouTube oEmbed 200, or HTTP 200), and 30 have none, listed in `src/data/videos.ts`
+(D-043). The Library has search, area and video filters, exercise pages with the ladder, history and sources, and a
+source view. `tests/component/library.test.tsx` drives search and filters in a memory router;
+`tests/e2e/library.spec.ts` searches and opens an exercise page with the network off, and takes the screenshots, light
+and dark.
+
 ### Phase 6 — Tests, progress and milestones (L)
 
 **Goal:** the long view.

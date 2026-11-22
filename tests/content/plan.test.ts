@@ -34,7 +34,9 @@ function* objects(): Generator<{ path: string; obj: Record<string, unknown>; inh
       const obj = node as Record<string, unknown>
       yield { path, obj, inherited }
       const here = inherited || covered(obj)
-      for (const [k, v] of Object.entries(obj)) if (k !== 'sources') yield* walk(v, `${path}.${k}`, here)
+      // A teaching link's title and channel are names, not claims (they may hold digits: "Stage 2").
+      for (const [k, v] of Object.entries(obj))
+        if (k !== 'sources' && k !== 'video') yield* walk(v, `${path}.${k}`, here)
     }
   }
   // The plan's own `ourRule: true` covers the plan as a whole; counting it here would make the rule pass for every
@@ -253,13 +255,18 @@ describe('minutes', () => {
   })
 })
 
-/** The rows of the plan's Appendix A: name, how, cue, mistake. */
+/** The rows of the plan's Appendix A library tables: name, how, cue, mistake (not the why table). */
 function appendixRows(): { name: string; how: string; cue: string; mistake: string }[] {
   const text = readRepoFile('docs/2-exercise-plan.md')
   const appendix = text.slice(text.indexOf('## Appendix A'))
   const rows: { name: string; how: string; cue: string; mistake: string }[] = []
+  let inLibraryTable = false
   for (const line of appendix.split('\n')) {
-    if (!line.startsWith('| ') || line.startsWith('| Exercise |')) continue
+    if (line.startsWith('| Exercise |')) {
+      inLibraryTable = line === '| Exercise | How | Key cue | Common mistake |'
+      continue
+    }
+    if (!line.startsWith('| ') || !inLibraryTable) continue
     const [name = '', how = '', cue = '', mistake = ''] = line
       .slice(2, -2)
       .split(' | ')
@@ -272,7 +279,7 @@ function appendixRows(): { name: string; how: string; cue: string; mistake: stri
 describe('against the plan text', () => {
   it('has an exercise for every row of Appendix A, with its texts verbatim', () => {
     const rows = appendixRows()
-    expect(rows.length).toBe(74)
+    expect(rows.length).toBe(78)
     const byName = new Map(plan.exercises.map((e) => [e.name, e]))
     for (const r of rows) {
       const e = byName.get(r.name)

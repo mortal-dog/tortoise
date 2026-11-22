@@ -10,23 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LibraryRouteImport } from './routes/library'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WeekRouteImport } from './routes/week'
 import { Route as DayDateRouteImport } from './routes/day.$date'
 import { Route as DebugWeekRouteImport } from './routes/debug.week'
+import { Route as LibraryIndexRouteImport } from './routes/library.index'
+import { Route as LibraryExerciseIdRouteImport } from './routes/library.$exerciseId'
 import { Route as TestDateRouteImport } from './routes/test.$date'
+import { Route as LibrarySourcesSourceIdRouteImport } from './routes/library.sources.$sourceId'
 import { Route as PlayDateSlotRouteImport } from './routes/play.$date.$slot'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgressRoute = ProgressRouteImport.update({
@@ -54,9 +51,24 @@ const DebugWeekRoute = DebugWeekRouteImport.update({
   path: '/debug/week',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryExerciseIdRoute = LibraryExerciseIdRouteImport.update({
+  id: '/library/$exerciseId',
+  path: '/library/$exerciseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestDateRoute = TestDateRouteImport.update({
   id: '/test/$date',
   path: '/test/$date',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibrarySourcesSourceIdRoute = LibrarySourcesSourceIdRouteImport.update({
+  id: '/library/sources/$sourceId',
+  path: '/library/sources/$sourceId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayDateSlotRoute = PlayDateSlotRouteImport.update({
@@ -67,83 +79,97 @@ const PlayDateSlotRoute = PlayDateSlotRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/library': typeof LibraryRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
+  '/library/$exerciseId': typeof LibraryExerciseIdRoute
   '/test/$date': typeof TestDateRoute
+  '/library/': typeof LibraryIndexRoute
+  '/library/sources/$sourceId': typeof LibrarySourcesSourceIdRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/library': typeof LibraryRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
+  '/library/$exerciseId': typeof LibraryExerciseIdRoute
   '/test/$date': typeof TestDateRoute
+  '/library': typeof LibraryIndexRoute
+  '/library/sources/$sourceId': typeof LibrarySourcesSourceIdRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/library': typeof LibraryRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
+  '/library/$exerciseId': typeof LibraryExerciseIdRoute
   '/test/$date': typeof TestDateRoute
+  '/library/': typeof LibraryIndexRoute
+  '/library/sources/$sourceId': typeof LibrarySourcesSourceIdRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/library'
     | '/progress'
     | '/settings'
     | '/week'
     | '/day/$date'
     | '/debug/week'
+    | '/library/$exerciseId'
     | '/test/$date'
+    | '/library/'
+    | '/library/sources/$sourceId'
     | '/play/$date/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/library'
     | '/progress'
     | '/settings'
     | '/week'
     | '/day/$date'
     | '/debug/week'
+    | '/library/$exerciseId'
     | '/test/$date'
+    | '/library'
+    | '/library/sources/$sourceId'
     | '/play/$date/$slot'
   id:
     | '__root__'
     | '/'
-    | '/library'
     | '/progress'
     | '/settings'
     | '/week'
     | '/day/$date'
     | '/debug/week'
+    | '/library/$exerciseId'
     | '/test/$date'
+    | '/library/'
+    | '/library/sources/$sourceId'
     | '/play/$date/$slot'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LibraryRoute: typeof LibraryRoute
   ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   WeekRoute: typeof WeekRoute
   DayDateRoute: typeof DayDateRoute
   DebugWeekRoute: typeof DebugWeekRoute
+  LibraryExerciseIdRoute: typeof LibraryExerciseIdRoute
   TestDateRoute: typeof TestDateRoute
+  LibraryIndexRoute: typeof LibraryIndexRoute
+  LibrarySourcesSourceIdRoute: typeof LibrarySourcesSourceIdRoute
   PlayDateSlotRoute: typeof PlayDateSlotRoute
 }
 
@@ -154,13 +180,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library': {
-      id: '/library'
-      path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/progress': {
@@ -198,11 +217,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebugWeekRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/$exerciseId': {
+      id: '/library/$exerciseId'
+      path: '/library/$exerciseId'
+      fullPath: '/library/$exerciseId'
+      preLoaderRoute: typeof LibraryExerciseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test/$date': {
       id: '/test/$date'
       path: '/test/$date'
       fullPath: '/test/$date'
       preLoaderRoute: typeof TestDateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/sources/$sourceId': {
+      id: '/library/sources/$sourceId'
+      path: '/library/sources/$sourceId'
+      fullPath: '/library/sources/$sourceId'
+      preLoaderRoute: typeof LibrarySourcesSourceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play/$date/$slot': {
@@ -217,13 +257,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LibraryRoute: LibraryRoute,
   ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   WeekRoute: WeekRoute,
   DayDateRoute: DayDateRoute,
   DebugWeekRoute: DebugWeekRoute,
+  LibraryExerciseIdRoute: LibraryExerciseIdRoute,
   TestDateRoute: TestDateRoute,
+  LibraryIndexRoute: LibraryIndexRoute,
+  LibrarySourcesSourceIdRoute: LibrarySourcesSourceIdRoute,
   PlayDateSlotRoute: PlayDateSlotRoute,
 }
 export const routeTree = rootRouteImport

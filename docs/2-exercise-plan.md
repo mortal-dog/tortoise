@@ -738,7 +738,8 @@ The app's long view. Each ability shows its latest result next to its line:
 
 ## Appendix A. Exercise library
 
-Each entry gives how to do it, the key cue, and the most common mistake. The app's library shows the same text. Every
+Each entry gives how to do it, the key cue, and the most common mistake; the why is in the session tables (§6) or, for
+the rest, in the [why table](#why-for-the-other-exercises) at the end. The app's library shows the same text. Every
 exercise named in the sessions (§6) and the ladders (§7) has an entry; a harder or easier variant is described in its
 base exercise's entry.
 
@@ -817,6 +818,10 @@ base exercise's entry.
 | Run–walk | Alternate the run and walk parts of your step (§7.8); the walk is brisk | Run slower than feels needed | Running the run parts hard |
 | Easy run | Short, light steps; upright; relaxed shoulders | Slow enough to talk | Starting too fast |
 | Strides | 20 s accelerating to fast but relaxed; walk back | Relaxed speed | Sprinting all-out |
+| Brisk walk | Walk briskly, upright, with the arms swinging | Brisk, not a stroll | Strolling |
+| Easy walk | Walk at an easy pace, upright and relaxed | Easy enough to talk | Hurrying |
+| Marching in place | March on the spot, lifting the knees, the arms swinging | A light, steady rhythm | Stamping |
+| Easy cool-down | An easy bounce, marching in place or a walk | Let the breathing settle | Stopping dead |
 
 ### Playground
 
@@ -846,8 +851,67 @@ base exercise's entry.
 | Puppy pose (shoulders) | Hands on a chair seat or wall, arms straight; hinge and let the chest sink between the arms | Ribs in | Arching the lower back |
 | Deep squat hold | Heels down, chest up, elbows pushing the knees out | Breathe and relax | Heels lifting |
 
-**Videos.** The library links, without embedding, to teaching videos from health bodies where they exist. Examples are the
-Royal Osteoporosis Society, Osteoporosis Canada, the National Institute on Aging and the Hospital for Special Surgery.
-These are the same videos the Straight Back page uses for back extension, strength, impact, balance, posture and the hip
-hinge. Handstand and split videos are chosen in implementation Phase 5 ([3-implementation.md](3-implementation.md)), and
-each title and channel is recorded as YouTube's oEmbed returns it.
+### Why, for the other exercises
+
+The session tables (§6) give the why of every exercise they name in their own row. These are the rest: the ladder
+steps, the playground and split drills, and the walks.
+
+| Exercise | Why |
+|---|---|
+| Wall plank (L) | The first handstand step: the shoulders learn to carry the body upside down, with the feet on the wall |
+| Wall walk | Builds the strength and the straight line of the handstand, step by step, with the wall for support |
+| Chest-to-wall handstand | Teaches the straight, hollow handstand line and builds the shoulders' endurance |
+| Kick-up | The way into every freestanding handstand; soft kicks teach how much push is enough |
+| Bail | A safe way out of a falling handstand is what makes practice in open space safe |
+| Heel pull | Teaches the fingers to steer the balance before the wall is taken away |
+| Freestanding handstand | One of the plan's goals on the way: balance on the hands, with no wall |
+| Wall handstand push-up | The top of the strength track: pressing the whole body weight upside down |
+| Split squat / Bulgarian split squat | One leg does most of the work, so the fixed dumbbells stay heavy enough as the legs grow stronger |
+| Pistol to a chair / pistol squat | The whole body on one leg: leg strength and balance with no heavier weights |
+| Archer push-up | Shifts most of the load onto one arm, so the push-up keeps getting harder without equipment |
+| Pseudo-planche push-up | The forward lean loads the shoulders more, toward the pressing strength of the handstand |
+| Single-leg Romanian deadlift | The hip hinge on one leg: more load from the same dumbbells, with balance and hip control |
+| Hollow hold | Trains the front of the trunk to hold the hollow line, which is the handstand line |
+| Hollow rock | Holds the hollow shape while moving, a harder step for the trunk |
+| L-sit | Trunk and hip strength with the shoulders pressed down, as in the handstand |
+| Glute bridge | Strong glutes for the hip hinge, running and jumping; the first step of the hinge ladder |
+| Squat jump | The first jump step: learning to land softly before jumping far; landings load bone [ros2022] |
+| Single-leg hop | Power and landing control on one leg, the way running lands |
+| Pogo hops | Quick, springy contacts train the ankles and calves for running, rope and jumping |
+| Skater hops | Sideways power and landing control, which running straight ahead does not train |
+| Rope skills | The running step and high knees carry the indoor intervals; new skills keep the rope interesting |
+| Run–walk | The way into running: walk breaks let the legs adapt before the runs grow longer |
+| Strides | Short, relaxed speed keeps the running quick and light without the cost of hard running |
+| Brisk walk | Warms up the legs, heart and breathing before the run |
+| Easy walk | Easy movement on the light day; it warms up the flexibility session |
+| Marching in place | Keeps the easy parts moving when there is no room to walk |
+| Easy cool-down | Lets the heart rate and breathing come down slowly after hard work |
+| Dead hang | Grip and shoulder strength; the first step toward the pull-up |
+| Scapular pull | Teaches the shoulder blades to start every pull |
+| Negative pull-up | Lowering slowly builds the strength for the first full pull-up |
+| Pull-up | The pull that lifts the whole body: back, arms and grip together |
+| Hanging knee raise | Trunk strength while hanging, with the shoulders working too |
+| Half split | Stretches the hamstrings of the front leg, the first part of the front split |
+| Supported front split | The front split itself, with supports that come down as the range grows |
+| Active front-leg lift | Strength at the end of the range, so the range can be controlled, not only reached |
+| Frog stretch | Opens the inner thighs and hips for the side split |
+| Horse stance | Strength in a wide stance, toward the side split |
+| Straddle lean / pancake | Hamstrings and inner thighs; a press to handstand needs this pancake later |
+| Supported side split | The side split itself, with chairs carrying part of the weight |
+| Side-lying leg raise | Strength to lift the leg to the side, the side split's working range |
+| 90/90 switch | Turns the hips in and out, a rotation that sitting rarely uses |
+| Puppy pose (shoulders) | Opens the shoulders overhead for a straight handstand line |
+| Deep squat hold | Ankles, knees and hips through a full squat, a position worth keeping for life |
+
+**Videos.** The library links to teaching videos and pages; it never embeds them, and it fetches nothing at runtime.
+The order of choice:
+1. a health body's own video or page where one shows the movement as the plan does it: the NHS and its trusts, the
+   National Institute on Aging, the Royal Osteoporosis Society, the Hospital for Special Surgery, Aspetar and Harris
+   Health. These include the videos the Straight Back page uses for balance, posture, strength, impact and the hip
+   hinge;
+2. for the handstand and split drills, the most reputable teaching video found, from an established coach;
+3. otherwise a technique video from a professional body, the National Academy of Sports Medicine.
+
+Each YouTube link carries its title and channel exactly as YouTube's oEmbed returns them, and each link records the
+day it was checked (oEmbed or the page answering). Exercises with no fitting video have none; the list is in the
+app's data (`src/data/videos.ts`).
