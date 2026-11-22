@@ -21,12 +21,13 @@
 - [x] ⚠️ docs/3-implementation.md: Phase 8 order (verify, claim in Pages, then DNS); guard tests; risks
 - [x] ⚠️ docs/decisions.md: D-029 to D-035; D-009 and D-015 corrected; the next number is D-036
 - [x] ⚠️ committed `fbf692e` (docs: review of all documents) — **do not commit it again**
-- [ ] ⛔ push of `fbf692e` and of the commit that closes this entry: asked in a picker when the entry closed. Check
-  `git status -sb`; push only on the owner's yes (public repo)
+- [x] ⚠️ committed `3c0edbe` (the sheet closed)
+- [x] ⛔ pushed `fbf692e` and `3c0edbe` to origin/main on the owner's picker yes (2026-11-22 07:02 ET) — **do not push
+  again**
+- [x] ♻️ compact-ai ran on 2026-11-22, also on the owner's picker yes: ai/now.md and the memory match the reviewed docs
 
-**Don't forget:** ai/now.md and ai/memory/ are written only by compact-ai, and this job left them stale: the next
-D-number is D-036; a full week is about 7½ hours; Phase 8 runs verify, claim in Pages, then DNS (D-035); the guard
-list is kept as keyed hashes (D-034). The owner should run compact-ai.
+**Don't forget:** the next D-number is D-036; a full week is about 7½ hours; Phase 8 runs verify, claim in Pages,
+then DNS (D-035); the guard list is kept as keyed hashes (D-034).
 
 ## Write the general plan docs (app design, exercise plan, implementation phases) — started 2026-11-21 20:40 ET, done 21:18 ET
 
