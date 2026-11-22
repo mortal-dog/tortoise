@@ -16,10 +16,10 @@ session (live since 17:19 local), not the folder outside any repo (no context th
 - [x] survey: french's two sessions ran compact-ai (`f793712` and a later one); tortoise's Phases 0-9 session ran it
   (`1825aba`); not compacted: ib `a0c1875d` (the money-flow layer, D-243, pushed 16:22 ET on the owner's picker),
   tortoise `eaef234b` (glass, D-048) and `a1d2a868` (install card, D-047)
+- [x] ib: compacted and pushed `814f17b` (now.md header, open work, Built on 11-22, Analysis answers given on 11-22,
+  recent commits; memory `money-flow-layer-d243`; resume-done: the push done) — **do not commit it again**
 
 **Next**
-- [ ] ♻️ ib: `ai/now.md`, `ai/memory/`, `ai/resume-done.md` (the entry says "done but the push": it is pushed); commit
-  `ai: 11-22 compact (session a0c1875d) — …` by pathspec; push only if the bubble watch is not running
 - [ ] ♻️ tortoise: lessons only in the glass and install-card transcripts → `ai/memory/`; commit and push `ai/`
 - [ ] ♻️ global memory: the two uncommitted notes (Clippy, IANA tz links) and any universal lesson; commit by pathspec,
   push
