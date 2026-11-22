@@ -5,6 +5,4 @@
 
 # In progress
 
-**Current: empty.**
-
 ---

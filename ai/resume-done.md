@@ -1,6 +1,41 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## A smarter first run: detect the platform, install button, open the installed app — started 2026-11-22 13:15 ET, done 2026-11-22 14:48 ET
+
+**Why:** owner 2026-11-22: "detect if already installed then open the app directly from browser; if not installed show
+an install button; continue in browser stays; where a platform has no install button, show directions" and "we also
+support desktop, Android, all platforms".
+
+**Where:** done in a worktree (removed); the commit is on main. This job's decision is **D-047**.
+
+**Done**
+- [x] ♻️ research: install prompt (Chromium only), getInstalledRelatedApps for an in-scope PWA (Android Chrome 84+,
+  desktop Chrome/Edge 140+, needs `related_applications` with `id` on desktop), navigation capturing opens the installed
+  app from a link with `target=_blank` (desktop Chrome 139+); none of it in WebKit, so Apple platforms get directions
+- [x] ♻️ `src/lib/install.ts`, `src/components/InstallCard.tsx`, `FirstRun.tsx`, manifest, tests, docs, D-047
+- [x] ♻️ gates green on the committed tree: 286 Vitest tests in 31 files, 19 e2e
+- [x] ⚠️ committed `856d3d7` and fast-forwarded main to it — **do not commit again**
+- [x] ⛔ pushed to origin/main on the owner's picker, with the glass theme (`1825aba..af76e29`)
+
+## A glass theme with subtle rain — started 2026-11-22 13:18 ET, done 2026-11-22 14:48 ET
+
+**Why:** owner 2026-11-22: "a fancy semi-transparent theme all over the app, like glass, and raindrops moving slowly,
+almost unnoticeably, on some screens; in a nutshell, a fancy modern theme with subtle dynamic effects".
+
+**Where:** done in a worktree (removed); the commit is on main. This job's decision is **D-048**.
+
+**Done**
+- [x] ♻️ tokens and glass utilities in `src/styles.css`; `src/lib/rain.ts`, `src/lib/effects.ts`,
+  `src/components/Backdrop.tsx`; glass on every surface; floating tab bar with a gliding pill; Settings → Display
+  switch; photo viewer in a portal
+- [x] ♻️ contrast guard over every glow overlap; `tests/unit/rain.test.ts`, `tests/component/backdrop.test.tsx`,
+  `tests/e2e/look.spec.ts`; design §3, §3.7, §12, §13; D-048; screenshots checked (WebKit and Chrome)
+- [x] ♻️ gates green: 311 Vitest tests in 33 files, 22 e2e
+- [x] ⚠️ committed `af76e29` and fast-forwarded main to it — **do not commit again**
+- [x] ⛔ pushed to origin/main on the owner's picker (`1825aba..af76e29`, with D-046 and D-047's commits); the
+  scheduled run at 23:07 UTC deploys it
+
 ## Phases 4 to 9 and scheduled CI/CD — started 2026-11-22 08:54 ET, done 2026-11-22
 
 **Why:** owner 2026-11-22: "do all the remaining phases" (in Chinese), and CI/CD "twice a day like the other repos,
