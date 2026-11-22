@@ -17,10 +17,11 @@ workflow's concurrency group queues runs one at a time). Delete `ci-probe` at th
 **Done**
 - [x] bisect on CI: `856d3d7` fast (17/19/13 s), `af76e29` slow; no single change fixed it: no blur (36/46/30 s), the
   Moving background switch off (33/41/74 s, flaky), reduced motion (42/50/40 s)
+- [x] probes: 1x on CI 18/32/21 s, no timeout; 1x and a still backdrop 18/27/18 s (within the spread, not taken)
+- [x] `5a32c8d` CI: render the e2e tests at 1x (D-049); gates green (311 Vitest in 33 files, 22 e2e); `ci-probe`
+  deleted
 
 **Next**
-- [ ] ♻️ probe: render at deviceScaleFactor 1 on CI (the iPhone profile renders at 3x; CI's WebKit has no GPU)
-- [ ] ♻️ the fix with its D-049, gates `pnpm check && pnpm test && pnpm build && pnpm e2e`, commit by pathspec
 - [ ] ⛔ push to main only after the owner's picker (main deploys)
 - [ ] ♻️ run compact-ai at the end (the owner asked)
 
