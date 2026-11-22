@@ -1,18 +1,74 @@
-name: CI
+# CI/CD: the gates, then GitHub Pages (D-039).
+#
+# When it runs (owner 2026-11-22: twice a day like the owner's other repos, plus a manual run, so that no push or pull
+# request starts a run): twice a day on a schedule, doing real work only when main changed since this workflow's last
+# green run (the state is GitHub's own run history; nothing is written to the repo). A manual run ("Run workflow" on
+# GitHub, or `gh workflow run ci.yml --repo mortal-dog/tortoise`) always runs in full. A red run is not covered: the
+# next slot tries again.
+#
+# The gates build dist/ once, and that same build is what deploys, so a red gate never deploys. The deploy job runs
+# only on main and only once GitHub Pages is set up for the repo (docs/3-implementation.md, Phase 8); until then the
+# gates still run and the deploy is skipped with a notice. Pages keeps serving the last good deployment when a run
+# fails.
+name: CI/CD
 
 on:
-  push:
-  pull_request:
+  schedule:
+    # Cron is UTC and GitHub may start a scheduled run late; minute 7 avoids the top-of-the-hour rush.
+    - cron: "7 13 * * *" # 08:07 EST / 09:07 EDT
+    - cron: "7 23 * * *" # 18:07 EST / 19:07 EDT
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy to GitHub Pages after the gates pass
+        type: boolean
+        default: true
 
 permissions:
+  actions: read # the changes job reads this workflow's last green run
   contents: read
 
+concurrency:
+  group: ci-cd
+  cancel-in-progress: false
+
 jobs:
-  gates:
+  # A skipped slot costs one runner minute; no checkout needed.
+  changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.last.outputs.run }}
+    steps:
+      - name: Changed since the last green run
+        id: last
+        env:
+          EVENT: ${{ github.event_name }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run=true
+          if [ "$EVENT" = "schedule" ]; then
+            last=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=success&per_page=1" \
+              --jq '.workflow_runs[0].head_sha // ""')
+            echo "last green run: ${last:-none} · now: $SHA"
+            if [ "$last" = "$SHA" ]; then run=false; fi
+          fi
+          echo "run=$run" | tee -a "$GITHUB_OUTPUT"
+
+  gates:
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      pages: ${{ steps.pages.outputs.on }}
     env:
-      # The personal-term guard's key (D-034). Without it, as in a fork's pull request, that one test is skipped.
+      # The personal-term guard's key (D-034). Without it, as in a fork, that one test is skipped.
       TORTOISE_GUARD_KEY: ${{ secrets.TORTOISE_GUARD_KEY }}
     steps:
       - uses: actions/checkout@v5
@@ -25,3 +81,36 @@ jobs:
       - run: pnpm exec playwright install --with-deps webkit
       - name: Gates
         run: pnpm check && pnpm test && pnpm build && pnpm e2e
+      # pnpm e2e rebuilds dist/ with the same sources, so this is the build the gates just checked.
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Is GitHub Pages set up
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          if gh api "repos/$REPO/pages" --silent 2>/dev/null; then
+            echo "on=true" | tee -a "$GITHUB_OUTPUT"
+          else
+            echo "::notice::GitHub Pages is not set up for this repo yet (Phase 8), so nothing is deployed."
+            echo "on=false" | tee -a "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: gates
+    if: >-
+      github.ref == 'refs/heads/main' && needs.gates.outputs.pages == 'true' &&
+      (github.event_name == 'schedule' || inputs.deploy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

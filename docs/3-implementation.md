@@ -55,7 +55,7 @@ tortoise/
 │  ├─ unit/  content/  db/   Vitest
 │  ├─ component/  guard/     Vitest
 │  └─ e2e/                   Playwright (WebKit, iPhone profile)
-└─ .github/workflows/        ci.yml, deploy.yml
+└─ .github/workflows/        ci.yml (the gates, then GitHub Pages; D-039)
 ```
 
 ---
@@ -79,7 +79,8 @@ tortoise/
 - **Docs and data change together:** from Phase 1 on, a change to the exercise plan updates
   [2-exercise-plan.md](2-exercise-plan.md), the plan data and, for a number, [sources.md](sources.md), in one commit.
 - **Decisions:** every new construction choice gets a D-number in [decisions.md](decisions.md).
-- **A push to `main` publishes the site** once Phase 8 exists, so it waits for the owner's yes in a picker.
+- **What is on `main` gets published** once Phase 8 exists: the next scheduled CI/CD run (twice a day) or a manual
+  run deploys it (D-039). So a push to `main` waits for the owner's yes in a picker.
 
 ---
 
@@ -103,7 +104,8 @@ Sizes are relative: S is small, M medium, L large.
   The dev server needs inline scripts, so the tag is not served there.
 - The guard tests (§3).
 - CI workflow: check, test, build and e2e on every push and pull request. Deploy workflow: build, then GitHub Pages. It
-  is written now with a manual trigger only; Phase 8 adds the trigger on a push to `main`.
+  is written now with a manual trigger only. *Since D-039 both are one workflow, `ci.yml`, run twice a day and by hand;
+  no push starts it.*
 - `CLAUDE.md` gets the real commands.
 
 **Done when:** the gates pass; the local preview is installable (manifest and service worker valid); and the WebKit e2e
@@ -272,7 +274,9 @@ name lets someone else's site claim it (D-035).
   and
   [Verifying your custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages).
 
-**Releases:** from Phase 8 on, every push to `main` publishes, so each one waits for the owner's yes in a picker.
+**Releases:** from Phase 8 on, what is on `main` is published by the next scheduled CI/CD run (13:07 and 23:07 UTC) or a
+manual run (`gh workflow run ci.yml`), once the gates pass (D-039). So each push to `main` waits for the owner's yes in
+a picker.
 
 **The real-phone checklist** (on the iPhone, from Safari):
 

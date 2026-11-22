@@ -45,7 +45,8 @@ running at 99, plus a handstand and the splits. It covers exercise only.
    - iPhone first; offline;
    - no third-party requests at runtime;
    - English UI.
-8. **Publishing:** once Phase 8 sets up deployment, a push to `main` publishes the site, so ask with a picker first.
+8. **Publishing:** CI/CD (`.github/workflows/ci.yml`) runs twice a day and by hand, never on a push (D-039). Once Phase 8
+   sets up GitHub Pages, it publishes whatever is on `main`, so a push to `main` needs a picker first.
 
 ## Commands
 
