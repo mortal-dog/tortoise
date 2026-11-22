@@ -53,10 +53,13 @@ export function RemindersCard({ settings, today }: { settings: SettingsRecord; t
   const reminders = remindersOf(r)
   const lines = reminderLines(reminders)
 
-  const save = (next: SettingsRecord['reminders']) => {
-    const main = Object.fromEntries(Object.entries(next.main).filter(([, v]) => v)) as typeof next.main
-    void saveSettings({ reminders: next.morning ? { morning: next.morning, main } : { main } })
-  }
+  // Each change starts from the stored reminders, not this render's copy, so two times typed in a row both land.
+  const save = (change: (stored: SettingsRecord['reminders']) => SettingsRecord['reminders']) =>
+    void saveSettings((s) => {
+      const next = change(s.reminders)
+      const main = Object.fromEntries(Object.entries(next.main).filter(([, v]) => v)) as typeof next.main
+      return { reminders: next.morning ? { morning: next.morning, main } : { main } }
+    })
 
   const file = () => {
     // The events begin with the plan's Week 0, or today once it has begun.
@@ -78,14 +81,14 @@ export function RemindersCard({ settings, today }: { settings: SettingsRecord; t
           label="Morning block, every day"
           className="col-span-2"
           value={r.morning}
-          onSave={(v) => save({ ...r, morning: v })}
+          onSave={(v) => save((stored) => ({ ...stored, morning: v }))}
         />
         {WEEKDAYS.map((d: Weekday) => (
           <TimeField
             key={d}
             label={`${dayName(d)}: ${sessionOf(plan.week[d].main).name}`}
             value={r.main[d]}
-            onSave={(v) => save({ ...r, main: { ...r.main, [d]: v } })}
+            onSave={(v) => save((stored) => ({ ...stored, main: { ...stored.main, [d]: v } }))}
           />
         ))}
       </div>

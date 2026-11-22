@@ -65,14 +65,30 @@ export async function getSettings(): Promise<SettingsRecord> {
   return (await db.get('settings', 'settings')) ?? defaultSettings()
 }
 
+export type SettingsPatch = Partial<Omit<SettingsRecord, 'key' | 'updatedAt'>>
+
+/**
+ * Saves a patch to the settings record. The read and the write share one transaction, so two saves started at once
+ * cannot both begin from the same old record. A patch to a nested field (reminders, profile, units, backup) is given
+ * as a function of the stored record: a screen that has not re-rendered since the last save would otherwise write its
+ * old copy back and undo that save (two time fields typed in a row).
+ */
 export async function saveSettings(
-  patch: Partial<Omit<SettingsRecord, 'key' | 'updatedAt'>>,
+  patch: SettingsPatch | ((stored: SettingsRecord) => SettingsPatch),
 ): Promise<SettingsRecord> {
   const db = await getDb()
-  const next = { ...(await getSettings()), ...patch, key: 'settings' as const, updatedAt: nowIso() }
-  // A cleared field is left out, not stored as undefined, so the record matches its backup copy exactly.
-  for (const k of Object.keys(next) as Array<keyof typeof next>) if (next[k] === undefined) delete next[k]
-  await db.put('settings', next)
+  const next = await db.transaction(['settings'], 'readwrite', async (tx) => {
+    const store = tx.objectStore('settings')
+    const stored = ((await request(store.get('settings'))) as SettingsRecord | undefined) ?? defaultSettings()
+    const changes = typeof patch === 'function' ? patch(stored) : patch
+    const record = { ...stored, ...changes, key: 'settings' as const, updatedAt: nowIso() }
+    // A cleared field is left out, not stored as undefined, so the record matches its backup copy exactly.
+    for (const k of Object.keys(record) as Array<keyof typeof record>) {
+      if (record[k] === undefined) delete record[k]
+    }
+    store.put(record)
+    return record
+  })
   notifyChange()
   return next
 }

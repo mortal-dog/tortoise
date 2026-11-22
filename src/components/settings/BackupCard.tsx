@@ -186,9 +186,10 @@ export function BackupCard({ settings }: { settings: SettingsRecord }) {
         Remind me to back up every
         <select
           value={settings.backup.everyDays}
-          onChange={(e) =>
-            void saveSettings({ backup: { ...settings.backup, everyDays: Number(e.target.value) } })
-          }
+          onChange={(e) => {
+            const everyDays = Number(e.target.value)
+            void saveSettings((s) => ({ backup: { ...s.backup, everyDays } }))
+          }}
           className={inputClass}
         >
           {(INTERVALS as readonly number[]).includes(settings.backup.everyDays) ? null : (

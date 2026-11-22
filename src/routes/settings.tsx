@@ -131,11 +131,13 @@ function ProfileSection({ settings }: { settings: SettingsRecord }) {
   const p = settings.profile
   const lb = settings.units.mass === 'lb'
   const year = new Date().getFullYear()
-  const saveProfile = (patch: Partial<SettingsRecord['profile']>) => {
-    const next = { ...p, ...patch }
-    for (const k of Object.keys(next) as Array<keyof typeof next>) if (next[k] === undefined) delete next[k]
-    void saveSettings({ profile: next })
-  }
+  // From the stored profile, not this render's copy, so two fields edited in a row both land.
+  const saveProfile = (patch: Partial<SettingsRecord['profile']>) =>
+    void saveSettings((s) => {
+      const next = { ...s.profile, ...patch }
+      for (const k of Object.keys(next) as Array<keyof typeof next>) if (next[k] === undefined) delete next[k]
+      return { profile: next }
+    })
   const mass = (kg: number | undefined) => (kg === undefined ? '' : String(round(lb ? kgToLb(kg) : kg, 1)))
   const toKg = (v: number | undefined) => (v === undefined ? undefined : round(lb ? lbToKg(v) : v, 3))
   return (
@@ -196,7 +198,7 @@ function UnitsSection({ settings }: { settings: SettingsRecord }) {
           { value: 'lb', label: 'lb' },
         ]}
         value={u.mass}
-        onChange={(v) => void saveSettings({ units: { ...u, mass: v } })}
+        onChange={(v) => void saveSettings((s) => ({ units: { ...s.units, mass: v } }))}
       />
       <Choice
         legend="Distance"
@@ -205,7 +207,7 @@ function UnitsSection({ settings }: { settings: SettingsRecord }) {
           { value: 'mi', label: 'mi' },
         ]}
         value={u.distance}
-        onChange={(v) => void saveSettings({ units: { ...u, distance: v } })}
+        onChange={(v) => void saveSettings((s) => ({ units: { ...s.units, distance: v } }))}
       />
       <SavedField
         className="mt-3"
