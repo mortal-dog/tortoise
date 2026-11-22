@@ -10,6 +10,7 @@ import {
   MetaRecord,
   MilestoneRecord,
   OverrideRecord,
+  PhotoRecord,
   SettingsRecord,
   type StoreName,
   type Stores,
@@ -28,6 +29,7 @@ export const STORE_NAMES = [
   'tests',
   'overrides',
   'milestones',
+  'photos',
   'meta',
 ] as const satisfies readonly StoreName[]
 
@@ -40,6 +42,7 @@ const KEY_OF: { [S in StoreName]: (r: Stores[S]) => string } = {
   tests: (r) => r.date,
   overrides: (r) => r.monday,
   milestones: (r) => r.id,
+  photos: (r) => r.id,
   meta: (r) => r.key,
 }
 
@@ -69,6 +72,8 @@ export const BackupFile = z.object({
     tests: uniqueKeys('tests', TestRecord),
     overrides: uniqueKeys('overrides', OverrideRecord),
     milestones: uniqueKeys('milestones', MilestoneRecord),
+    // Schema 2 added the photos; a file from schema 1 has none.
+    photos: uniqueKeys('photos', PhotoRecord).default([]),
     meta: uniqueKeys('meta', MetaRecord),
   }),
 })
@@ -166,6 +171,7 @@ export function previewBackup(file: BackupFile): BackupPreview {
       tests: s.tests.length,
       overrides: s.overrides.length,
       milestones: s.milestones.length,
+      photos: s.photos.length,
     },
     range: from && to ? { from, to } : null,
   }

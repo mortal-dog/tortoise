@@ -286,6 +286,7 @@ Settings ─ Backup / Reminders / Profile / About
 | `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, broadJumpCm, hangS, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answers {runMin, ropeMin, negative} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
+| `photos` | a random id; index on date | date, dataUrl (a JPEG of at most 1280 px), note (optional); added by migration 2 (D-044) |
 | `meta` | `"meta"` | schemaVersion, createdAt, appVersion |
 
 - Every record carries `updatedAt`. It decides which record is newer when a backup is merged

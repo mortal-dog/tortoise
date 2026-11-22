@@ -27,6 +27,14 @@ export const MIGRATIONS: readonly Migration[] = [
       db.createObjectStore('meta', { keyPath: 'key' })
     },
   },
+  {
+    // Phase 9: progress photos.
+    version: 2,
+    upgrade(db) {
+      const photos = db.createObjectStore('photos', { keyPath: 'id' })
+      photos.createIndex('date', 'date')
+    },
+  },
 ]
 
 export const SCHEMA_VERSION = MIGRATIONS.at(-1)?.version ?? 1

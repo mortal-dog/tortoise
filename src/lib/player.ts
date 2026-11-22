@@ -374,3 +374,16 @@ export function clockText(ms: number): string {
   const ss = String(s).padStart(2, '0')
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`
 }
+
+/** What spoken coaching says at the start of a step: the exercise, the target in words, and the key cue. */
+export function coachingText(unit: Unit): string {
+  const names = unit.exercises.map((e) => e.title.replace(/ · /g, ', ')).join(', then ')
+  const target = unit.target
+    .replace(/×/g, 'times')
+    .replace(/(\d)–(\d)/g, '$1 to $2')
+    .replace(/\bs\b/g, 'seconds')
+    .replace(/\bmin\b/g, 'minutes')
+    .replace(/ \/ /g, ', and ')
+  const cue = unit.exercises[0]?.cue
+  return `${names}. ${target}.${cue ? ` ${cue}.` : ''}`
+}

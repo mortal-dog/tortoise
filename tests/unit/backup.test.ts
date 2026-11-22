@@ -43,6 +43,9 @@ function sample(): BackupFile {
       tests: [{ date: '2026-11-28', results: { pushups: 12 }, computed: {}, updatedAt: AT }],
       overrides: [],
       milestones: [{ id: 'first-week', earnedAt: '2026-11-29', updatedAt: AT }],
+      photos: [
+        { id: 'photo-0001-abcd', date: '2026-12-01', dataUrl: 'data:image/jpeg;base64,AAAA', updatedAt: AT },
+      ],
       meta: [
         { key: 'meta', schemaVersion: SCHEMA_VERSION, createdAt: AT, appVersion: '0.1.0', updatedAt: AT },
       ],
@@ -129,6 +132,7 @@ describe('the import preview', () => {
       tests: 1,
       overrides: 0,
       milestones: 1,
+      photos: 1,
     })
     expect(p.range).toEqual({ from: '2026-11-23', to: '2026-12-02' })
     expect(p.exportedAt).toBe(AT)
@@ -183,5 +187,13 @@ describe('the backup file name and the reminder', () => {
       backup: { lastAt: '2026-12-01T10:00:00Z', everyDays: 7 },
     })
     expect(backupDue(weekly, '2026-12-08').due).toBe(true)
+  })
+})
+
+describe('backups from schema 1', () => {
+  it('parse without a photos store, which reads as empty', () => {
+    const { photos: _, ...stores } = sample().stores
+    const file = parseBackup(text({ ...sample(), schemaVersion: 1, stores }))
+    expect(file.stores.photos).toEqual([])
   })
 })

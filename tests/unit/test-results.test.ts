@@ -124,3 +124,12 @@ describe('trend series', () => {
     ).toBeUndefined()
   })
 })
+
+describe('photo size', () => {
+  it('shrinks to 1280 px on the long side and keeps the shape; a small photo stays', async () => {
+    const { fitWithin } = await import('@/lib/photos')
+    expect(fitWithin(4032, 3024)).toEqual({ width: 1280, height: 960 })
+    expect(fitWithin(3024, 4032)).toEqual({ width: 960, height: 1280 })
+    expect(fitWithin(800, 600)).toEqual({ width: 800, height: 600 })
+  })
+})

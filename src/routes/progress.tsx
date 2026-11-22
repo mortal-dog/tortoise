@@ -2,6 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { ClipboardList } from 'lucide-react'
 import { useEffect } from 'react'
 import { Honeycomb } from '@/components/progress/Honeycomb'
+import { Photos } from '@/components/progress/Photos'
 import { type ChartPoint, TrendChart } from '@/components/progress/TrendChart'
 import { StatusMark, statusLabel } from '@/components/StatusMark'
 import { Card, Screen } from '@/components/ui'
@@ -86,6 +87,10 @@ function Progress() {
 
       <Section title="Milestones">
         <Milestones earned={earned} metrics={metrics ?? {}} tests={tests} />
+      </Section>
+
+      <Section title="Photos">
+        <Photos today={t} />
       </Section>
 
       <Section title="At 99">

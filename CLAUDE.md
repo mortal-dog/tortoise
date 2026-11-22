@@ -3,7 +3,8 @@
 Tortoise is a private, offline iPhone app (a PWA) for a 60-year exercise plan: the goal is a straight back, jumping and
 running at 99, plus a handstand and the splits. It covers exercise only.
 
-**Status:** building. The owner started Phase 0 on 2026-11-22 ("implement phase 0 to 3"); see `docs/3-implementation.md`.
+**Status:** building. Phases 0 to 7 and Phase 9's offline parts are done (2026-11-22); Phase 8, the deployment and the
+phone checks, is next. See `docs/3-implementation.md`.
 
 ## Map
 

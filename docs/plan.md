@@ -80,5 +80,8 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
   text. The evidence wording was tightened, the weekly hours were recounted, and gaps in the rules were closed (D-029
   to D-035).
 - **2026-11-22:** the owner started the building ("implement phase 0 to 3"). Phases 0 to 3 are done: the scaffold and
-  its guardrails, the plan as data, the storage and core logic, and the Today and Week screens. Next is Phase 4, the
-  session player.
+  its guardrails, the plan as data, the storage and core logic, and the Today and Week screens.
+- **2026-11-22, later:** the owner asked for all the remaining phases. Phases 4 to 7 are done (the session player, the
+  library, the Tortoise Test and Progress, settings with backup and reminders), and Phase 9's offline parts (spoken
+  coaching, progress photos). CI/CD now runs twice a day and by hand, never on a push (D-039). Next is Phase 8: the
+  domain, the first deployment and the checks on the phone.

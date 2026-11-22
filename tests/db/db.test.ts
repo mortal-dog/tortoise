@@ -11,7 +11,7 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
   it('creates the stores of design §6', async () => {
     const db = await openDb({ name: fresh() })
     expect([...db.raw.objectStoreNames].sort()).toEqual(
-      ['days', 'levels', 'logs', 'meta', 'milestones', 'overrides', 'settings', 'tests'].sort(),
+      ['days', 'levels', 'logs', 'meta', 'milestones', 'overrides', 'photos', 'settings', 'tests'].sort(),
     )
     db.close()
   })
@@ -61,7 +61,7 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
   it('upgrades a version-1 database through a later migration and keeps its data (fixture)', async () => {
     const name = fresh()
     // The fixture: a version-1 database holding records in the version-1 shape.
-    const v1 = await openDb({ name, migrations: MIGRATIONS })
+    const v1 = await openDb({ name, migrations: MIGRATIONS.slice(0, 1) })
     await v1.put('days', {
       date: '2026-12-01',
       main: { doneAt: AT, sessionId: 'long', minutes: 40 },
@@ -79,7 +79,7 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
 
     // A test migration in the shape later versions will take: a new index, and a field filled in for old records.
     const v2: Migration = {
-      version: 2,
+      version: MIGRATIONS.length + 1,
       upgrade(_db, tx) {
         const logs = tx.objectStore('logs')
         logs.createIndex('exerciseId', 'exerciseId')
@@ -93,7 +93,7 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
       },
     }
     const db = await openDb({ name, migrations: [...MIGRATIONS, v2] })
-    expect(db.version).toBe(2)
+    expect(db.version).toBe(MIGRATIONS.length + 1)
     const day = await db.get('days', '2026-12-01')
     expect(day).toMatchObject({ main: { minutes: 40 }, folded: false })
     expect(DaySchema.safeParse(day).success).toBe(true)
@@ -101,6 +101,25 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
       request(tx.objectStore('logs').index('exerciseId').getAll('goblet-squat')),
     )
     expect(byExercise).toHaveLength(1)
+    db.close()
+  })
+
+  it('migration 2 adds the photos store to a version-1 database and keeps its data (fixture)', async () => {
+    const name = fresh()
+    const v1 = await openDb({ name, migrations: MIGRATIONS.slice(0, 1) })
+    await v1.put('days', { date: '2026-12-01', morning: { doneAt: AT }, updatedAt: AT })
+    v1.close()
+    const db = await openDb({ name })
+    expect(db.version).toBe(2)
+    expect([...db.raw.objectStoreNames]).toContain('photos')
+    expect(await db.get('days', '2026-12-01')).toMatchObject({ morning: { doneAt: AT } })
+    await db.put('photos', {
+      id: 'photo-0001-abcd',
+      date: '2026-12-01',
+      dataUrl: 'data:image/jpeg;base64,AAAA',
+      updatedAt: AT,
+    })
+    expect(await db.count('photos')).toBe(1)
     db.close()
   })
 

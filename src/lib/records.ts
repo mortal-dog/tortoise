@@ -149,6 +149,16 @@ export type OverrideRecord = z.infer<typeof OverrideRecord>
 export const MilestoneRecord = z.object({ id: z.string(), earnedAt: LocalDate, updatedAt: Instant })
 export type MilestoneRecord = z.infer<typeof MilestoneRecord>
 
+/** A progress photo (Phase 9), kept only on this phone and in its backups: a JPEG as a data URL. */
+export const PhotoRecord = z.object({
+  id: z.string().min(8),
+  date: LocalDate,
+  dataUrl: z.string().regex(/^data:image\/(jpeg|png|webp);base64,/),
+  note: z.string().optional(),
+  updatedAt: Instant,
+})
+export type PhotoRecord = z.infer<typeof PhotoRecord>
+
 export const MetaRecord = z.object({
   key: z.literal('meta'),
   schemaVersion: z.number().int().positive(),
@@ -166,6 +176,7 @@ export interface Stores {
   tests: TestRecord
   overrides: OverrideRecord
   milestones: MilestoneRecord
+  photos: PhotoRecord
   meta: MetaRecord
 }
 export type StoreName = keyof Stores

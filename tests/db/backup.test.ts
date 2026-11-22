@@ -71,6 +71,12 @@ async function seed(db: Db): Promise<void> {
   })
   await db.put('overrides', { monday: '2026-11-30', swaps: [['tue', 'wed']], updatedAt: T1 })
   await db.put('milestones', { id: 'first-week', earnedAt: '2026-11-29', updatedAt: T1 })
+  await db.put('photos', {
+    id: 'photo-0001-abcd',
+    date: '2026-12-01',
+    dataUrl: 'data:image/jpeg;base64,AAAA',
+    updatedAt: T1,
+  })
   await db.put('meta', {
     key: 'meta',
     schemaVersion: SCHEMA_VERSION,

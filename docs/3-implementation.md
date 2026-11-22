@@ -1,6 +1,7 @@
 # 3 · Implementation plan
 
-**Status (2026-11-22):** building. The owner started Phase 0 on 2026-11-22 (D-021); Phases 0 to 3 are done.
+**Status (2026-11-22):** building. The owner started Phase 0 on 2026-11-22 (D-021); Phases 0 to 7 are done, and Phase 9's
+offline parts. Phase 8 waits for the owner: the domain steps, the first deployment and the real-phone checklist.
 
 This plan turns [1-app-design.md](1-app-design.md) and [2-exercise-plan.md](2-exercise-plan.md) into a working iPhone app
 in nine phases, 0 to 8, with an optional Phase 9 for later extras. Each phase ends in something that runs and is tested.
@@ -344,6 +345,10 @@ a picker.
   browser (to be checked then), with a city-level location and off by default (D-020).
 - Progress photos kept on the phone.
 - Spoken coaching for whole sessions.
+
+**Done (2026-11-22), the offline parts (D-044):** spoken coaching in the player, and progress photos on Progress (a new
+store, in backups too; `tests/e2e/photos.spec.ts` adds, keeps and deletes one offline). The weather hint waits for the
+owner: the official API answers browsers, but it would be the app's first third-party request.
 
 ---
 

@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 import { Banner, Button, Card } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import type { LocalDate } from '@/lib/dates'
-import { clockText, type Unit } from '@/lib/player'
+import { clockText, coachingText, type Unit } from '@/lib/player'
 import type { Variant } from '@/lib/records'
 import { type PlayedSession, type Slot, savePlayedSession } from '@/lib/repo'
-import { canSpeak, setSpokenCues, spokenCuesOn, unlockAudio } from '@/lib/sound'
+import { canSpeak, setSpokenCues, speak, spokenCuesOn, unlockAudio } from '@/lib/sound'
 import { useWakeLock } from '@/lib/wake-lock'
 import { PocketLock } from './PocketLock'
 import { type UnitResult, UnitRunner } from './runners'
@@ -52,6 +52,11 @@ export function Player(props: PlayerProps) {
   const finished = startedAt !== null && index >= units.length && !pending
   const wake = useWakeLock(startedAt !== null && !finished)
   const unit = units[index]
+
+  // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target and key cue.
+  useEffect(() => {
+    if (spoken && startedAt !== null && unit && !pending) speak(coachingText(unit))
+  }, [spoken, startedAt, unit, pending])
 
   const complete = (result: UnitResult) => {
     if (!unit) return

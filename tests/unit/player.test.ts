@@ -207,3 +207,17 @@ describe('timelines', () => {
     expect(clockText(3_723_000)).toBe('1:02:03')
   })
 })
+
+describe('spoken coaching', () => {
+  it('says the step, its target in words and the key cue', async () => {
+    const { coachingText } = await import('@/lib/player')
+    const list = units('strength-a', '2026-12-28', { squat: 3, push: 3 })
+    const text = coachingText(byStep(list, 'a1'))
+    expect(text).toMatch(
+      /^Squat, L3, then Push, L3\. 3 times \d+ to \d+( per side)?, and 3 times \d+ to \d+\./,
+    )
+    expect(coachingText(byStep(units('split-front', '2026-12-28'), 'front-1'))).toContain(
+      '45 seconds per side',
+    )
+  })
+})
