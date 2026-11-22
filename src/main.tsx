@@ -1,6 +1,7 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { listenForInstallPrompt } from './lib/install'
 import { registerServiceWorker } from './lib/sw-register'
 import { routeTree } from './routeTree.gen'
 import './styles.css'
@@ -13,6 +14,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Before the first render: the browser may offer its install prompt before React mounts (D-047).
+listenForInstallPrompt()
 if (import.meta.env.PROD) registerServiceWorker()
 
 const root = document.getElementById('root')

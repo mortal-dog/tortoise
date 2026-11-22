@@ -13,23 +13,23 @@ export function Card({
   )
 }
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'quiet' | 'danger' }
+type Variant = 'primary' | 'quiet' | 'danger'
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }
+
+/** A button's look, shared with links that act as buttons. */
+export function buttonClass(variant: Variant = 'primary', className?: string) {
+  return cn(
+    'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold',
+    'disabled:cursor-not-allowed disabled:border-disabled disabled:bg-transparent disabled:text-disabled',
+    variant === 'primary' && 'bg-primary text-on-primary',
+    variant === 'quiet' && 'border border-primary text-primary',
+    variant === 'danger' && 'border border-brick text-brick',
+    className,
+  )
+}
 
 export function Button({ variant = 'primary', className, type = 'button', ...rest }: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(
-        'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold',
-        'disabled:cursor-not-allowed disabled:border-disabled disabled:bg-transparent disabled:text-disabled',
-        variant === 'primary' && 'bg-primary text-on-primary',
-        variant === 'quiet' && 'border border-primary text-primary',
-        variant === 'danger' && 'border border-brick text-brick',
-        className,
-      )}
-      {...rest}
-    />
-  )
+  return <button type={type} className={buttonClass(variant, className)} {...rest} />
 }
 
 export function Banner({

@@ -12,6 +12,14 @@ test('the app loads with its manifest, icons and security policy', async ({ page
   expect(csp).toContain("default-src 'self'")
   const manifest = await (await page.request.get('/manifest.webmanifest')).json()
   expect(manifest.display).toBe('standalone')
+  // The installed-app check (desktop Chrome needs the app's id) and a launch that focuses a running window (D-047).
+  expect(manifest.related_applications).toEqual([
+    { platform: 'webapp', url: '/manifest.webmanifest', id: 'https://tortoise.doctornova.net/' },
+  ])
+  expect(manifest.launch_handler.client_mode).toEqual(['focus-existing', 'auto'])
+  // WebKit's iPhone profile is Safari on an iPhone: written directions, no install button.
+  await expect(page.getByText('In Safari, tap Share. No Share button? Tap ⋯ first.')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Install Tortoise' })).toHaveCount(0)
   for (const icon of manifest.icons) {
     expect((await page.request.get(icon.src)).ok()).toBe(true)
   }

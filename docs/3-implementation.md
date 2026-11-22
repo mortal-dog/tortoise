@@ -337,6 +337,14 @@ a picker.
 | Storage | Persistent storage reported |
 | Layout | Safe areas, dark mode, larger text |
 
+**Other platforms** (D-047), on whatever devices are at hand:
+
+| Where | Check |
+|---|---|
+| Android, Chrome | The first run shows **Install Tortoise**; it installs; the same address in a tab then says the app is installed and where it is |
+| Desktop, Chrome or Edge | **Install Tortoise** installs and opens the app window; the address in a tab then shows **Open Tortoise**, which brings the app window forward (a running session keeps going) |
+| Any browser | The welcome screen's directions match what the browser shows |
+
 **Done when:** the checklist passes on the phone, and the results are written into this file.
 
 ### Phase 9 — Later, optional (only when the owner asks)

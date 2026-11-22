@@ -17,8 +17,8 @@ only.
 
 ### 1. [App design](1-app-design.md)
 
-- A private, offline iPhone app at <https://tortoise.doctornova.net>. The data stays on the phone; there is no account
-  and no server.
+- A private, offline app at <https://tortoise.doctornova.net>, iPhone first, on every platform (D-047). The data
+  stays on the device; there is no account and no server.
 - Five tabs: **Today** (the day's cards and one-tap logging), **Week**, **Progress** (the Shell honeycomb calendar,
   test trends, milestones, the At-99 board), **Library** (every exercise with its why and sources) and **Settings**
   (backup, reminders, profile).
@@ -69,7 +69,7 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
 | Equipment | One fixed dumbbell pair (7–15 kg each), a jump rope, playground or park bars, a wall, a chair, a sofa, the floor |
 | Time | About 60–70 min on weekdays (15 in the morning, the rest later), 1.5–2 h on Saturday, about 45 min plus a walk on Sunday; the 15-minute Shell day when needed |
 | Outdoors | Runs outside whenever the weather allows; the rope indoors otherwise |
-| Phone | iPhone, with the app installed from Safari |
+| Phone | iPhone first, with the app installed from Safari; Android phones and desktop browsers work too (D-047) |
 | Privacy | The repo is public, so it holds no personal facts. Personal data lives only on the phone |
 
 ## Status

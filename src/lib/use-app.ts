@@ -54,9 +54,3 @@ export function useHistory(startDate: LocalDate | undefined, todayDate: LocalDat
 export function planDayOf(startDate: LocalDate, date: LocalDate) {
   return planDay(startDate, date, plan.blockRules)
 }
-
-/** True when running as an installed home-screen app. */
-export function isStandalone(): boolean {
-  const nav = navigator as Navigator & { standalone?: boolean }
-  return nav.standalone === true || window.matchMedia?.('(display-mode: standalone)').matches === true
-}

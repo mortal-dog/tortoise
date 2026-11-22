@@ -8,7 +8,7 @@ only: nutrition, sleep and medicine are out of scope.
 
 | | |
 |---|---|
-| Users | One person, on an iPhone (installed from Safari). A desktop browser can import a backup file to view it there |
+| Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). A backup file moves the data between them |
 | Address | <https://tortoise.doctornova.net> |
 | Data | Only on the phone (IndexedDB), with export and import of a backup file |
 | Network | None needed after the first load; only app updates use it. No account, no server, no analytics, no third-party requests |
@@ -44,7 +44,7 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 
 | Topic | Fact or constraint | Design |
 |---|---|---|
-| Install | Safari → Share → Add to Home Screen; it then opens full screen as its own app | An install hint on first visit in Safari; `display: standalone` |
+| Install | Safari → Share → Add to Home Screen; it then opens full screen as its own app. Safari offers no install button and cannot tell a page that the app is installed | The first run's install card gives written directions in Safari ([§3.8](#38-first-run)); `display: standalone` |
 | Offline | A service worker caches the app | Precache everything at install; no runtime requests |
 | Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data. The home-screen app keeps its own data, apart from Safari's (verify) | Ask for persistent storage; a backup reminder every 30 days; export and import; the first run asks to install before starting ([§3.8](#38-first-run)) |
 | The address is the data | Data belongs to the exact origin `https://tortoise.doctornova.net`; another address starts empty | The address was chosen once and never changes (decision D-010) |
@@ -192,8 +192,18 @@ and the test wizard open full screen above the tabs.
 
 ### 3.8 First run
 
-- **In Safari:** an install hint (Share → Add to Home Screen). The home-screen app keeps its own data, so the plan is
-  started there, not in the Safari tab.
+- **In a browser:** an install card that fits the browser (D-047), and always **Start in this browser instead**:
+  - **Install Tortoise**, a button, where the browser offers its install prompt (Chrome, Edge, Samsung Internet, Opera);
+  - "Tortoise is installed on this device" where the browser can tell (Chrome on Android; Chrome and Edge on desktop),
+    with **Open Tortoise** on desktop, which opens the installed app, and on Android where the app is found;
+  - written directions where there is no button: Share → Add to Home Screen on an iPhone or iPad (in any browser
+    there), File → Add to Dock in Safari on a Mac, the menu in Firefox on Android, the address-bar button in Firefox on
+    Windows, and the address bar or the menu in a Chromium browser that gave no prompt; then "Already installed? Open
+    Tortoise from …", since these browsers cannot tell;
+  - inside another app's browser, or in a browser that cannot install (Firefox on a Mac or Linux): the address, with a
+    copy button, to open it elsewhere.
+  - Apple's installed web apps keep their own data, apart from the browser's, so on an iPhone, iPad or Mac the plan is
+    started in the installed app, not the tab. Chromium's installed app shares the browser's data.
 - **In the installed app:** pick the Monday on which Week 0 begins: the coming Monday by default, or today on a
   Monday. Week 1 starts seven days later.
 - **Until Week 0 begins:** Today shows the days left. The Library is open, and the morning block can be tried; days
@@ -207,7 +217,7 @@ and the test wizard open full screen above the tabs.
 ## 4. Navigation map
 
 ```
-First run ─ Install hint → start Monday
+First run ─ Install card → start Monday
 Today ──┬─ Session player (full screen)
         ├─ Test wizard (full screen, on test weekends)
         └─ Day detail (yesterday / any past day)
