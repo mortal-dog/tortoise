@@ -9,7 +9,7 @@ outdoor running on a good weather"; the handstand and both splits added as goals
 then "don't write any code; write all the plan documents first; prepare everything except code".
 
 **Done**
-- [x] ♻️ read the Straight Back page's plan data (ib) for ideas and its checked sources
+- [x] ♻️ read the Straight Back page's plan data for ideas and its checked sources
 - [x] ♻️ owner's picker answers: playground bars (no purchase); one medium/heavy fixed dumbbell pair; a short morning block
   plus a main session later; iPhone; address tortoise.doctornova.net; Saturday long outdoor, Sunday light
 - [x] ♻️ read 26 PubMed abstracts in raw text (E-utilities efetch); reused 19 sources from the Straight Back page
@@ -17,8 +17,9 @@ then "don't write any code; write all the plan documents first; prepare everythi
   (D-001–D-028), docs/sources.md, CLAUDE.md, README.md
 - [x] ♻️ checks: every cited source defined and every source cited; links and anchors resolve; D-numbers defined; no
   personal terms; no CJK
-- [x] ⚠️ first commit of the repo (see `git log`) — **do not commit it again**
-- [ ] ⛔ push to origin: asked in a picker after the commit; the truth is `git status -sb` against origin/main
+- [x] ⚠️ first commit of the repo, `14a550c` — **do not commit it again**
+- [x] ⚠️ committed `c520ef6` (Phase 8 DNS steps wait until the repo claims the domain)
+- [x] ⛔ pushed `14a550c` and `c520ef6` to origin/main on the owner's picker yes (2026-11-21) — **do not push again**
 
 **Don't forget:** the repo is public: no personal facts in any committed file (D-022). No code until the owner starts
 Phase 0 (D-021).
