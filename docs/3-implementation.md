@@ -56,7 +56,7 @@ tortoise/
 │  ├─ unit/  content/  db/   Vitest
 │  ├─ component/  guard/     Vitest
 │  └─ e2e/                   Playwright (WebKit, iPhone profile)
-└─ .github/workflows/        ci.yml (the gates, then GitHub Pages; D-039)
+└─ .github/workflows/        ci.yml (the gates side by side, then GitHub Pages; D-039, D-046)
 ```
 
 ---
@@ -106,7 +106,7 @@ Sizes are relative: S is small, M medium, L large.
 - The guard tests (§3).
 - CI workflow: check, test, build and e2e on every push and pull request. Deploy workflow: build, then GitHub Pages. It
   is written now with a manual trigger only. *Since D-039 both are one workflow, `ci.yml`, run twice a day and by hand;
-  no push starts it.*
+  no push starts it. Since D-046 its gates run as parallel jobs, the e2e tests in three shards.*
 - `CLAUDE.md` gets the real commands.
 
 **Done when:** the gates pass; the local preview is installable (manifest and service worker valid); and the WebKit e2e

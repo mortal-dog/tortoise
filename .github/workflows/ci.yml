@@ -1,4 +1,4 @@
-# CI/CD: the gates, then GitHub Pages (D-039).
+# CI/CD: the gates, then GitHub Pages (D-039, D-046).
 #
 # When it runs (owner 2026-11-22: twice a day like the owner's other repos, plus a manual run, so that no push or pull
 # request starts a run): twice a day on a schedule, doing real work only when main changed since this workflow's last
@@ -6,10 +6,12 @@
 # GitHub, or `gh workflow run ci.yml --repo mortal-dog/tortoise`) always runs in full. A red run is not covered: the
 # next slot tries again.
 #
-# The gates build dist/ once, and that same build is what deploys, so a red gate never deploys. The deploy job runs
-# only on main and only once GitHub Pages is set up for the repo (docs/3-implementation.md, Phase 8); until then the
-# gates still run and the deploy is skipped with a notice. Pages keeps serving the last good deployment when a run
-# fails.
+# How it runs (D-046): the four gates run side by side. "checks" runs pnpm check, pnpm test and pnpm build and uploads
+# that dist/ for Pages; three "e2e" shards each install WebKit and run a third of the Playwright tests against their
+# own build of the same commit. The build is deterministic (the service worker's version is a hash of the files), so
+# the e2e shards test the same files that deploy. The deploy waits for all four and runs only when every one passed,
+# only on main, and only once GitHub Pages is set up (docs/3-implementation.md, Phase 8). Pages keeps serving the last
+# good deployment when a run fails.
 name: CI/CD
 
 on:
@@ -33,8 +35,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # A skipped slot costs one runner minute; no checkout needed.
+  # Scheduled runs only; a manual run skips this job and runs in full. A skipped slot costs one runner minute.
   changes:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -43,25 +46,24 @@ jobs:
       - name: Changed since the last green run
         id: last
         env:
-          EVENT: ${{ github.event_name }}
           SHA: ${{ github.sha }}
           REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          last=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=success&per_page=1" \
+            --jq '.workflow_runs[0].head_sha // ""')
+          echo "last green run: ${last:-none} · now: $SHA"
           run=true
-          if [ "$EVENT" = "schedule" ]; then
-            last=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=success&per_page=1" \
-              --jq '.workflow_runs[0].head_sha // ""')
-            echo "last green run: ${last:-none} · now: $SHA"
-            if [ "$last" = "$SHA" ]; then run=false; fi
-          fi
+          if [ "$last" = "$SHA" ]; then run=false; fi
           echo "run=$run" | tee -a "$GITHUB_OUTPUT"
 
-  gates:
+  checks:
+    name: check, test, build
     needs: changes
-    if: needs.changes.outputs.run == 'true'
+    # !cancelled(): without it, the skipped changes job of a manual run would skip this job too.
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.changes.outputs.run == 'true') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     permissions:
       contents: read
       pages: read
@@ -71,18 +73,16 @@ jobs:
       # The personal-term guard's key (D-034). Without it, as in a fork, that one test is skipped.
       TORTOISE_GUARD_KEY: ${{ secrets.TORTOISE_GUARD_KEY }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps webkit
-      - name: Gates
-        run: pnpm check && pnpm test && pnpm build && pnpm e2e
-      # pnpm e2e rebuilds dist/ with the same sources, so this is the build the gates just checked.
-      - uses: actions/upload-pages-artifact@v4
+      - name: Gates (check, test, build)
+        run: pnpm check && pnpm test && pnpm build
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
       - name: Is GitHub Pages set up
@@ -98,10 +98,36 @@ jobs:
             echo "on=false" | tee -a "$GITHUB_OUTPUT"
           fi
 
+  e2e:
+    name: e2e ${{ matrix.shard }}/3
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.changes.outputs.run == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Most of this job's time: WebKit's system libraries come from apt (about 55 s); the browser itself takes 4 s.
+      - run: pnpm exec playwright install --with-deps webkit
+      - name: Gate (e2e, shard ${{ matrix.shard }} of 3)
+        run: pnpm e2e --shard=${{ matrix.shard }}/3
+
   deploy:
-    needs: gates
+    needs: [checks, e2e]
+    # Each result is named: a skipped changes job (a manual run) would otherwise skip the deploy too.
     if: >-
-      github.ref == 'refs/heads/main' && needs.gates.outputs.pages == 'true' &&
+      !cancelled() && needs.checks.result == 'success' && needs.e2e.result == 'success' &&
+      github.ref == 'refs/heads/main' && needs.checks.outputs.pages == 'true' &&
       (github.event_name == 'schedule' || inputs.deploy)
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -113,4 +139,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
