@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
-import { useState } from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { NumberField, PointsStepper, PulseCount, parseNumber } from '@/components/test/fields'
 import { Banner, Button, Card, Screen } from '@/components/ui'
 import type { TestDef } from '@/data/schema'
@@ -105,6 +105,30 @@ const FIELDS: Record<string, FieldSpec[]> = {
   })),
 }
 
+/**
+ * Cards with unsaved changes register a flush here, so "Finish" saves them first: nothing typed is lost, and the
+ * day is finished only after every save has landed.
+ */
+type Flush = () => Promise<void>
+const FlushContext = createContext<Map<string, Flush> | null>(null)
+
+function useFlush(key: string, dirty: boolean, flush: Flush) {
+  const map = useContext(FlushContext)
+  const ref = useRef(flush)
+  ref.current = flush
+  useEffect(() => {
+    if (!map || !dirty) return
+    map.set(key, () => ref.current())
+    return () => {
+      map.delete(key)
+    }
+  }, [map, key, dirty])
+}
+
+function FlushProvider({ map, children }: { map: Map<string, Flush>; children: ReactNode }) {
+  return <FlushContext.Provider value={map}>{children}</FlushContext.Provider>
+}
+
 function TestWizard() {
   const { date } = Route.useParams()
   const search = Route.useSearch()
@@ -113,6 +137,7 @@ function TestWizard() {
   const tests = useLive(getTests, [])
   const [day, setDay] = useState<1 | 2>(search.day ?? 1)
   const [finished, setFinished] = useState<{ day: 1 | 2; levels: Map<string, number> } | null>(null)
+  const flushes = useRef(new Map<string, Flush>()).current
 
   if (!settings || !tests) return <Screen title="Tortoise Test">{null}</Screen>
   if (!isLocalDate(date) || !settings.startDate) {
@@ -197,22 +222,25 @@ function TestWizard() {
         Rested, in the same conditions and the same order each time. Each card saves on its own; leave and
         come back any time.
       </p>
-      <div className="space-y-3">
-        {defs.map((def) => (
-          <TestCard
-            key={`${date}-${def.id}`}
-            date={date}
-            def={def}
-            record={record}
-            previous={previous}
-            tests={tests}
-          />
-        ))}
-        {week0 && day === 1 && <StartQuestions date={date} record={record} />}
-      </div>
+      <FlushProvider map={flushes}>
+        <div className="space-y-3">
+          {defs.map((def) => (
+            <TestCard
+              key={`${date}-${def.id}`}
+              date={date}
+              def={def}
+              record={record}
+              previous={previous}
+              tests={tests}
+            />
+          ))}
+          {week0 && day === 1 && <StartQuestions date={date} record={record} />}
+        </div>
+      </FlushProvider>
       <Button
         className="mt-4 min-h-14 w-full text-lg"
         onClick={async () => {
+          for (const flush of [...flushes.values()]) await flush()
           const levels = await finishTestDay(date, day, { week0, today: t })
           setFinished({ day, levels })
         }}
@@ -240,8 +268,10 @@ function TestCard({
   const fields = FIELDS[def.id] ?? []
   const [values, setValues] = useState<string[]>(() => fields.map((f) => String(f.get(results) ?? '')))
   const [saved, setSaved] = useState(false)
+  const [dirty, setDirty] = useState(false)
   const set = (i: number, v: string) => {
     setSaved(false)
+    setDirty(true)
     setValues(values.map((x, j) => (j === i ? v : x)))
   }
   const save = async (extra?: Patch) => {
@@ -254,7 +284,9 @@ function TestCard({
     })
     await saveTestResults(date, { results: { ...patch, ...extra } })
     setSaved(true)
+    setDirty(false)
   }
+  useFlush(def.id, dirty && fields.length > 0, () => save())
 
   return (
     <Card data-testid={`test-${def.id}`}>
@@ -268,7 +300,7 @@ function TestCard({
         {def.id === 'rockport' ? (
           <Rockport date={date} record={record} previous={previous} onSaved={() => setSaved(true)} />
         ) : def.id === 'sit-to-rise' ? (
-          <SitToRise record={record} onSave={(sitRise) => void save({ sitRise })} />
+          <SitToRise record={record} onSave={(sitRise) => save({ sitRise })} />
         ) : (
           <>
             {fields.map((f, i) => (
@@ -327,18 +359,39 @@ function SitToRise({
   onSave,
 }: {
   record: TestRecord | undefined
-  onSave: (s: { sit: number; rise: number }) => void
+  onSave: (s: { sit: number; rise: number }) => Promise<void>
 }) {
   const [sit, setSit] = useState(record?.results.sitRise?.sit ?? 0)
   const [rise, setRise] = useState(record?.results.sitRise?.rise ?? 0)
+  // Untouched steppers read 10 points, so only a card that was touched is saved by "Finish".
+  const [dirty, setDirty] = useState(false)
+  const save = async () => {
+    await onSave({ sit, rise })
+    setDirty(false)
+  }
+  useFlush('sit-to-rise', dirty, save)
   return (
     <>
-      <PointsStepper label="Sitting down" supports={sit} onChange={setSit} />
-      <PointsStepper label="Standing up" supports={rise} onChange={setRise} />
+      <PointsStepper
+        label="Sitting down"
+        supports={sit}
+        onChange={(n) => {
+          setSit(n)
+          setDirty(true)
+        }}
+      />
+      <PointsStepper
+        label="Standing up"
+        supports={rise}
+        onChange={(n) => {
+          setRise(n)
+          setDirty(true)
+        }}
+      />
       <p className="font-semibold" data-testid="sit-rise-score">
         Score: {Math.max(0, 5 - sit) + Math.max(0, 5 - rise)} of 10
       </p>
-      <Button variant="quiet" onClick={() => onSave({ sit, rise })}>
+      <Button variant="quiet" onClick={() => void save()}>
         Save
       </Button>
     </>
@@ -372,6 +425,22 @@ function Rockport({
     m && h && w && by && sex
       ? computeResults({ rockport: { minutes: m, heartRate: h, weightKg: w } }, { birthYear: by, sex }, date)
       : null
+  const [dirty, setDirty] = useState(false)
+  const touch =
+    <T,>(f: (v: T) => void) =>
+    (v: T) => {
+      f(v)
+      setDirty(true)
+    }
+  const save = async () => {
+    if (needsProfile && by && sex)
+      await saveSettings({ profile: { ...settings?.profile, birthYear: by, sex } })
+    if (m && h && w)
+      await saveTestResults(date, { results: { rockport: { minutes: m, heartRate: h, weightKg: w } } })
+    setDirty(false)
+    onSaved()
+  }
+  useFlush('rockport', dirty && !!m && !!h && !!w, save)
 
   return (
     <>
@@ -379,24 +448,24 @@ function Rockport({
         label="Time for the mile"
         unit="min"
         value={minutes}
-        onChange={setMinutes}
+        onChange={touch(setMinutes)}
         previous={previous?.results.rockport?.minutes}
         stopwatch={{ minutes: true }}
       />
-      <NumberField label="Heart rate at the finish" unit="bpm" value={hr} onChange={setHr} />
-      <PulseCount onBpm={(bpm) => setHr(String(bpm))} />
-      <NumberField label="Weight" unit="kg" value={kg} onChange={setKg} />
+      <NumberField label="Heart rate at the finish" unit="bpm" value={hr} onChange={touch(setHr)} />
+      <PulseCount onBpm={(bpm) => touch(setHr)(String(bpm))} />
+      <NumberField label="Weight" unit="kg" value={kg} onChange={touch(setKg)} />
       {needsProfile && (
         <div className="space-y-2 rounded-xl border border-line p-3">
           <p className="text-sm">The equation needs age and sex. They stay on this phone, in the profile.</p>
-          <NumberField label="Birth year" unit="" value={birthYear} onChange={setBirthYear} />
+          <NumberField label="Birth year" unit="" value={birthYear} onChange={touch(setBirthYear)} />
           <fieldset className="flex gap-2">
             <legend className="mb-1 text-sm font-semibold">Sex</legend>
             {(['male', 'female'] as const).map((s) => (
               <Button
                 key={s}
                 variant={sex === s ? 'primary' : 'quiet'}
-                onClick={() => setSex(s)}
+                onClick={() => touch(setSex)(s)}
                 aria-pressed={sex === s}
               >
                 {s === 'male' ? 'Male' : 'Female'}
@@ -415,17 +484,7 @@ function Rockport({
           )}
         </p>
       )}
-      <Button
-        variant="quiet"
-        disabled={!m || !h || !w}
-        onClick={async () => {
-          if (needsProfile && by && sex)
-            await saveSettings({ profile: { ...settings?.profile, birthYear: by, sex } })
-          if (m && h && w)
-            await saveTestResults(date, { results: { rockport: { minutes: m, heartRate: h, weightKg: w } } })
-          onSaved()
-        }}
-      >
+      <Button variant="quiet" disabled={!m || !h || !w} onClick={() => void save()}>
         Save
       </Button>
     </>
@@ -440,6 +499,15 @@ function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord 
   const [saved, setSaved] = useState(false)
   const r = parseNumber(run)
   const j = parseNumber(rope)
+  const [dirty, setDirty] = useState(false)
+  const complete = r !== undefined && j !== undefined && negative !== undefined
+  const save = async () => {
+    if (r === undefined || j === undefined || negative === undefined) return
+    await saveTestResults(date, { start: { runMin: r, ropeMin: j, negative } })
+    setSaved(true)
+    setDirty(false)
+  }
+  useFlush('start-questions', dirty && complete, save)
   return (
     <Card data-testid="start-questions">
       <div className="flex items-baseline justify-between gap-2">
@@ -448,12 +516,23 @@ function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord 
       </div>
       <p className="mt-1 text-sm">With the results, they set the starting levels at the end of Week 0.</p>
       <div className="mt-3 space-y-3">
-        <NumberField label="How long is an easy run comfortable?" unit="min" value={run} onChange={setRun} />
+        <NumberField
+          label="How long is an easy run comfortable?"
+          unit="min"
+          value={run}
+          onChange={(v) => {
+            setRun(v)
+            setDirty(true)
+          }}
+        />
         <NumberField
           label="How long does the rope turn without stopping?"
           unit="min"
           value={rope}
-          onChange={setRope}
+          onChange={(v) => {
+            setRope(v)
+            setDirty(true)
+          }}
         />
         <fieldset>
           <legend className="text-sm font-semibold">
@@ -465,22 +544,17 @@ function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord 
                 key={String(v)}
                 variant={negative === v ? 'primary' : 'quiet'}
                 aria-pressed={negative === v}
-                onClick={() => setNegative(v)}
+                onClick={() => {
+                  setNegative(v)
+                  setDirty(true)
+                }}
               >
                 {v ? 'Yes' : 'No'}
               </Button>
             ))}
           </div>
         </fieldset>
-        <Button
-          variant="quiet"
-          disabled={r === undefined || j === undefined || negative === undefined}
-          onClick={async () => {
-            if (r === undefined || j === undefined || negative === undefined) return
-            await saveTestResults(date, { start: { runMin: r, ropeMin: j, negative } })
-            setSaved(true)
-          }}
-        >
+        <Button variant="quiet" disabled={!complete} onClick={() => void save()}>
           Save
         </Button>
       </div>

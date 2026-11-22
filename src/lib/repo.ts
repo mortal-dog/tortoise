@@ -1,5 +1,15 @@
 // Reading and writing the app's records. Every write stamps updatedAt (D-032) and tells the UI to refresh.
 import type { Weekday } from '@/data/schema'
+import {
+  type BackupFile,
+  type ImportMode,
+  type ImportResult,
+  importBackup,
+  markBackedUp,
+  type PreparedBackup,
+  prepareBackup,
+  wipeAll,
+} from './backup'
 import type { Swap } from './calendar'
 import { addDays, type LocalDate } from './dates'
 import { type Db, openDb, request, requestPersistentStorage, SCHEMA_VERSION } from './db'
@@ -42,7 +52,7 @@ export function resetDbForTests(): void {
   dbPromise = null
 }
 
-function appVersion(): string {
+export function appVersion(): string {
   return typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'dev'
 }
 
@@ -60,6 +70,8 @@ export async function saveSettings(
 ): Promise<SettingsRecord> {
   const db = await getDb()
   const next = { ...(await getSettings()), ...patch, key: 'settings' as const, updatedAt: nowIso() }
+  // A cleared field is left out, not stored as undefined, so the record matches its backup copy exactly.
+  for (const k of Object.keys(next) as Array<keyof typeof next>) if (next[k] === undefined) delete next[k]
   await db.put('settings', next)
   notifyChange()
   return next
@@ -178,5 +190,27 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
     }
     days.put(next)
   })
+  notifyChange()
+}
+
+export async function prepareBackupFile(now: Date = new Date()): Promise<PreparedBackup> {
+  return prepareBackup(await getDb(), now, appVersion())
+}
+
+/** Records the backup date once the file has gone out (shared or downloaded). */
+export async function backupSaved(prepared: PreparedBackup): Promise<void> {
+  await markBackedUp(await getDb(), prepared)
+  notifyChange()
+}
+
+export async function importBackupFile(file: BackupFile, mode: ImportMode): Promise<ImportResult> {
+  const result = await importBackup(await getDb(), file, mode, new Date(), appVersion())
+  notifyChange()
+  return result
+}
+
+/** Deletes all data (design §3.7, Reset); the app returns to its first run. */
+export async function resetAll(): Promise<void> {
+  await wipeAll(await getDb(), new Date(), appVersion())
   notifyChange()
 }

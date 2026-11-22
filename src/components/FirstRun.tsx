@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { Share, SquarePlus } from 'lucide-react'
 import { useState } from 'react'
 import { addDays, compareDates, defaultWeek0Monday, formatShort, isLocalDate, weekday } from '@/lib/dates'
@@ -72,6 +73,13 @@ export function FirstRun() {
         </Button>
       </Card>
       <p className="mt-4 text-sm">The profile is optional; the Tortoise Test asks for what it needs.</p>
+      <p className="mt-4 text-sm">
+        Moving from another phone or browser?{' '}
+        <Link to="/settings" hash="backup" className="font-semibold text-primary underline">
+          Restore a backup in Settings
+        </Link>
+        .
+      </p>
     </Screen>
   )
 }

@@ -93,6 +93,11 @@ export function formatShort(date: LocalDate): string {
   return `${DAY_NAMES[weekday(date)]} ${d} ${MONTHS[mo - 1]}`
 }
 
+/** "Mon 23 Nov 2026", where the year matters (backups, the plan's start). */
+export function formatLong(date: LocalDate): string {
+  return `${formatShort(date)} ${date.slice(0, 4)}`
+}
+
 export function dayName(day: Weekday): string {
   return DAY_NAMES[day]
 }

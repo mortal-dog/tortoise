@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check, Play, Sun, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
+import { BackupReminder } from '@/components/BackupReminder'
 import { DayRing } from '@/components/DayRing'
 import { FirstRun } from '@/components/FirstRun'
 import { Banner, Button, Card } from '@/components/ui'
@@ -183,6 +184,8 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
           </div>
         </Banner>
       )}
+
+      <BackupReminder settings={settings} t={t} />
 
       <PlanCard
         testId="card-morning"

@@ -270,6 +270,23 @@ At-99 board, the test trends with aim lines and the level steps. Construction ch
 - malformed files are refused with a clear message;
 - the calendar file imports into the iPhone Calendar.
 
+**Done (2026-11-22):** Settings has every section of [design §3.7](1-app-design.md#37-settings) (D-042).
+- `tests/e2e/settings.spec.ts` (WebKit, iPhone profile):
+  - export → reset (type DELETE) → import with Replace gives the identical database, every store compared; merging
+    the same file again writes nothing;
+  - a file that is not JSON, not a backup, damaged or from a newer app is refused with its own message, and nothing
+    changes;
+  - the backup goes out through a share sheet that takes files (a stub) or as a download;
+  - the calendar file is downloaded and checked; the backup reminder appears on Today on Week 0's thirtieth day and
+    goes once a backup is made;
+  - screenshots, light and dark.
+- Unit tests cover the iCalendar text (folding at 75 octets without splitting a character, CRLF line ends, escaping,
+  floating times, weekly rules and alarms) and the backup validation, preview and reminder. Database tests run the
+  round trip, Merge, Replace and a failed import that writes nothing.
+- **Left for the real phone (Phase 8):** whether the share sheet saves the backup to Files and whether the calendar
+  file reaches the iPhone Calendar, through the share sheet or by opening the file, from the home-screen app. The
+  reminder times are listed as text in case neither works.
+
 ### Phase 8 — Deploy, install and the real-phone check (S)
 
 **Goal:** the app live at its permanent address and installed on the phone.
@@ -306,7 +323,7 @@ a picker.
 | Screen | Wake lock in the installed app; the pocket lock |
 | Background | Timers catch up after locking the phone mid-interval |
 | Backup | Export through the share sheet to Files; import back |
-| Reminders | The calendar file imports and rings |
+| Reminders | The calendar file imports and rings, through "Add to Calendar" (the share sheet) or "Open the calendar file"; note which works from the home-screen app |
 | Daylight | "Use my location once" asks for permission and fills the coordinates |
 | Storage | Persistent storage reported |
 | Layout | Safe areas, dark mode, larger text |

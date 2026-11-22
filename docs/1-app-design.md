@@ -174,16 +174,15 @@ and the test wizard open full screen above the tabs.
 
 | Section | Contents |
 |---|---|
-| Plan | Start date (the Monday of Week 1); "Restart from Week 0" (keeps history) |
+| Plan | Start date (the Monday of Week 1); "Restart from Week 0" on a chosen Monday (keeps history) |
 | Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax, Rockport and the broad-jump aim |
-| Units | kg or lb; km or mi |
-| Equipment | Dumbbell weight (each) |
+| Units and equipment | kg or lb; km or mi; dumbbell weight (each), in the chosen unit. One card |
 | Daylight | Location as latitude/longitude, typed in or "Use my location once". Stored on the phone; no network. Off until set |
 | Runs | Default variant: outdoor, indoor, or ask each time |
-| Reminders | Times for the morning block and for the main session on each weekday, then "Add to Calendar" ([§9](#9-reminders)) |
-| Backup | Export, import, the last backup date, and the reminder interval (30 days) |
-| Storage | Whether storage is persistent; space used |
-| About | App version, plan version, sources, privacy statement, licences |
+| Reminders | Times for the morning block and for the main session on each weekday, the times as text, then "Add to Calendar" and "Open the calendar file" ([§9](#9-reminders)) |
+| Backup | Export, import, the last backup date, and the reminder interval (30 days by default; 7, 14, 60 or 90 to choose) |
+| Storage | Whether storage is persistent, with "Ask to keep the data" when it is not; space used |
+| About | App version, plan version, the number of sources with a link to their list in the repo (opens outside the app), privacy statement, the runtime libraries' licences |
 | Reset | Delete all data (type DELETE to confirm) |
 
 ### 3.8 First run
@@ -195,6 +194,8 @@ and the test wizard open full screen above the tabs.
 - **Until Week 0 begins:** Today shows the days left. The Library is open, and the morning block can be tried; days
   before Week 0 have no status and no streak.
 - The profile is optional. The Rockport test asks for age, sex and weight when it needs them.
+- A link leads to Settings → Backup, to restore a backup instead of starting afresh (a new phone, or the move from the
+  Safari tab to the home-screen app).
 
 ---
 
@@ -341,6 +342,10 @@ There are no push notifications in v1, because a web app needs a push server for
   closed. Whether the share sheet or opening the file is the hand-off that works from a home-screen app is checked on
   the phone ([§2](#2-the-iphone-as-a-platform)).
 - The chosen times are also listed on the screen, so the alarms can be set by hand if the hand-off fails.
+- Each event is named after its weekday's session in the week template (swaps and test weekends show only in the app),
+  rings at its start, has no end date, and begins with Week 0, or today once Week 0 has begun. The events keep fixed
+  ids, but adding the file again may still add a second set, so the screen says to delete the old events first
+  (D-042).
 
 ---
 
@@ -351,7 +356,13 @@ There are no push notifications in v1, because a web app needs a push server for
   download as the fallback.
 - **Import:** pick a file → schema validation → migrate from older versions → a preview (record counts and date range) →
   **Merge** (for each key the record with the later `updatedAt` wins) or **Replace** → written in one transaction.
-- **Reminder:** a banner on Today when the last backup is older than 30 days.
+- **Validation:** a file that is not JSON, not a Tortoise backup, damaged (the message names the store, record and
+  field) or from a newer version of the app is refused with its own message, and nothing is written. The file also
+  carries the database schema version, so a future migration can upgrade an old file's records.
+- **The backup date** is written into the file's own settings record, and the phone saves the same record once the
+  file has gone out, so the phone and the file hold identical data (D-042).
+- **Reminder:** a banner on Today when the last backup is 30 days old or more (the interval is set in Settings); before
+  the first backup it counts from the Week 0 Monday. "Not today" hides it until the app is opened again.
 - A backup file is personal data. It goes wherever the user sends it, never into the repo.
 
 ---
