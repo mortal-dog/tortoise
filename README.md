@@ -13,7 +13,8 @@ covers exercise only.
 
 - **Status:** planning. Start at [docs/plan.md](docs/plan.md).
 - **Privacy:** all data stays on the phone. No account, no server, no tracking.
-- **Evidence:** every number in the plan names its source in [docs/sources.md](docs/sources.md).
+- **Evidence:** every number the plan takes from a study or guideline names its source in
+  [docs/sources.md](docs/sources.md); the plan's own choices are marked as such.
 
 | Document | What it holds |
 |---|---|

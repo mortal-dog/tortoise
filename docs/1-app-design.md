@@ -8,10 +8,10 @@ only: nutrition, sleep and medicine are out of scope.
 
 | | |
 |---|---|
-| Users | One person, on an iPhone (installed from Safari); a Mac browser for backups and viewing |
+| Users | One person, on an iPhone (installed from Safari). A desktop browser can import a backup file to view it there |
 | Address | <https://tortoise.doctornova.net> |
 | Data | Only on the phone (IndexedDB), with export and import of a backup file |
-| Network | None after the first load: no account, no server, no analytics, no third-party requests |
+| Network | None needed after the first load; only app updates use it. No account, no server, no analytics, no third-party requests |
 | Language | English |
 
 ---
@@ -46,13 +46,16 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 |---|---|---|
 | Install | Safari → Share → Add to Home Screen; it then opens full screen as its own app | An install hint on first visit in Safari; `display: standalone` |
 | Offline | A service worker caches the app | Precache everything at install; no runtime requests |
-| Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data | Ask for persistent storage; a backup reminder every 30 days; export and import |
+| Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data. The home-screen app keeps its own data, apart from Safari's (verify) | Ask for persistent storage; a backup reminder every 30 days; export and import; the first run asks to install before starting ([§3.8](#38-first-run)) |
 | The address is the data | Data belongs to the exact origin `https://tortoise.doctornova.net`; another address starts empty | The address was chosen once and never changes (decision D-010) |
 | Sound | Web Audio starts only after a tap; the ring/silent switch may mute it (verify) | Unlock audio on the session's Start tap; every cue is also shown on screen |
+| Speech | Safari's speech synthesis uses the phone's own voices and needs no network (verify in the home-screen app) | Spoken cues are optional; tones and text always carry the cue |
 | Vibration | Safari has no Vibration API | Visual and sound cues only |
 | Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on during sessions; if that fails, a notice to set Auto-Lock |
 | Background | iOS suspends a web app in the background; timers stop firing | Timers run from timestamps and catch up on return; cues need the screen on |
 | Notifications | Web Push needs a push server | No push in v1; a calendar file sets the reminders ([§9](#9-reminders)) |
+| Calendar file | iOS adds the events of an iCalendar file to its Calendar. Which hand-off works from a home-screen app, the share sheet or opening the file, is not yet known (verify) | Try the share sheet first, then opening the file; the reminder times are also shown as text |
+| Updates | An installed web app gets a new version only when its service worker updates | An update banner; Settings shows the app and plan versions |
 | Health data | A web app cannot read Apple Health | Steps and run distance are typed in (optional) |
 | Files | The Web Share API can share a file to Files or iCloud Drive | Backup export through the share sheet |
 
@@ -66,32 +69,40 @@ and the test wizard open full screen above the tabs.
 ### 3.1 Today (home)
 
 ```
-┌──────────────────────────────────────┐
-│ Mon 23 Nov · Block 1 · Week 1        │  date, block, week (build / light / test)
-│ 🐢 Tortoise streak 12 days           │
-│ ☀ 07:24 – 16:37 · 9 h 13 min of day  │  daylight strip (once a location is set)
-├──────────────────────────────────────┤
-│ MORNING BLOCK              15 min  ✓ │  card: done in green
-├──────────────────────────────────────┤
-│ STRENGTH A                 30 min    │  card: main session
-│ Jumps · Squat L1 · Push L3 · Row ... │  current levels
-│ [ Start ]          [ Done as planned ]│
-├──────────────────────────────────────┤
-│ FRONT SPLIT BLOCK          10 min    │
-│ [ Start ]          [ Done ]          │
-├──────────────────────────────────────┤
-│ HABITS  Steps [ 8,412 ]  Snacks ●●○  │
-│         Outdoors [ 25 ] min          │
-├──────────────────────────────────────┤
-│ Short on time?  [ Make it a Shell day ]│
-└──────────────────────────────────────┘
+┌────────────────────────────────────────┐
+│ Mon 23 Nov · Block 1 · Week 1          │  date, block, week (build / light / test)
+│ 🐢 Tortoise streak 8 days              │
+│ ☀ 07:31 – 16:01 · 8 h 30 min of day    │  daylight strip (once a location is set; here Greenwich)
+├────────────────────────────────────────┤
+│ MORNING BLOCK                15 min  ✓ │  card: done in green
+├────────────────────────────────────────┤
+│ STRENGTH A                   35 min    │  card: main session, warm-up included
+│ Jumps · Squat L1 · Push L3 · Row ...   │  current levels
+│ [ Start ]          [ Done as planned ] │
+├────────────────────────────────────────┤
+│ FRONT SPLIT BLOCK            10 min    │
+│ [ Start ]          [ Done as planned ] │
+├────────────────────────────────────────┤
+│ HABITS  Steps [ 8,412 ]  Snacks ●●○    │
+│         Outdoors [ 25 ] min            │
+├────────────────────────────────────────┤
+│ Short on time? [ Make it a Shell day ] │
+└────────────────────────────────────────┘
 ```
 
-- **Day ring** (top right, not drawn above): three states, missed / shell / full, filling as cards are done.
+- **Day ring** (top right, not drawn above): empty, shell or full, filling as cards are done.
 - **Cards in the order of the day:** morning block, main session, split block, habits. Each card shows its time, its
-  exercises with their current ladder levels, **Start** (opens the player) and **Done as planned** (one tap).
-- **Run days:** an **Outdoor ☀ / Indoor** switch picks the variant; the default comes from Settings.
-- **Light and test weeks** show a banner: "Light week: 2 sets, runs 30% shorter", "Test weekend: the Tortoise Test".
+  exercises with their current ladder levels, **Start** (opens the player) and **Done as planned** (one tap). The main
+  card includes the session's warm-up.
+- **Run days** (Tuesday, Thursday, Saturday): an **Outdoor ☀ / Indoor** switch picks the variant; the default comes
+  from Settings.
+- **Sunday:** the split work is inside the Light session, so there is no split card; finishing the session records the
+  split as well.
+- **Light and test weeks** show a banner: "Light week: 2 sets, runs 30% shorter", "Test weekend: the Tortoise Test". On
+  the two test days the main card is that day's part of the test, and there is no split card.
+- **Make it a Shell day** folds the cards that are still open, so the day ends with the morning block. It only tidies
+  the screen: the status still follows [§5.2](#52-day-status-and-the-tortoise-streak), and a tap unfolds the cards
+  again.
 - **Yesterday missed?** A banner offers "Log yesterday" (the honour system), or "It was a sick day" (pauses the streak).
 - **Level-up suggestions** appear as a card when a ladder's pass rule is met: "Ready for Bulgarian split squat? Move up /
   Not yet".
@@ -120,8 +131,8 @@ and the test wizard open full screen above the tabs.
 
 - Seven rows, Monday to Sunday: each shows the main session, the split block, and the day's status colour.
 - The week's label: build, light or test.
-- **Swap days:** pick two days to swap their main sessions within the week. The app warns if the swap breaks a rule
-  (two strength days in a row, intervals the day before the long run).
+- **Swap days:** pick two days of the week to swap their main sessions; each session takes its split block along. The
+  app warns if the swap breaks a rule (two strength days in a row, intervals the day before the long run).
 - Tapping a past day opens it for viewing or editing.
 
 ### 3.4 Progress
@@ -130,8 +141,8 @@ and the test wizard open full screen above the tabs.
   tortoise's shell. Tapping a hexagon opens that day.
 - **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; outdoor sessions; minutes per
   pillar (strength, aerobic, skills, mobility) this week against the plan.
-- **Test trends:** a small line chart per test (push-ups, broad jump, VO2max estimate, split distances, handstand holds,
-  wall gap, dead hang, one-leg stance), each with its aim line.
+- **Test trends:** a small line chart for every test of the Tortoise Test (the VO2max estimate for the Rockport walk),
+  with the aim line where the test has one.
 - **Levels over time:** a step chart per ladder.
 - **Milestones:** earned badges with dates, and "next up" with progress bars.
 - **The At-99 board:** each 99-year ability with its latest result ([plan §11](2-exercise-plan.md#11-milestones)).
@@ -140,10 +151,15 @@ and the test wizard open full screen above the tabs.
 
 - Opens from Today on a test weekend, or from Progress at any time.
 - Two parts, Day 1 (outdoors) and Day 2 (indoors), resumable across days.
-- Each test card has its instructions, a built-in stopwatch where needed (one-leg stance capped at 60 s, hang, farmer hold,
-  squat hold), and input fields.
-- Built-in calculators: sit-to-rise (two steppers counting down from 5), Rockport (time, heart rate and weight give the
-  VO2max estimate), and height change against the last record.
+- Each test card has its instructions, a built-in stopwatch where needed (the mile walk, the 15-second pulse count,
+  one-leg stance capped at 60 s, hang, farmer hold, squat hold), and input fields.
+- Built-in calculators:
+  - sit-to-rise: two steppers counting down from 5;
+  - Rockport: time, heart rate and weight give the VO2max estimate; age and sex come from the profile, or are asked
+    here;
+  - height: the change against the tallest earlier record.
+- Height is asked once a year: when the last height record is 48 weeks old or more.
+- In Week 0 the wizard also asks the three start questions (easy running, the rope, a slow negative pull-up).
 - On saving: comparison with the last test; milestones awarded; and, in Week 0, the starting levels set by the rules in
   [plan §8](2-exercise-plan.md#8-the-first-13-weeks).
 
@@ -151,8 +167,8 @@ and the test wizard open full screen above the tabs.
 
 - Search, plus filters by area (spine, strength, handstand, splits, cardio, playground).
 - **Exercise page:** how to do it, the key cue, the common mistake; the why line with source chips (a chip opens the
-  finding and its link); the ladder, with the current level marked and pass targets shown; the last 10 logs; and a video
-  link where one exists (it opens outside the app).
+  finding and its link); the ladder, with the current level marked and pass targets shown (another level can be set by
+  hand, after a confirmation); the last 10 logs; and a video link where one exists (it opens outside the app).
 
 ### 3.7 Settings
 
@@ -164,23 +180,34 @@ and the test wizard open full screen above the tabs.
 | Equipment | Dumbbell weight (each) |
 | Daylight | Location as latitude/longitude, typed in or "Use my location once". Stored on the phone; no network. Off until set |
 | Runs | Default variant: outdoor, indoor, or ask each time |
-| Reminders | Times for the morning block and the main session, then "Add to Calendar" ([§9](#9-reminders)) |
+| Reminders | Times for the morning block and for the main session on each weekday, then "Add to Calendar" ([§9](#9-reminders)) |
 | Backup | Export, import, the last backup date, and the reminder interval (30 days) |
 | Storage | Whether storage is persistent; space used |
 | About | App version, plan version, sources, privacy statement, licences |
 | Reset | Delete all data (type DELETE to confirm) |
+
+### 3.8 First run
+
+- **In Safari:** an install hint (Share → Add to Home Screen). The home-screen app keeps its own data, so the plan is
+  started there, not in the Safari tab.
+- **In the installed app:** pick the Monday on which Week 0 begins: the coming Monday by default, or today on a
+  Monday. Week 1 starts seven days later.
+- **Until Week 0 begins:** Today shows the days left. The Library is open, and the morning block can be tried; days
+  before Week 0 have no status and no streak.
+- The profile is optional. The Rockport test asks for age, sex and weight when it needs them.
 
 ---
 
 ## 4. Navigation map
 
 ```
+First run ─ Install hint → start Monday
 Today ──┬─ Session player (full screen)
         ├─ Test wizard (full screen, on test weekends)
         └─ Day detail (yesterday / any past day)
 Week ───── Day detail, swap days
 Progress ┬ Shell → Day detail
-         ├ Test trends → Test detail
+         ├ Test trends → Test detail, test wizard
          ├ Milestones
          └ At-99 board
 Library ── Exercise page → Source detail
@@ -196,6 +223,11 @@ Settings ─ Backup / Reminders / Profile / About
 - **Week 1** starts on the Monday chosen as the start date; **Week 0** is the seven days before it.
 - **Block** = ceil(week ÷ 4). **Week in block** = ((week − 1) mod 4) + 1.
 - **Light week:** week in block = 4. **Test week:** a light week whose block number is a multiple of 3, and Week 0.
+- **Test days:** the Saturday and Sunday of a test week. The day's part of the Tortoise Test takes the place of the
+  main session and the split block.
+- **Week 0 changes:** half volume from Monday to Friday: sets halved (rounded up), run and rope minutes halved,
+  interval reps halved (rounded up), and every ladder at level 1.
+- **Ramp changes:** strength at 2 sets in Weeks 1 and 2.
 - **Light-week changes:** strength sets −1 (never below 2); run and rope minutes × 0.7; interval reps halved, rounded up.
   The morning block, splits and habits are unchanged.
 - **Interval stage:** Block 1 → stage 1, 2 → 2, 3 → 3, 4 onward → the 4 × 4 ([plan §6.7](2-exercise-plan.md#67-intervals--thursday)).
@@ -203,18 +235,24 @@ Settings ─ Backup / Reminders / Profile / About
 
 ### 5.2 Day status and the tortoise streak
 
-| Status | Rule | Colour |
-|---|---|---|
-| Full | Morning block and main session both done | Moss green |
-| Shell | Morning block done, main session not | Shell amber |
-| Missed | Neither done (decided once the day is over) | Brick outline |
-| Paused | Marked sick or injured | Sky outline |
-| Ahead | A future day | Pale beige |
+| Status | Rule | Colour | Mark |
+|---|---|---|---|
+| Full | Morning block and main session both done | Moss green | Filled |
+| Shell | One of the two done. The morning block alone is the planned Shell day; the main session alone counts the same | Shell amber | Half filled |
+| Missed | Neither done, once the day is over | Brick | Outline |
+| Paused | Marked sick or injured, with neither done | Sky | Dashed outline |
+| Ahead | A future day, or today while nothing is done yet | Pale beige | Faint fill |
 
+- A day with something done is Full or Shell even when it is marked sick: done beats paused.
+- On a test day, the day's part of the Tortoise Test counts as the main session. On Sunday the Light session is the
+  main session.
 - The split block and habits do not change the status; they feed their own counts and milestones.
-- **Tortoise streak:** count back from today (from yesterday if today is not done yet). Stop at the first pair of missed
-  days in a row. Paused days neither count nor break the streak. A single missed day stays inside the streak.
-- **Longest streak:** the longest such run in the history.
+- **Tortoise streak:** the number of done days, Full or Shell, in the current run.
+  - Count back from today, or from yesterday while today has nothing done.
+  - One missed day does not end the run, but adds nothing to the count. Two missed days in a row end it.
+  - Paused days are skipped: they add nothing, end nothing, and do not come between two missed days.
+  - The run never reaches back before Week 0.
+- **Longest streak:** the largest such count in the history.
 
 ### 5.3 Progression suggestions
 
@@ -223,8 +261,10 @@ Settings ─ Backup / Reminders / Profile / About
 - **Holds:** all sets at the target → suggest the next level.
 - **Two "Too hard" in a row** → suggest one level down.
 - **After 14 or more days with no logs for a ladder** → suggest one level down for a week.
-- **Endurance steps** (run–walk, rope) move only on the user's tap, at least 7 days apart, with a reminder of the 10%
-  rule.
+- **Endurance steps** (run–walk, rope) move only on the user's tap, at least 7 days apart. Past the ladders, the run
+  cards show last week's minutes and the most that the 10% rule allows this week.
+- **By hand:** a level can be set from the Library at any time, for a start above level 1 or a step back after an
+  injury.
 - The app never changes a level by itself: the user confirms each move, and the history keeps every change with its date.
 
 ---
@@ -234,14 +274,16 @@ Settings ─ Backup / Reminders / Profile / About
 | Store | Key | Fields |
 |---|---|---|
 | `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}; dumbbellKg; location {lat, lon, label} (optional); runDefault; reminders {morning, main per weekday}; backup {lastAt, everyDays} |
-| `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note}; split {doneAt, kind (front, side, both or long)}; habits {steps, snacks 0–3, outdoorMin} |
-| `logs` | auto id; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
+| `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note}; split {doneAt, kind (front, side, both or long)}; habits {steps, snacks 0–3, outdoorMin}; folded (the "Make it a Shell day" tap) |
+| `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
 | `levels` | ladderId | level, since, history [{level, date}] |
-| `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, broadJumpCm, hangS, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; computed {vo2max, sitRiseScore} |
+| `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, broadJumpCm, hangS, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answers {runMin, ropeMin, negative} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
 | `meta` | `"meta"` | schemaVersion, createdAt, appVersion |
 
+- Every record carries `updatedAt`. It decides which record is newer when a backup is merged
+  ([§10](#10-backup-and-restore)), and a log's random id keeps two phones from giving different logs the same key.
 - Volume: one `days` record a day for 60 years is about 22,000 small records. IndexedDB handles that easily.
 - Schema changes go through numbered migrations, each covered by a test with a fixture of the previous version.
 
@@ -256,12 +298,15 @@ One typed data module, validated by a schema in the tests and at start-up:
 | sources | id, citation, url, finding: mirrors [sources.md](sources.md) |
 | exercises | id, name, area, how, cue, mistake, why, sources, video link (optional), unit (reps, seconds or minutes) |
 | ladders | id, name, levels [{level, exerciseId, target (sets × reps or seconds, per side), pass rule}] |
-| sessions | id, kind (morning, strength, run, intervals, long, light, split), minutes, steps [{ladderId or exerciseId, sets, reps / seconds / minutes, rest, paired with}], variants {outdoor, indoor} |
-| week template | Monday–Sunday → {morning, main, split} |
-| block rules | block length, light week, test cadence, light-week changes, interval stages |
-| tests | id, name, how, unit, aim, sources, day (1 or 2), calculator (rockport, sitRise or none) |
+| sessions | id, kind (morning, strength, run, intervals, long, light, split), minutes (in total and per pillar), steps [{ladderId or exerciseId, sets, reps / seconds / minutes, rest, paired with}], variants {outdoor, indoor}. A main session's steps begin with its warm-up |
+| week template | Monday–Sunday → {morning, main, split (none on Sunday)} |
+| block rules | block length, light week, test cadence and test days, Week 0 and ramp changes, light-week changes, interval stages |
+| tests | id, name, how, unit, aim, sources, day (1 or 2), order, calculator (rockport, sitRise, height or none) |
 | milestones | id, name, kind (streak, count, test or level), metric, threshold |
-| start rules | Week 0 results → starting levels |
+| start rules | Week 0 results and start answers → starting levels |
+| habits | id, name, target, sources |
+| At-99 board | ability, measure (a test or a log metric), line |
+| plan version | a date, shown in About and written into every backup |
 
 **Content rules, enforced by tests:**
 - Every id is unique, and every reference resolves.
@@ -279,20 +324,23 @@ One typed data module, validated by a schema in the tests and at start-up:
 | Easy ceiling / hard band | ≤ 0.70 × HRmax; 0.90–0.95 × HRmax | [helgerud2007] |
 | Rockport VO2max | L/min = 6.9652 + 0.0091 × weight (lb) − 0.0257 × age + 0.5955 × sex (1 male, 0 female) − 0.2240 × time (min) − 0.0115 × heart rate. mL/kg/min = 1000 × L/min ÷ weight (kg). Flag ages outside 30–69 | [kline1987] |
 | Sit-to-rise | (5 − supports sitting) + (5 − supports rising), each part at least 0 | [brito2014] |
+| Height loss | The tallest earlier record − today's height; flag more than 2 cm | [oc2023] |
 | Daylight | Sunrise, sunset, solar noon and day length from NOAA's solar equations (public domain), for the stored latitude, longitude and date; checked in tests against published NOAA values | — |
 | Units | 1 kg = 2.20462 lb; 1 km = 0.621371 mi | — |
-| Pillar minutes | Planned: the session templates. Done: logged minutes, or the template's minutes for a "Done as planned" | — |
+| Pillar minutes | Four pillars: strength, aerobic, skills, mobility. Planned: each session template's minutes per pillar. Done: the logged minutes in the template's shares, or the template's own minutes for a "Done as planned" | — |
 
 ---
 
 ## 9. Reminders
 
 There are no push notifications in v1, because a web app needs a push server for them (D-013). Instead:
-- Settings builds a calendar file (iCalendar, RFC 5545) with two weekly repeating events, the morning block and the main
-  session, at the chosen times, each with an alarm.
+- Settings builds a calendar file (iCalendar, RFC 5545) of weekly repeating events, each with an alarm: one for the
+  morning block, and one for each main-session time on its weekdays.
 - The times are floating local times, so they follow the phone's time zone.
-- "Add to Calendar" hands the file to iOS through the share sheet, and the phone's own Calendar then rings the reminders,
-  even when the app is closed.
+- "Add to Calendar" hands the file to iOS, and the phone's own Calendar then rings the reminders, even when the app is
+  closed. Whether the share sheet or opening the file is the hand-off that works from a home-screen app is checked on
+  the phone ([§2](#2-the-iphone-as-a-platform)).
+- The chosen times are also listed on the screen, so the alarms can be set by hand if the hand-off fails.
 
 ---
 
@@ -302,7 +350,7 @@ There are no push notifications in v1, because a web app needs a push server for
   version, and every store. It goes out through the share sheet (Files, iCloud Drive, AirDrop to the Mac), with a plain
   download as the fallback.
 - **Import:** pick a file → schema validation → migrate from older versions → a preview (record counts and date range) →
-  **Merge** (the newer record wins for each key) or **Replace** → written in one transaction.
+  **Merge** (for each key the record with the later `updatedAt` wins) or **Replace** → written in one transaction.
 - **Reminder:** a banner on Today when the last backup is older than 30 days.
 - A backup file is personal data. It goes wherever the user sends it, never into the repo.
 
@@ -314,8 +362,8 @@ There are no push notifications in v1, because a web app needs a push server for
   `img-src 'self' data: blob:`. No third-party scripts, fonts, analytics or cookies.
 - External links (videos, sources) open in the browser, outside the app.
 - Location for daylight is typed in or read once from the phone, stored on the phone, and never sent.
-- The repo holds no personal facts; a test scans committed text for banned personal terms
-  ([3-implementation.md](3-implementation.md), Phase 0).
+- The repo holds no personal facts; a test scans committed text for banned personal terms. The list itself is
+  committed only as keyed hashes ([3-implementation.md](3-implementation.md), §3 and Phase 0).
 
 ---
 
@@ -330,14 +378,16 @@ There are no push notifications in v1, because a web app needs a push server for
 | text | `#1E2B1E` | `#F3ECDA` | All text, at full strength |
 | primary | `#3E6B3F` (moss) | `#7FB77E` | Full days, buttons, headings |
 | primary-strong | `#2E5230` | `#A6D3A3` | Secondary text, in place of grey |
-| shell | `#B8792A` (amber) | `#E0A955` | Shell days, streaks |
-| sky | `#2C7BB6` | `#6DB3E8` | Outdoor, daylight, paused days |
+| shell | `#9A6212` (amber) | `#E0A955` | Shell days, streaks |
+| sky | `#2A72AB` | `#6DB3E8` | Outdoor, daylight, paused days |
 | brick | `#B23A2A` | `#E07A6A` | Missed days, warnings, delete |
-| line | `#E4DCC8` (beige) | `#2C3B2E` | Borders and dividers |
+| line | `#E4DCC8` (beige) | `#2C3B2E` | Borders, dividers, days ahead |
 
+- **Contrast:** text, primary, primary-strong, shell, sky and brick each reach 4.5:1 or more on both the background and
+  the surface, in both themes (computed with the WCAG formula).
 - **Type:** the system font (SF Pro on iPhone), so nothing has to load. Timers are 64–96 px; headings 22–28 px semibold.
-- **Icon:** a geometric tortoise whose shell is made of hexagons, matching the Shell calendar. App icons at 180, 192 and
-  512 px, plus a maskable version and the Apple touch icon.
+- **Icon:** a geometric tortoise whose shell is made of hexagons, matching the Shell calendar. App icons at 192 and
+  512 px, a maskable version, and the 180 px Apple touch icon.
 - **Layout:** one column; safe-area insets for the notch and the home indicator; tap targets of 44 pt or more.
 - **Motion:** small and short; none when the system asks for reduced motion.
 
@@ -348,7 +398,8 @@ There are no push notifications in v1, because a web app needs a push server for
 - Contrast of 4.5:1 or more for text, in both themes.
 - Every control has a label; timers announce changes to VoiceOver.
 - Layouts hold up with larger text.
-- Colour is never the only signal: day statuses also differ by fill and outline, and the ring shows a count.
+- Colour is never the only signal: every day status has its own mark as well as its colour
+  ([§5.2](#52-day-status-and-the-tortoise-streak)), and the ring shows a count.
 
 ---
 

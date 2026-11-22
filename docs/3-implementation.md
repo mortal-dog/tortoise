@@ -3,13 +3,15 @@
 **Status (2026-11-21):** planning only. No code is written until the owner starts Phase 0 (D-021).
 
 This plan turns [1-app-design.md](1-app-design.md) and [2-exercise-plan.md](2-exercise-plan.md) into a working iPhone app
-in nine phases. Each phase ends in something that runs and is tested.
+in nine phases, 0 to 8, with an optional Phase 9 for later extras. Each phase ends in something that runs and is tested.
 
 ---
 
 ## 1. Stack
 
-(D-016) Aligned with the owner's existing React frontend, minus what an offline single-user app does not need.
+(D-016) Aligned with the owner's existing React frontend, minus what an offline single-user app does not need. The
+version numbers are that frontend's on 2026-11-21. Phase 0 pins whatever is current when it starts (Vitest 5 and
+TypeScript 7 were already out on that day) and writes the pinned versions into D-016.
 
 | Concern | Choice | Why |
 |---|---|---|
@@ -24,7 +26,7 @@ in nine phases. Each phase ends in something that runs and is tested.
 | Charts | Hand-made SVG | A few small charts; no chart library (D-019) |
 | Icons | lucide-react | The owner's existing stack; static SVG |
 | Lint and format | Biome | The owner's existing stack; never apply `--unsafe` fixes unread |
-| Unit and component tests | Vitest 4, Testing Library, jsdom, fake-indexeddb | |
+| Unit and component tests | Vitest 4, Testing Library, jsdom, fake-indexeddb | The owner's existing stack; fake-indexeddb runs the real database code under Node |
 | End-to-end tests | Playwright with WebKit and an iPhone device profile | WebKit is the engine closest to iPhone Safari |
 | Package manager | pnpm | The owner's existing stack |
 | Hosting | GitHub Pages from this public repo, custom domain tortoise.doctornova.net | Public repos use no billed Actions minutes on standard runners |
@@ -51,6 +53,7 @@ tortoise/
 │  └─ sw/                    service worker source
 ├─ tests/
 │  ├─ unit/  content/  db/   Vitest
+│  ├─ component/  guard/     Vitest
 │  └─ e2e/                   Playwright (WebKit, iPhone profile)
 └─ .github/workflows/        ci.yml, deploy.yml
 ```
@@ -65,9 +68,14 @@ tortoise/
 - **Gates, run once at the end of each phase:** `pnpm check` (Biome + tsc) → `pnpm test` → `pnpm build` → `pnpm e2e`,
   chained with `&&` so that a failing gate stops the chain.
 - **Guard tests** (Phase 0) stay green forever:
-  - no personal terms in committed text (public repo);
+  - no personal terms in committed text, `ai/` included (public repo). The banned list is committed only as keyed
+    hashes (HMAC-SHA-256). The key stays outside the repo, in an untracked local file and in a CI secret, because a
+    plain hash of a city or a first name falls to a dictionary attack (D-034). A local run without the key fails; a CI
+    run without the secret, such as a fork's pull request, reports the test as skipped;
   - no CJK characters in committed text (English-only rule);
-  - no grey utility classes (`gray-`, `slate-`, `zinc-`, `neutral-`, `stone-`) outside disabled styles.
+  - no grey utility classes (`gray-`, `slate-`, `zinc-`, `neutral-`, `stone-`) outside disabled styles;
+  - the docs hold together: every cited source id is defined in [sources.md](sources.md) and every source is cited;
+    every relative link and anchor resolves; every D-number mentioned is defined.
 - **Docs and data change together:** from Phase 1 on, a change to the exercise plan updates
   [2-exercise-plan.md](2-exercise-plan.md), the plan data and, for a number, [sources.md](sources.md), in one commit.
 - **Decisions:** every new construction choice gets a D-number in [decisions.md](decisions.md).
@@ -91,10 +99,11 @@ Sizes are relative: S is small, M medium, L large.
     and a maskable one;
   - the Apple touch icon and iOS meta tags;
   - the service worker skeleton with its build-time precache list and an update banner.
-- A Content Security Policy meta tag ([design §11](1-app-design.md#11-privacy-and-security)).
+- A Content Security Policy meta tag in the production build ([design §11](1-app-design.md#11-privacy-and-security)).
+  The dev server needs inline scripts, so the tag is not served there.
 - The guard tests (§3).
-- CI workflow: check, test, build and e2e on every push and pull request. Deploy workflow: build, then GitHub Pages; it is
-  written now and first runs in Phase 8.
+- CI workflow: check, test, build and e2e on every push and pull request. Deploy workflow: build, then GitHub Pages. It
+  is written now with a manual trigger only; Phase 8 adds the trigger on a push to `main`.
 - `CLAUDE.md` gets the real commands.
 
 **Done when:** the gates pass; the local preview is installable (manifest and service worker valid); and the WebKit e2e
@@ -113,9 +122,10 @@ smoke test loads the app with the network off.
   | ladders | §7 |
   | sessions | §6 |
   | week template | §5 |
-  | block rules and interval stages | §8–§9 |
+  | habits | §6.10 |
+  | block rules, Week 0, the ramp and interval stages | §2, §6.7, §8–§9 |
   | tests | §10 |
-  | milestones | §11 |
+  | milestones and the At-99 board | §11 |
   | start rules | §8 |
 
 - zod schemas, and content tests ([design §7](1-app-design.md#7-plan-content-model-static-shipped-with-the-app)): unique
@@ -138,6 +148,7 @@ smoke test loads the app with the network off.
 - Edge-case tests:
   - dates: daylight-saving changes, year ends, 29 February, Week 0;
   - local calendar dates rather than UTC instants;
+  - the streak: one missed day, two in a row, paused days between two missed days, the days before Week 0;
   - performance with a 22,000-day history.
 
 **Done when:** all logic tests pass; the database tests pass on fake-indexeddb, including a migration fixture; and the
@@ -148,6 +159,7 @@ daylight results match NOAA's published values for the test dates.
 **Goal:** the daily loop works without the player.
 
 - The tab bar; safe-area layout; light and dark themes.
+- The first run: the install hint and the start Monday ([design §3.8](1-app-design.md#38-first-run)).
 - Today:
   - the cards, with "Done as planned";
   - Shell day and the habits;
@@ -199,7 +211,7 @@ iPhone, sound, wake lock and background catch-up have been checked by hand.
 **Done when:**
 - e2e: a completed Week 0 test sets the starting levels;
 - milestones are awarded correctly from fixtures;
-- the charts render with 0, 1 and 200 tests.
+- the charts render with 0, 1 and 300 tests (60 years of tests is about 260).
 
 ### Phase 7 — Settings, backup and reminders (M)
 
@@ -223,32 +235,38 @@ iPhone, sound, wake lock and background catch-up have been checked by hand.
 
 **Goal:** the app live at its permanent address and installed on the phone.
 
-**Owner steps** (one time). Do them only when Phase 8 begins, right before the repo claims the domain in its Pages
-settings. A CNAME that points at GitHub before any site claims it can be taken over by someone else's site.
+**The domain, in this order** (one time, and only when Phase 8 begins). GitHub's documentation says to add the custom
+domain to the Pages site before the DNS record exists: a record that points at GitHub before any site has claimed the
+name lets someone else's site claim it (D-035).
 
-| # | Step |
-|---|---|
-| 1 | In GoDaddy's DNS for doctornova.net, add a CNAME record: host `tortoise`, value `mortal-dog.github.io` (the same shape as the existing `money` record) |
-| 2 | If doctornova.net is not yet verified for GitHub Pages in the GitHub account settings, verify it with the TXT record GitHub shows. This protects the subdomain from takeover |
+| # | Who | Step |
+|---|---|---|
+| 1 | Owner | If doctornova.net is not yet verified for GitHub Pages in the GitHub account settings, verify it with the TXT record GitHub shows. A verified domain and its immediate subdomains can be published only from this account's repositories |
+| 2 | Builder, on the owner's yes | Repo settings → Pages: source "GitHub Actions"; custom domain `tortoise.doctornova.net` |
+| 3 | Owner | In GoDaddy's DNS for doctornova.net, add a CNAME record: host `tortoise`, value `mortal-dog.github.io` (the same shape as the existing `money` record) |
+| 4 | Builder | Tick "Enforce HTTPS" once GitHub has issued the certificate |
 
-**Repo setup:**
-- Settings → Pages: source "GitHub Actions"; custom domain `tortoise.doctornova.net`; "Enforce HTTPS" once the
-  certificate is issued.
 - With an Actions deployment the custom domain lives in the Pages settings; a `CNAME` file is not used.
+- Source, read in its raw text on 2026-11-21: GitHub Docs,
+  [Managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)
+  and
+  [Verifying your custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages).
 
-**Releases:** the first push to `main` goes out after the owner's yes in a picker, because it publishes.
+**Releases:** from Phase 8 on, every push to `main` publishes, so each one waits for the owner's yes in a picker.
 
 **The real-phone checklist** (on the iPhone, from Safari):
 
 | Area | Check |
 |---|---|
-| Install | Add to Home Screen; opens full screen |
+| Install | Add to Home Screen; opens full screen; the home-screen app starts with its own empty data |
 | Offline | Works in airplane mode after the first load |
-| Sound | Cues with the ring/silent switch on and off |
+| Update | A new deploy shows the update banner, and the new version loads after a tap |
+| Sound | Cues with the ring/silent switch on and off; a spoken cue |
 | Screen | Wake lock in the installed app; the pocket lock |
 | Background | Timers catch up after locking the phone mid-interval |
 | Backup | Export through the share sheet to Files; import back |
 | Reminders | The calendar file imports and rings |
+| Daylight | "Use my location once" asks for permission and fills the coordinates |
 | Storage | Persistent storage reported |
 | Layout | Safe areas, dark mode, larger text |
 
@@ -271,7 +289,7 @@ settings. A CNAME that points at GitHub before any site claims it can be taken o
 | Content | Vitest + zod | The plan data's rules ([design §7](1-app-design.md#7-plan-content-model-static-shipped-with-the-app)) |
 | Database | Vitest + fake-indexeddb | Stores, transactions, migrations with fixtures |
 | Component | Vitest + Testing Library | Cards, player steps, wizard steps, settings forms |
-| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, tests wizard, backup round trip, offline mode |
+| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, test wizard, backup round trip, offline mode |
 | Real phone | Phase 8 checklist | What emulation cannot show: sound, wake lock, install, share sheet, Calendar |
 
 ---
@@ -282,11 +300,13 @@ settings. A CNAME that points at GitHub before any site claims it can be taken o
 |---|---|
 | Losing the data on the phone (app deleted, storage cleared) | Persistent storage; the 30-day backup reminder; one-tap export |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
+| The calendar file does not import from a home-screen app | Phase 7 tries the share sheet and opening the file on the phone; the reminder times are also shown as text |
+| Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0. If so, that one test runs in Chromium, and the phone check of Phase 8 covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |
 | The data drifting from the plan | Phase 1 content tests; the rule that docs and data change in one commit |
-| Personal facts leaking into the public repo | The guard test; the `CLAUDE.md` rule; ai/ files reviewed before each commit |
+| Personal facts leaking into the public repo | The guard test, with its list kept as keyed hashes (D-034); the `CLAUDE.md` rule; ai/ files reviewed before each commit |
 | Scope creep (nutrition, social, sync) | Scope decision D-001 and the out-of-scope list ([design §14](1-app-design.md#14-out-of-scope-and-later)) |
-| DNS or Pages misconfiguration | The Phase 8 steps; domain verification against takeover |
+| DNS or Pages misconfiguration | The Phase 8 steps in their order; domain verification against takeover (D-035) |
 | Supply chain | Five runtime dependencies; a lockfile; the Content Security Policy blocks third-party requests |
 
 ---

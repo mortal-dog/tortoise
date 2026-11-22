@@ -33,11 +33,12 @@ only.
 
   | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
   |---|---|---|---|---|---|---|
-  | Strength A | Easy run | Strength B | Intervals | Strength C | Long outdoor run + playground | Light: flexibility + walk |
+  | Strength A | Easy run | Strength B | Intervals | Strength C | Long outdoor run + playground | Light: walk + flexibility |
 
-- About 7 hours in a full week. Every fourth week is light. The **Tortoise Test** comes every 12 weeks, and progression
+- About 7½ hours in a full week. Every fourth week is light. The **Tortoise Test** comes every 12 weeks, and progression
   ladders carry every exercise forward for decades.
-- Every number names a source in [sources.md](sources.md).
+- Every number taken from evidence names a source in [sources.md](sources.md); the plan's own choices are marked
+  *our rule*.
 
 ### 3. [Implementation](3-implementation.md)
 
@@ -66,7 +67,7 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
 | | |
 |---|---|
 | Equipment | One fixed dumbbell pair (7–15 kg each), a jump rope, playground or park bars, a wall, a chair, a sofa, the floor |
-| Time | About 60 min on weekdays (15 in the morning, 45 later), 1.5–2 h on Saturday, about 45 min on Sunday; the 15-minute Shell day when needed |
+| Time | About 60–70 min on weekdays (15 in the morning, the rest later), 1.5–2 h on Saturday, about 45 min plus a walk on Sunday; the 15-minute Shell day when needed |
 | Outdoors | Runs outside whenever the weather allows; the rope indoors otherwise |
 | Phone | iPhone, with the app installed from Safari |
 | Privacy | The repo is public, so it holds no personal facts. Personal data lives only on the phone |
@@ -75,5 +76,8 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
 
 - **2026-11-21:** the plan is written: these documents, plus `CLAUDE.md` and `README.md` at the repo root. There is no code
   yet, by the owner's instruction (D-021).
+- **2026-11-21, review:** every document was checked against the others, and every source was read again in its raw
+  text. The evidence wording was tightened, the weekly hours were recounted, and gaps in the rules were closed (D-029
+  to D-035).
 - **Next:** Phase 0 of the [implementation plan](3-implementation.md#phase-0--scaffold-and-guardrails-s), when the owner
   starts it.
