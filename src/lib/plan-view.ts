@@ -28,6 +28,19 @@ export function currentLevel(
   return ladder.levels.find((l) => l.level === n) ?? (ladder.levels[0] as LadderLevel)
 }
 
+/** The level a step works at: the ladder's current level, raised by the step's offset and capped at the top. */
+export function stepLevel(
+  step: Step,
+  ladder: Ladder,
+  levels: ReadonlyMap<string, LevelRecord>,
+  day?: PlanDay,
+): LadderLevel {
+  const base = currentLevel(ladder, levels, day)
+  if (!step.levelOffset) return base
+  const top = ladder.levels.at(-1) as LadderLevel
+  return ladder.levels.find((l) => l.level === base.level + (step.levelOffset ?? 0)) ?? top
+}
+
 /** The steps a variant uses: untagged steps and the variant's own. */
 export function stepsFor(session: Session, variant: Variant, day?: PlanDay): Step[] {
   return session.steps.filter(
@@ -42,7 +55,7 @@ export function stepName(step: Step, levels: ReadonlyMap<string, LevelRecord>, d
   if (step.ladderId) {
     const ladder = laddersById.get(step.ladderId)
     if (!ladder) return step.ladderId
-    const code = currentLevel(ladder, levels, day).code
+    const code = stepLevel(step, ladder, levels, day).code
     // Numeric codes read "L1"; lettered ones (H1, S1, P1, R1, J1, G1, Ba1) stand alone.
     return `${ladder.name} ${/^\d/.test(code) ? `L${code}` : code}`
   }

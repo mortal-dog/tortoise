@@ -209,6 +209,14 @@ Phase 4; the Progress, Library and Settings tabs hold only what Phase 3 needs un
 **Done when:** the step-engine unit tests pass; e2e tests with a fake clock run Strength A and a 4 × 4 session; and on the
 iPhone, sound, wake lock and background catch-up have been checked by hand.
 
+**Done (2026-11-22), apart from the phone:** `src/lib/player.ts` builds the units and runs the timelines;
+`tests/unit/player.test.ts` covers pairs, Week 0, the ramp, the light week, the interval stages, run–walk levels, holds,
+stretches, Friday's level offset and the timeline arithmetic. `tests/e2e/player.spec.ts` runs Strength A on a fake
+clock (the rest timer, the pair, the pocket lock, saving the logs and the card) and the 4 × 4 (work and rest, a
+10-minute jump standing in for the background, pause). Today's cards have **Start**; the player is full screen
+(`/play/<date>/<slot>`). Construction choices: D-040. Sound, speech, wake lock and background catch-up on the iPhone
+are in the Phase 8 checklist.
+
 ### Phase 5 — Library and content (M)
 
 **Goal:** every exercise fully explained.

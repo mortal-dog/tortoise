@@ -550,6 +550,7 @@ export const sessions: SessionInput[] = [
         reps: range(6, 12),
         restS: 60,
         pairedWith: 'b1',
+        levelOffset: 1,
         dose: '2 × 6–12',
         note: "Push-up, one variant harder than Monday's, or slower",
         why: 'The second push day',

@@ -2,15 +2,18 @@
 import type { Weekday } from '@/data/schema'
 import type { Swap } from './calendar'
 import { addDays, type LocalDate } from './dates'
-import { type Db, openDb, requestPersistentStorage, SCHEMA_VERSION } from './db'
+import { type Db, openDb, request, requestPersistentStorage, SCHEMA_VERSION } from './db'
 import { notifyChange } from './live'
 import {
   type DayRecord,
   type LevelRecord,
+  type LogRecord,
+  newId,
   nowIso,
   type OverrideRecord,
   type SettingsRecord,
   SettingsRecord as SettingsSchema,
+  type Variant,
 } from './records'
 
 let dbPromise: Promise<Db> | null = null
@@ -126,4 +129,54 @@ export async function getLogsForLadder(ladderId: string) {
 
 export async function getAllLogs() {
   return (await getDb()).getAll('logs')
+}
+
+export type Slot = 'morning' | 'main' | 'split'
+
+export interface PlayedSession {
+  date: LocalDate
+  slot: Slot
+  sessionId: string
+  variant?: Variant
+  /** The split kind for a split block, and for the Sunday session that holds the split work. */
+  splitKind?: 'front' | 'side' | 'both' | 'long'
+  minutes: number
+  effort?: number
+  note?: string
+  distanceKm?: number
+  logs: Array<Omit<LogRecord, 'id' | 'updatedAt' | 'date' | 'sessionId'>>
+}
+
+/** Saves a session the player ran: its logs and the day's card, in one transaction (design §3.2). */
+export async function savePlayedSession(p: PlayedSession): Promise<void> {
+  const db = await getDb()
+  const at = nowIso()
+  await db.transaction(['days', 'logs'], 'readwrite', async (tx) => {
+    const logs = tx.objectStore('logs')
+    for (const l of p.logs) {
+      logs.put({ ...l, id: newId(), date: p.date, sessionId: p.sessionId, updatedAt: at } satisfies LogRecord)
+    }
+    const days = tx.objectStore('days')
+    const current = ((await request(days.get(p.date))) as DayRecord | undefined) ?? {
+      date: p.date,
+      updatedAt: at,
+    }
+    const next: DayRecord = { ...current, date: p.date, updatedAt: at }
+    if (p.slot === 'morning') next.morning = { doneAt: at }
+    else if (p.slot === 'split') next.split = { doneAt: at, kind: p.splitKind ?? 'both' }
+    else {
+      next.main = {
+        doneAt: at,
+        sessionId: p.sessionId,
+        minutes: Math.round(p.minutes),
+        ...(p.variant ? { variant: p.variant } : {}),
+        ...(p.effort ? { effort: p.effort } : {}),
+        ...(p.note ? { note: p.note } : {}),
+        ...(p.distanceKm ? { distanceKm: p.distanceKm } : {}),
+      }
+      if (p.splitKind) next.split = { doneAt: at, kind: p.splitKind }
+    }
+    days.put(next)
+  })
+  notifyChange()
 }

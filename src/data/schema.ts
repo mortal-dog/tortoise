@@ -118,6 +118,8 @@ export const Step = z
     restS: z.number().nonnegative().optional(),
     /** The id of the step done alternately with this one (A1 with A2). */
     pairedWith: z.string().optional(),
+    /** Levels above the ladder's current level ("one variant harder than Monday's"), capped at the top level. */
+    levelOffset: z.number().int().positive().optional(),
     /** A step for one variant only; steps without it are in both. */
     variant: z.enum(['outdoor', 'indoor']).optional(),
     /** A step that starts in a later block (strides from Block 2). */

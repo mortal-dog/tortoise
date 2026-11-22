@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Check, Sun, Undo2 } from 'lucide-react'
+import { Check, Play, Sun, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { DayRing } from '@/components/DayRing'
 import { FirstRun } from '@/components/FirstRun'
@@ -24,7 +24,7 @@ import {
 } from '@/lib/plan-view'
 import { type LadderLog, type Suggestion, suggest } from '@/lib/progression'
 import { type DayRecord, type LevelRecord, nowIso, type SettingsRecord, type Variant } from '@/lib/records'
-import { getAllLogs, getLevels, getOverride, setLevel, updateDay } from '@/lib/repo'
+import { getAllLogs, getLevels, getOverride, type Slot, setLevel, updateDay } from '@/lib/repo'
 import { type History, planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/')({
@@ -192,6 +192,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
         done={morningDone}
         onDone={() => void updateDay(t, (d) => ({ ...d, morning: { doneAt: nowIso() } }))}
         onUndo={() => void updateDay(t, (d) => ({ ...d, morning: null }))}
+        start={{ date: t, slot: 'morning' }}
       />
 
       {!(folded && !mainDone) &&
@@ -218,6 +219,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
               lines={[sessionSummary(main, variant, levels, pd).join(' · ')]}
               done={mainDone}
               onDone={() => void markMain(main.id, main.hasVariants ? variant : undefined)}
+              start={{ date: t, slot: 'main', ...(main.hasVariants ? { variant } : {}) }}
               onUndo={() =>
                 void updateDay(t, (d) => ({ ...d, main: null, ...(tmpl.split ? {} : { split: null }) }))
               }
@@ -238,6 +240,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
             void updateDay(t, (d) => ({ ...d, split: { doneAt: nowIso(), kind: splitKind(split.id) } }))
           }
           onUndo={() => void updateDay(t, (d) => ({ ...d, split: null }))}
+          start={{ date: t, slot: 'split' }}
         />
       )}
 
@@ -315,10 +318,12 @@ interface PlanCardProps {
   done: boolean
   onDone: () => void
   onUndo: () => void
+  /** Opens the player for this card (design §3.1). */
+  start?: { date: LocalDate; slot: Slot; variant?: Variant }
   children?: ReactNode
 }
 
-function PlanCard({ testId, title, minutes, lines, done, onDone, onUndo, children }: PlanCardProps) {
+function PlanCard({ testId, title, minutes, lines, done, onDone, onUndo, start, children }: PlanCardProps) {
   return (
     <Card data-testid={testId} className={cn(done && 'border-primary')}>
       <div className="flex items-baseline justify-between gap-3">
@@ -340,9 +345,22 @@ function PlanCard({ testId, title, minutes, lines, done, onDone, onUndo, childre
             <Undo2 aria-hidden className="size-4" /> Undo
           </Button>
         ) : (
-          <Button onClick={onDone} aria-label={`Done as planned: ${title}`}>
-            Done as planned
-          </Button>
+          <>
+            <Button variant="quiet" onClick={onDone} aria-label={`Done as planned: ${title}`}>
+              Done as planned
+            </Button>
+            {start && (
+              <Link
+                to="/play/$date/$slot"
+                params={{ date: start.date, slot: start.slot }}
+                search={start.variant ? { v: start.variant } : {}}
+                aria-label={`Start ${title}`}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
+              >
+                <Play aria-hidden className="size-4" /> Start
+              </Link>
+            )}
+          </>
         )}
       </div>
     </Card>
