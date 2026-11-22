@@ -10,11 +10,41 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as WeekRouteImport } from './routes/week'
+import { Route as DayDateRouteImport } from './routes/day.$date'
 import { Route as DebugWeekRouteImport } from './routes/debug.week'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeekRoute = WeekRouteImport.update({
+  id: '/week',
+  path: '/week',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DayDateRoute = DayDateRouteImport.update({
+  id: '/day/$date',
+  path: '/day/$date',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DebugWeekRoute = DebugWeekRouteImport.update({
@@ -25,27 +55,69 @@ const DebugWeekRoute = DebugWeekRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/library': typeof LibraryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/week': typeof WeekRoute
+  '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/library': typeof LibraryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/week': typeof WeekRoute
+  '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/library': typeof LibraryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/week': typeof WeekRoute
+  '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/debug/week'
+  fullPaths:
+    | '/'
+    | '/library'
+    | '/progress'
+    | '/settings'
+    | '/week'
+    | '/day/$date'
+    | '/debug/week'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debug/week'
-  id: '__root__' | '/' | '/debug/week'
+  to:
+    | '/'
+    | '/library'
+    | '/progress'
+    | '/settings'
+    | '/week'
+    | '/day/$date'
+    | '/debug/week'
+  id:
+    | '__root__'
+    | '/'
+    | '/library'
+    | '/progress'
+    | '/settings'
+    | '/week'
+    | '/day/$date'
+    | '/debug/week'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LibraryRoute: typeof LibraryRoute
+  ProgressRoute: typeof ProgressRoute
+  SettingsRoute: typeof SettingsRoute
+  WeekRoute: typeof WeekRoute
+  DayDateRoute: typeof DayDateRoute
   DebugWeekRoute: typeof DebugWeekRoute
 }
 
@@ -56,6 +128,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/week': {
+      id: '/week'
+      path: '/week'
+      fullPath: '/week'
+      preLoaderRoute: typeof WeekRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/day/$date': {
+      id: '/day/$date'
+      path: '/day/$date'
+      fullPath: '/day/$date'
+      preLoaderRoute: typeof DayDateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/debug/week': {
@@ -70,6 +177,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LibraryRoute: LibraryRoute,
+  ProgressRoute: ProgressRoute,
+  SettingsRoute: SettingsRoute,
+  WeekRoute: WeekRoute,
+  DayDateRoute: DayDateRoute,
   DebugWeekRoute: DebugWeekRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,6 +1,23 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## Phases 0 to 3 — started 2026-11-22 07:24 ET, done 2026-11-22
+
+**Why:** owner 2026-11-22: "implement phase 0 to 3".
+
+**Done**
+- [x] Phase 0: scaffold and guardrails — `79befb7`
+- [x] Phase 1: the plan content schema `4355376`; the data, content tests and debug week `4ae93a6` (a subagent in a
+  worktree, cherry-picked)
+- [x] Phase 2: storage and core logic — `491994c`
+- [x] Phase 3: Today and Week, the e2e daily loop, screenshots reviewed in both themes; docs D-037 and D-038 — the
+  commit after `4ae93a6`
+- [x] all four gates green on the final tree
+- [ ] ⛔ push to origin/main: waits for the owner's picker (public repo); the CI secret TORTOISE_GUARD_KEY is the
+  owner's step as well
+
+**Don't forget:** the next D-number is D-039; Phase 4 (the session player) is next, when the owner asks.
+
 ## Review all docs and fix every issue found — started 2026-11-21 21:30 ET, done 22:11 ET
 
 **Why:** owner 2026-11-21: "review all docs and fix all issues."

@@ -274,7 +274,7 @@ Settings ─ Backup / Reminders / Profile / About
 | Store | Key | Fields |
 |---|---|---|
 | `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}; dumbbellKg; location {lat, lon, label} (optional); runDefault; reminders {morning, main per weekday}; backup {lastAt, everyDays} |
-| `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note}; split {doneAt, kind (front, side, both or long)}; habits {steps, snacks 0–3, outdoorMin}; folded (the "Make it a Shell day" tap) |
+| `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned")}; split {doneAt, kind (front, side, both or long)}; habits {steps, snacks 0–3, outdoorMin}; folded (the "Make it a Shell day" tap) |
 | `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
 | `levels` | ladderId | level, since, history [{level, date}] |
 | `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, broadJumpCm, hangS, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answers {runMin, ropeMin, negative} (Week 0 only); computed {vo2max, sitRiseScore} |

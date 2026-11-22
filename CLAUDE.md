@@ -16,6 +16,10 @@ running at 99, plus a handstand and the splits. It covers exercise only.
 | `docs/decisions.md` | Every decision as a D-number (the next number is at the top) |
 | `docs/sources.md` | Every source, with the finding read in its raw text |
 | `ai/resume.md` | The handoff sheet (global §0); finished entries move to `ai/resume-done.md` |
+| `src/data/` | The plan as data (schema, sessions, ladders, tests, milestones, sources); changes with the plan docs (rule 6) |
+| `src/lib/` | The rules as pure functions (calendar, streak, progression, daylight, milestones) and the IndexedDB layer |
+| `src/routes/`, `src/components/` | The screens (TanStack Router, file-based) |
+| `tests/` | Vitest (`unit`, `content`, `db`, `component`, `guard`) and Playwright (`e2e`) |
 
 ## Rules
 

@@ -1,6 +1,6 @@
 # 3 · Implementation plan
 
-**Status (2026-11-22):** building. The owner started Phase 0 on 2026-11-22 (D-021); Phase 0 is done.
+**Status (2026-11-22):** building. The owner started Phase 0 on 2026-11-22 (D-021); Phases 0 to 3 are done.
 
 This plan turns [1-app-design.md](1-app-design.md) and [2-exercise-plan.md](2-exercise-plan.md) into a working iPhone app
 in nine phases, 0 to 8, with an optional Phase 9 for later extras. Each phase ends in something that runs and is tested.
@@ -137,6 +137,11 @@ policy, then reloads the app with the network off (proved by a fetch that fails)
 
 **Done when:** the content tests pass, and the debug week matches the plan's tables, checked by hand.
 
+**Done (2026-11-22):** the plan lives in `src/data/` (78 exercises, 14 ladders, 11 sessions, 13 tests, 44 milestones,
+all 45 sources used). `tests/content/` checks the rules of design §7, and also that every copied text appears word
+for word in the plan unless it is listed as composed, with a reason. `/debug/week` draws the week from the data. The
+encoding choices where the plan left a gap are D-038.
+
 ### Phase 2 — Storage and core logic (M)
 
 **Goal:** every rule of the app as pure, tested functions, and the database under them.
@@ -157,6 +162,12 @@ policy, then reloads the app with the network off (proved by a fetch that fails)
 **Done when:** all logic tests pass; the database tests pass on fake-indexeddb, including a migration fixture; and the
 daylight results match NOAA's published values for the test dates.
 
+**Done (2026-11-22):** the logic lives in `src/lib/` and its tests in `tests/unit/` and `tests/db/`. Dates are whole day
+numbers, never instants, and the tests run in a zone with daylight saving. The daylight module matches the values in
+NOAA's published year spreadsheet (its own example: 40° N, 105° W, 2010) to within a minute on nine dates, and the
+design's Greenwich mock to the minute (D-037). The migration fixture upgrades a version-1 database through a test
+migration and keeps its records; 22,000 days are written and read in one test.
+
 ### Phase 3 — Today and Week (M)
 
 **Goal:** the daily loop works without the player.
@@ -174,6 +185,12 @@ daylight results match NOAA's published values for the test dates.
 **Done when:** e2e tests log a full day, a Shell day and a sick day, and the streak numbers match the rules
 ([design §5.2](1-app-design.md#52-day-status-and-the-tortoise-streak)). It all works offline. Screenshots in the iPhone
 profile have been reviewed.
+
+**Done (2026-11-22):** `tests/e2e/daily-loop.spec.ts` runs a week of Week 0 with the network off and a fixed clock: a
+full day, a Shell day, a sick day bridged as paused, one missed day bridged, then two missed days ending the run; the
+Week tab's marks and the longest streak match. A second test edits a past day and swaps two days with the rule
+warning. `tests/e2e/screens.spec.ts` takes the screenshots, light and dark. The player's **Start** buttons come with
+Phase 4; the Progress, Library and Settings tabs hold only what Phase 3 needs until their phases (D-037).
 
 ### Phase 4 — Session player (L)
 

@@ -79,5 +79,6 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
 - **2026-11-21, review:** every document was checked against the others, and every source was read again in its raw
   text. The evidence wording was tightened, the weekly hours were recounted, and gaps in the rules were closed (D-029
   to D-035).
-- **2026-11-22:** the owner started the building ("implement phase 0 to 3"). Phase 0, the scaffold and its guardrails, is
-  done.
+- **2026-11-22:** the owner started the building ("implement phase 0 to 3"). Phases 0 to 3 are done: the scaffold and
+  its guardrails, the plan as data, the storage and core logic, and the Today and Week screens. Next is Phase 4, the
+  session player.
