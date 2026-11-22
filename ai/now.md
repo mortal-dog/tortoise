@@ -3,172 +3,156 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-22)
+## Open work and next steps (as of 2026-11-22, 13:00 ET)
 
-- **Nothing in flight.** The handoff sheet is empty. Phases 0 to 3 are built, committed and pushed to origin/main on
-  the owner's picker yes (2026-11-22, CI run green at 08:38 ET):
-  - `79befb7` Phase 0; `4355376` the plan schema; `491994c` Phase 2; `4ae93a6` Phase 1 data (a subagent in a git
-    worktree, cherry-picked); `f63c61d` Phase 3 and the docs (D-036 to D-038).
-  - The owner, 2026-11-22: "implement phase 0 to 3". That started the building and ended D-021's no-code rule.
-- **Next: Phase 4, the session player** (`docs/3-implementation.md` §4), when the owner asks. Write its entry in
-  `ai/resume.md` first (global §0). Phase 4 adds the **Start** buttons to the Today cards; it needs:
-  - the step engine on `src/lib/calendar.ts` `adjustDose()` (Week 0 halves, ramp 2 sets, light week) and the interval
-    stage of `plan.blockRules.intervalStages`;
-  - a level offset for Friday's push-up, "one variant harder than Monday's", which is only a note in the data (D-038 4);
-  - logs written by the player: "Done as planned" writes no logs (D-037 3), so the level-up banner on Today stays
-    silent until the player logs sets.
-- **Plan gaps the data encodes by its closest reading (D-038), worth the owner's look:** A0 jumps show the squat jump
-  (ladder level 1), not the table's broad jump; the four exercises added without an Appendix A row (brisk walk, easy
-  walk, marching in place, cool-down); Thursday plyometrics counted as about 3 min; no data home yet for the ramp-week
-  effort notes, the rest between Day-2 tests, §9 stages to 99, §13 pain rules and §14 adaptations.
-- **Later phases' tabs are minimal on purpose (D-037 6):** Progress shows the streak numbers, Library a plain list,
-  Settings the start date, daylight location and run default.
-- **Phase 8 domain steps wait for Phase 8 and run in this order** (D-035; GitHub's documentation, read in raw text):
-  1. the owner verifies doctornova.net for GitHub Pages in the account settings (a TXT record), if not yet verified;
-  2. the repo's Pages settings, on the owner's yes: source "GitHub Actions", custom domain `tortoise.doctornova.net`;
-  3. the owner adds the GoDaddy DNS CNAME `tortoise` → `mortal-dog.github.io`;
-  4. "Enforce HTTPS" once the certificate is issued.
-
-  A DNS record that exists before a site has claimed the name lets someone else's site claim it. Then Phase 8 adds the
-  push trigger to `.github/workflows/deploy.yml` (manual only now).
+- **Nothing in flight; the handoff sheet is empty.** Every phase that code can do is built, committed and pushed to
+  origin/main (owner's picker yes, 2026-11-22). The owner, 2026-11-22: "do all the remaining phases" (after "implement
+  phase 0 to 3" the same morning).
+- **Phase 8 is all that is left, and it waits on a deploy and on the phone:**
+  1. **The first deployment has not happened yet** (the site answered 404 at 13:00 ET). The scheduled CI/CD run at
+     23:07 UTC (18:07 ET) deploys it: main changed since the last green run. Or the owner clicks "Run workflow" on
+     GitHub (Actions → CI/CD). A `gh workflow run ci.yml` from the session was refused by the auto-mode classifier as
+     an unapproved deploy; do not retry it another way. After the run: check `https://tortoise.doctornova.net/` loads
+     (HTTP 200) and that the run's deploy job ran (not skipped).
+  2. **The real-phone checklist** (`docs/3-implementation.md`, Phase 8 table) is the owner's, on the iPhone from
+     Safari: install, offline, the update banner, sound with the silent switch, spoken cues, wake lock and the pocket
+     lock, background catch-up, backup through the share sheet to Files and back, the calendar file into Calendar,
+     "Use my location once", persistent storage, layout. **When the owner reports results, write them into
+     `docs/3-implementation.md` under Phase 8** (its done criterion), mark the domain steps done there, and fix what
+     fails.
+- **The domain steps are done** (D-035 order kept): Pages enabled with source "GitHub Actions" and custom domain
+  `tortoise.doctornova.net` by the builder on the owner's yes; the owner added the GoDaddy CNAME `tortoise` →
+  `mortal-dog.github.io` and the TXT `_github-pages-challenge-mortal-dog` (doctornova.net is "verified" for the
+  account) and turned on "Enforce HTTPS". Checked 13:00 ET: `cname` set, `https_enforced` true,
+  `protected_domain_state` verified. The TXT record must stay.
+- **Owner questions left open by the agents (optional, no picker asked yet):**
+  - the 44 new "why" lines and the four walking rows of Appendix A (D-043), written under the builder's delegation;
+  - the backup interval choices (7, 14, 30, 60, 90 days) and whether "Not today" should hide the backup reminder for
+    longer than until the app is opened again (D-042).
+- **Plan gaps still encoded by their closest reading (D-038):** A0 jumps show the squat jump (ladder level 1), not the
+  table's broad jump; Thursday plyometrics counted as about 3 min; no data home yet for the ramp-week effort notes, the
+  rest between Day-2 tests, §9 stages to 99, §13 pain rules and §14 adaptations. Closed: (1) the walking rows (D-043)
+  and (4) Friday's push-up offset (D-040).
 
 ## Standing rules (also in CLAUDE.md)
 
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
-  rule 3; commands in CLAUDE.md). `pnpm e2e` builds and serves `dist/` itself on port 4173.
+  rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
+  a running server is never reused). Last green: 242 Vitest tests in 28 files, 19 e2e tests, on `a9153fc`.
+- **CI/CD (D-039):** one workflow `.github/workflows/ci.yml`, run twice a day (13:07 and 23:07 UTC) and by hand, never on
+  a push or pull request. A scheduled slot works only when main changed since the workflow's last green run (GitHub's
+  run history; nothing written to the repo). The gates build `dist/` once and that build deploys, from main only and
+  only when GitHub Pages is set up (it is now). The owner: CI/CD "like the other repos: runs automatically twice a day,
+  manual deploy supported. That saves GitHub Actions quota, and we can push any number of times without triggering a
+  run." The old `deploy.yml` is gone.
+- **Pushes:** compact-ai pushes `ai/` as its job; any other push to main needs a picker first, because whatever is on
+  main is published by the next scheduled run (CLAUDE.md rule 8). Do not chain a commit and a push in one command.
 - **The personal-term guard needs the untracked `.guard-key`** at the repo root (D-034); CI has it as the secret
-  `TORTOISE_GUARD_KEY` (set 2026-11-22). Details: `ai/memory/guard-tests.md`.
-- **Public repo** (`mortal-dog/tortoise`, visibility PUBLIC): no personal facts in any committed file, including docs,
-  code, tests, this file, `ai/memory/` and commit messages. Health answers given in pickers never go in. Profile values
-  live only on the phone (D-022). Times in ai/ files are ET only.
-- **Example data comes from neutral places.** Mocks, fixtures and tests take daylight values from Greenwich or from
-  NOAA's own published examples, and invented values elsewhere; never real coordinates, dates or measurements. The
-  tests run in `Europe/London` (set in `vitest.config.ts`; `timezoneId` in the e2e specs).
-- **English only** in committed files.
-- **Numbers need sources**, each read in its raw text (`docs/sources.md`).
-  - A finding restates only what the text says, and says who was studied.
-  - The plan's own choices are *our rule*: its doses, ladder steps, pass targets, milestones and test aims as a whole
-    (`docs/2-exercise-plan.md`, "How to read the numbers"), and single lines marked one by one.
-  - How to fetch each kind of raw text: `ai/memory/reading-sources-raw.md`.
+  `TORTOISE_GUARD_KEY`. Copy it into an agent's worktree (never print it). Details: `ai/memory/guard-tests.md`.
+- **Public repo** (`mortal-dog/tortoise`, PUBLIC): no personal facts in any committed file, including docs, code,
+  tests, this file, `ai/memory/` and commit messages. Profile values live only on the phone (D-022). Times in ai/ files
+  are ET only. Example data from neutral places (Greenwich, NOAA's own examples) or invented; tests run in
+  `Europe/London`.
+- **English only** in committed files, names included: a YouTube channel name with Arabic script keeps only its Latin
+  spelling (`src/data/videos.ts`, "Aspetar").
+- **Numbers need sources**, each read in its raw text (`docs/sources.md`); the plan's own choices are *our rule*. How to
+  fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
-  `docs/sources.md` in one commit. `tests/content/verbatim.test.ts` fails when copied text drifts from the plan.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-039**.
-  - The owner's decisions go through a picker.
-  - Construction choices are builder's rulings, which the owner may overturn.
-- **Pushes:**
-  - compact-ai pushes `ai/` as its job;
-  - any other push to this public repo goes through a picker (approved in pickers on 2026-11-21 and twice on
-    2026-11-22);
-  - from Phase 8 on, a push to main also deploys the site.
-- **UI:**
-  - no grey except for disabled controls (Tailwind's default palette is removed, so no grey class exists; the
-    `disabled` token is the one grey; native controls with grey borders get drawn in theme colours, as the day
-    page's checkboxes);
-  - iPhone first; offline;
-  - no third-party requests at runtime;
-  - English UI.
+  `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-046**. The docs guard requires the numbers with
+  no gap, so parallel agents' entries are renumbered after main's at merge (done for D-042 and D-043).
+- **UI:** no grey except disabled controls (no grey class exists; the `disabled` token); iPhone first; offline; **no
+  third-party requests at runtime** (the owner kept this, D-045: no weather hint); English UI.
 - **The weekly hours are stated in four places** that must change together: `docs/2-exercise-plan.md` §4–§5,
-  `docs/plan.md`, D-009 and this page. Recount them from the sessions' minutes after any session change.
+  `docs/plan.md`, D-009 and this page.
 
 ## Pitfalls
 
-- **Building pitfalls** (worktrees and Biome, Playwright clock and locators, TypeScript 7 and the service worker, the
-  NOAA reference values): `ai/memory/building-pitfalls.md`.
-- **Evidence that is easy to overstate:** `ai/memory/evidence-pitfalls.md`. The review of 2026-11-21 found eight
-  findings that said more than their raw text; the same slips come back whenever a finding is written from memory.
+- **Building pitfalls** (worktrees, Biome, Playwright clocks and locators, route tree, TypeScript 7, the service
+  worker, D-number merges, NOAA values, a refused deploy run): `ai/memory/building-pitfalls.md`.
+- **Evidence that is easy to overstate:** `ai/memory/evidence-pitfalls.md`.
 - **The address is the data:** IndexedDB belongs to the exact origin, so moving the app strands the phone's data until
   an export and import (D-010).
-- **The guard key has no backup** besides the CI secret, which cannot be read back. Losing `.guard-key` means a new key
-  and the hash list made again from the banned terms.
-- **iOS web-app limits** to verify on the phone (design §2):
-  - Web Push needs a server;
-  - there is no Vibration API;
-  - Web Audio starts only after a tap, and the silent switch may mute it;
-  - wake lock in home-screen mode was broken on older iOS;
-  - timers stop in the background;
-  - the home-screen app keeps its own data, apart from Safari's, so the first run asks to install before starting;
-  - speech synthesis in the home-screen app;
-  - which hand-off adds the calendar file from a home-screen app: the share sheet, or opening the file.
-- **Custom domain:** with an Actions deployment, GitHub Pages takes it from the Pages settings, not from a `CNAME` file.
-- **A level label can collide with a slot label.** The strength tables use A1, B2, C1 for exercise slots, so the back
-  extension and core ladders number their levels 1, 2, 3 instead of B1 or C1. On cards, numeric codes read "L1" and
-  lettered codes stand alone ("H1", "Ba1"): `src/lib/plan-view.ts` `stepName()`.
+- **The guard key has no backup** besides the CI secret, which cannot be read back.
+- **iOS web-app limits** still to verify on the phone (design §2; the Phase 8 checklist): sound after a tap and the
+  silent switch, speech in the home-screen app, wake lock in home-screen mode, timers stopped in the background (the
+  player catches up from timestamps), the home-screen app's separate data, the calendar file's hand-off (share sheet or
+  opening the file), the share sheet to Files.
+- **A level label can collide with a slot label** (A1, B2 are slots): numeric level codes read "L1", lettered ones stand
+  alone ("H1", "Ba1"), in `plan-view.ts` `stepName()` and `player.ts` `levelLabel()`.
+
+## What the app holds now (2026-11-22)
+
+- **Today:** cards with **Start** (the player) and "Done as planned"; on test days **Start** opens the test wizard; the
+  backup reminder; banners; the day ring and daylight strip.
+- **Player** (`/play/<date>/<morning|main|split>`, D-040): units from `src/lib/player.ts` `buildUnits()` (pairs
+  alternate and rest after each pair; level holds vs reps by the pass target; run–walk and rope levels as intervals;
+  the interval stage by block; Week 0, ramp and light changes; Friday's push-up `levelOffset: 1`); timers from
+  timestamps (`position()`); tones unlocked on Start (`src/lib/sound.ts`), spoken cues and spoken coaching (switch kept
+  in localStorage); wake lock (`src/lib/wake-lock.ts`); pocket lock (1.5-s press); feedback; the summary saves logs and
+  the card in one transaction (`repo.ts` `savePlayedSession`).
+- **Library** (D-043): `library.index.tsx` (search, area and video filters kept in the address),
+  `library.$exerciseId.tsx` (how, cue, mistake, why with source chips, ladder with "Set" by hand, last 10 logs, video
+  link with its check date), `library.sources.$sourceId.tsx`. Every exercise has a `why` (the schema requires it); 48
+  of 78 have a video link (`src/data/videos.ts`, oEmbed titles, checked 2026-11-22; the order kept by the owner,
+  D-045).
+- **Tortoise Test** (`/test/<Day 1 date>?day=1|2`, D-041): cards save on their own; "Finish" first saves every card
+  with unsaved changes (a race the e2e test caught under load), marks the day done, sets Week 0's starting levels
+  (`test-results.ts` `startingLevels()`), awards milestones. Stopwatches, the 15-s pulse count, sit-to-rise steppers,
+  Rockport with the 30–69 age flag, yearly height (48 weeks), the three start questions.
+- **Progress** (D-041): numbers and minutes per pillar this week; the Shell (two weeks a row); milestones (next up,
+  earned; checked on open); photos (D-044: `photos` store, migration 2, JPEG ≤ 1280 px as data URLs, in backups); At
+  99; test trends with aim lines (`aimLine` in `src/data/tests.ts`); level step charts; empty charts listed in one line.
+- **Settings** (D-042): every section of design §3.7; backup export (share sheet or download) and import (validate,
+  preview, merge by `updatedAt` or replace; schema-1 files read as having no photos); the calendar file (RFC 5545,
+  floating times, weekly rules, alarms); reset (type DELETE).
 
 ## Decisions to remember (details in docs/decisions.md)
 
-- **Goals (D-002):** at 99, a straight back and still able to jump and run; on the way, a handstand, the side split and the
-  front split. Exercise only (D-001).
-- **Equipment (D-003–D-006):**
-  - one fixed medium/heavy dumbbell pair (7–15 kg);
-  - a jump rope;
-  - playground bars on outdoor days; the owner declined the recommended pull-up bar.
+- **Goals (D-002):** at 99, a straight back and still able to jump and run; on the way, a handstand, the side split and
+  the front split. Exercise only (D-001).
+- **Equipment (D-003–D-006):** one fixed medium/heavy dumbbell pair (7–15 kg); a jump rope; playground bars on outdoor
+  days; the owner declined the recommended pull-up bar.
 - **Outdoors (D-004):** outdoor running in good weather, the rope indoors. The owner: "natural sun is important, so we
   can encourage outdoor running on a good weather".
-- **Shape of the days (D-007–D-009):**
-  - a 15-min morning block plus a main session of about 45 min (50–55 on run and interval days);
-  - Saturday long outdoor + playground; Sunday light: an easy walk, then the flexibility session;
-  - **about 7½ h in a full week**, about 8 with the longest Saturday run; Week 0 about 5½ h, the ramp-up weeks about
-    6½. It is 7½, not the 7 h (and 4–5 h for the ramp) of the first summary, which the sessions' own minutes did not
-    add up to;
-  - that load was set under the owner's delegation: "you arrange the daily intensity" and "I have time".
-- **App (D-010–D-014):**
-  - iPhone; the address `https://tortoise.doctornova.net`, fixed forever, because the phone keeps data per origin;
-  - data only on the phone; reminders by calendar file;
-  - a Shell day counts, and the streak breaks only on two missed days in a row.
-- **Day status and streak, completed (D-029):**
-  - either part alone, the morning block or the main session, makes a Shell day;
-  - a day with something done is never Paused;
-  - the streak number counts done days; one missed day is bridged without counting; paused days are skipped;
-  - on a test day the test part stands in for the main session.
-- **More app rulings from the review:**
-  - backups merge by `updatedAt`, and logs have random ids, not auto-increment ids (D-032);
-  - statuses differ by shape as well as colour; the light theme's shell is `#9A6212` and sky `#2A72AB`, so that every
-    text colour reaches 4.5:1 (D-033).
-- **Cycle (D-015):** 4-week blocks (3 build + 1 light). The Tortoise Test comes in Week 0, then every 12 weeks in the
-  light week.
-- **Week 0 and test weekends (D-030):**
-  - Week 0 runs at half volume with every ladder at level 1;
-  - on a test weekend the two test days replace Saturday's and Sunday's main sessions and split blocks;
-  - three start questions (easy running, the rope, a slow negative pull-up) set the levels the tests cannot.
-- **Plan repairs (D-031):**
-  - the 10% rule applies beyond the run–walk and rope ladders; rope step J6 grows by 10% a week;
-  - indoor fallbacks: Tuesday follows the rope ladder; Saturday is Tuesday's indoor session plus the home pulling work;
-  - the core ladder ends at the L-sit; hanging raises stay at the playground;
-  - the split blocks have a short form and a long form;
-  - the farmer hold is on test Day 2; the 100-day milestone is "Adult", not "Shell";
-  - the exercise library has an entry for every exercise the sessions and ladders name (74 rows; the data has 78).
-- **Stack (D-016), pinned in Phase 0:** TypeScript 7.0.2, React 19.3.1, Vite 8.3.8, Tailwind CSS 4.3.5, TanStack
-  Router 1.170.46 (plugin 1.169.0), zod 4.6.7, lucide-react 1.77.0, Biome 2.6.8, Vitest 5.1.1, Playwright 1.65.1,
-  jsdom 31.0.1, fake-indexeddb 6.2.8, Node 24, pnpm 11.20.0. A first-party service worker (D-017); hand-made SVG charts
-  (D-019).
-- **Building rulings:**
-  - D-036 (Phase 0): no default palette; the service worker as a second Vite entry with its precache list written by
-    `scripts/vite-pwa-plugin.ts`; `404.html` copied from `index.html`; `robots.txt` disallows all; WebKit serves the
-    app offline, so the offline test runs on WebKit.
-  - D-037 (Phases 2–3): dates as whole day numbers; daylight checked against NOAA's spreadsheet values; "Done as
-    planned" writes no logs; a test day's "Done as planned" records the test part until the wizard; the day page
-    `/day/<date>`; the minimal tabs.
-  - D-038 (Phase 1): the plan gaps above.
+- **Shape of the days (D-007–D-009):** a 15-min morning block plus a main session of about 45 min (50–55 on run and
+  interval days); Saturday long outdoor + playground; Sunday light. **About 7½ h in a full week**, about 8 with the
+  longest Saturday run; Week 0 about 5½ h, the ramp-up weeks about 6½ (set under the owner's delegation: "you arrange
+  the daily intensity" and "I have time"). It is 7½, not the 7 h of the first summary.
+- **App (D-010–D-014):** iPhone; the address `https://tortoise.doctornova.net`, fixed forever; data only on the phone;
+  reminders by calendar file; a Shell day counts, and the streak breaks only on two missed days in a row.
+- **Day status and streak (D-029):** either part alone makes a Shell day; a day with something done is never Paused;
+  one missed day is bridged without counting; paused days are skipped; on a test day the test part stands in for the
+  main session.
+- **Other rulings:** backups merge by `updatedAt`, logs have random ids (D-032); statuses differ by shape as well as
+  colour, light-theme shell `#9A6212` and sky `#2A72AB` (D-033); 4-week blocks, the test in Week 0 and every 12 weeks
+  (D-015); Week 0 at half volume, all levels 1, three start questions (D-030); plan repairs (D-031).
+- **Stack (D-016):** TypeScript 7.0.2, React 19.3.1, Vite 8.3.8, Tailwind CSS 4.3.5, TanStack Router 1.170.46 (plugin
+  1.169.0), zod 4.6.7, lucide-react 1.77.0, Biome 2.6.8, Vitest 5.1.1, Playwright 1.65.1, jsdom 31.0.1,
+  fake-indexeddb 6.2.8, Node 24, pnpm 11.20.0. First-party service worker (D-017); hand-made SVG charts (D-019).
+- **Building rulings:** D-036 (Phase 0), D-037 (Phases 2–3), D-038 (Phase 1 gaps), D-039 (CI/CD, owner), D-040
+  (player), D-041 (test wizard, Progress), D-042 (settings, backup, reminders), D-043 (library, content), D-044
+  (spoken coaching, photos; weather not built), D-045 (owner: no weather hint; video links as chosen).
 
 ## Where things are
 
-- `src/data/` the plan as data (`plan.ts` exports `plan`, `planInput` and the `exerciseById`, `ladderById`,
-  `sessionById` maps; `schema.ts` the zod schemas; `rationale.ts` the plan's prose findings).
-- `src/lib/` the rules: `dates`, `calendar`, `status` (streak), `progression`, `calc`, `daylight`, `milestones`,
-  `pillars`, `records` (record schemas), `db` (IndexedDB, migrations), `repo` (reads and writes), `live` (change
-  bus), `plan-view` (display lookups), `use-app` (screen state).
-- `src/routes/` Today (`index.tsx`), `week.tsx`, `day.$date.tsx`, `progress.tsx`, `library.tsx`, `settings.tsx`,
-  `debug.week.tsx`; `src/sw/sw.ts` the service worker.
-- `tests/` `unit`, `content`, `db`, `component`, `guard`, `fixtures` (block rules as design §5.1, ladders), `e2e`
-  (`smoke`, `daily-loop`, `screens`: screenshots land in `test-results/`).
-- `scripts/` `make-icons.mjs` (`pnpm icons`), `guard-hash.mjs` and `guard-key.mjs`, `vite-pwa-plugin.ts`.
+- `src/data/` the plan as data (`plan.ts`, `schema.ts`, `sessions.ts`, `ladders.ts`, `exercises.ts`, `videos.ts`,
+  `tests.ts` with `aimLine`, `rules.ts`, `start-rules.ts`, `milestones.ts`, `at99.ts`, `rationale.ts`).
+- `src/lib/` `dates`, `calendar`, `status`, `progression`, `calc`, `daylight`, `milestones`, `pillars`, `records`,
+  `db` (migrations 1–2), `repo`, `live`, `plan-view`, `use-app`, `player`, `sound`, `wake-lock`, `use-now`,
+  `test-results`, `test-repo`, `photos`, `library`, `backup`, `ics`, `share`.
+- `src/routes/` `index.tsx` (Today), `week.tsx`, `day.$date.tsx`, `play.$date.$slot.tsx`, `test.$date.tsx`,
+  `progress.tsx`, `library.index.tsx`, `library.$exerciseId.tsx`, `library.sources.$sourceId.tsx`, `settings.tsx`,
+  `debug.week.tsx`; `src/components/` `player/`, `test/`, `progress/`, `settings/`; `src/sw/sw.ts`.
+- `tests/` `unit`, `content`, `db`, `component`, `guard`, `fixtures`, `e2e` (`smoke`, `daily-loop`, `screens`,
+  `player`, `test-wizard`, `settings`, `library`, `photos`; screenshots land in `test-results/`).
+- `scripts/` `make-icons.mjs`, `guard-hash.mjs`, `guard-key.mjs`, `vite-pwa-plugin.ts`.
+- Commits of 2026-11-22: `35f88ff` CI/CD, `d8e112c` Phase 4, `97cd9a1` Phase 6, `c332503` Phase 7, `7f3b5be` Phase 5,
+  `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045, `d2598c4` the sheet; Phases 0–3 earlier (`79befb7` … `f63c61d`).
 
 ## Background
 
-- The repo started on 2026-11-21 as an empty public repo; the plan landed the same evening.
-- The owner asked for a review of all documents that night ("review all docs and fix all issues"). Every source was
-  read again in its raw text, and the review closed with D-029 to D-035.
-- Ideas, and 19 sources already checked in their raw text, came from the owner's Straight Back page
-  (<https://money.doctornova.net/posture>).
-- DNS: doctornova.net uses GoDaddy nameservers (domaincontrol.com); `money.doctornova.net` is a CNAME to
-  `mortal-dog.github.io`.
+- The repo started on 2026-11-21 as an empty public repo; the plan and its review (D-029 to D-035) landed that day and
+  night. Building began 2026-11-22 with Phases 0–3, then 4–9 the same day.
+- Ideas and 19 sources came from the owner's Straight Back page (<https://money.doctornova.net/posture>).
+- DNS: doctornova.net on GoDaddy nameservers; `money` and `tortoise` are CNAMEs to `mortal-dog.github.io`.
