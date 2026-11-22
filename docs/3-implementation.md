@@ -94,7 +94,7 @@ Sizes are relative: S is small, M medium, L large.
 **Goal:** an empty app that builds, tests, installs and works offline, with every guardrail in place.
 
 - pnpm project; Vite + React 19 + TypeScript (strict); Tailwind 4 with the design tokens (light and dark); Biome; Vitest
-  with jsdom; Playwright with WebKit and an iPhone profile.
+  with jsdom; Playwright with WebKit and an iPhone profile (rendered at 1x on CI, D-049).
 - The folder layout of §2 and the `cn()` helper.
 - PWA basics:
   - a manifest: name "Tortoise", start URL `/`, standalone display, theme and background colours, icons at 192 and 512 px

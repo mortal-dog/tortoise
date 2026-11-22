@@ -106,6 +106,9 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+    env:
+      # This WebKit draws without a GPU and the glass costs per pixel: render at 1x, not the iPhone's 3x (D-049).
+      TORTOISE_E2E_DPR: 1
     strategy:
       matrix:
         shard: [1, 2, 3]
