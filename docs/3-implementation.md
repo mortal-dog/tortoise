@@ -347,8 +347,8 @@ a picker.
 - Spoken coaching for whole sessions.
 
 **Done (2026-11-22), the offline parts (D-044):** spoken coaching in the player, and progress photos on Progress (a new
-store, in backups too; `tests/e2e/photos.spec.ts` adds, keeps and deletes one offline). The weather hint waits for the
-owner: the official API answers browsers, but it would be the app's first third-party request.
+store, in backups too; `tests/e2e/photos.spec.ts` adds, keeps and deletes one offline). The weather hint is left out by
+the owner's choice (D-045): the official API answers browsers, but it would be the app's first third-party request.
 
 ---
 
