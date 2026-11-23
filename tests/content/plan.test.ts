@@ -1,6 +1,7 @@
 // The plan data's rules (design §7, docs/3-implementation.md Phase 1): it parses, ids are unique and references
 // resolve, digits name a source or carry "our rule", every source is used, and the minutes per day match the plan.
 import { describe, expect, it } from 'vitest'
+import { EQUIPMENT, HOUSEHOLD } from '@/data/equipment'
 import { NO_VIDEO } from '@/data/exercises'
 import { exerciseById, ladderById, plan, planInput, sessionById } from '@/data/plan'
 import { Plan, type Session, type StartRule, WEEKDAYS } from '@/data/schema'
@@ -445,5 +446,14 @@ describe('start rules', () => {
       'R8',
     ])
     expect(plan.startRules.map((r) => r.ladderId)).toEqual(['push', 'run'])
+  })
+})
+
+describe('the equipment (D-063)', () => {
+  it('in Settings › About is the equipment the plan names, word for word', () => {
+    const intro = readRepoFile('docs/2-exercise-plan.md').split('## Contents')[0]?.replace(/\n/g, ' ') ?? ''
+    for (const e of EQUIPMENT) expect(intro, e).toContain(e.charAt(0).toLowerCase() + e.slice(1))
+    for (const h of HOUSEHOLD) expect(intro, h).toContain(h)
+    expect(EQUIPMENT).toHaveLength(3)
   })
 })

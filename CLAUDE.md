@@ -48,8 +48,13 @@ phone checks, is next. See `docs/3-implementation.md`.
      Drive backup (D-054), and YouTube's privacy-enhanced player (`youtube-nocookie.com`), only after the user taps an
      exercise's name (D-060);
    - English UI.
-8. **Publishing:** CI/CD (`.github/workflows/ci.yml`) runs twice a day and by hand, never on a push (D-039). Once Phase 8
-   sets up GitHub Pages, it publishes whatever is on `main`, so a push to `main` needs a picker first.
+8. **Publishing:** CI/CD (`.github/workflows/ci.yml`) runs twice a day and by hand, never on a push (D-039); a scheduled
+   run publishes whatever is on `main`.
+9. **Finish every job with commit, push and compact, unasked (D-064).** When a job's gates are green: commit, push to
+   `main`, then run the `compact-ai` skill. The owner: "record this rule: every time, commit, push and compact; no
+   special instruction from me needed, it is the default routine" (his picker: this repo only). It replaces, here only,
+   the picker before a push to `main` and the global "do not run compact-ai unasked". A manual deploy run
+   (`gh workflow run ci.yml` with deploy on) still needs his yes; the scheduled runs publish by themselves.
 
 ## Commands
 

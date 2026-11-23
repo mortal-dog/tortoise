@@ -158,7 +158,8 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
 - Opens from Today on a test weekend, or from Progress at any time.
 - Two parts, Day 1 (outdoors) and Day 2 (indoors), resumable across days.
 - Each test card has its instructions, a built-in stopwatch where needed (the mile walk, the 15-second pulse count,
-  one-leg stance capped at 60 s, hang, farmer hold, squat hold), and input fields.
+  one-leg stance capped at 60 s, farmer hold, squat hold), and input fields. Day 1 is the Rockport walk; Day 2 holds
+  everything else, jump and reach included (D-056).
 - Built-in calculators:
   - sit-to-rise: two steppers counting down from 5;
   - Rockport: time, heart rate and weight give the VO2max estimate; age and sex come from the profile, or are asked
@@ -174,10 +175,10 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
 | Section | Contents |
 |---|---|
 | Plan | Start date (the Monday of Week 1); "Restart from Week 0" on a chosen Monday (keeps history) |
-| Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax, Rockport and the broad-jump aim |
+| Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax and Rockport |
 | Units | kg or lb; km or mi. One card |
 | Google Drive sync | The last sync's date and time, and nothing else to read; Sign in with Google, or Sync now and Sign out ([§10](#10-backup-and-restore), D-054, D-055) |
-| About | App version, plan version, the number of sources with a link to their list in the repo (opens outside the app), privacy statement, the runtime libraries' licences |
+| About | App version, plan version; **the equipment**: a yoga mat, a jump rope and one pair of fixed dumbbells (7–15 kg each), with what is already at home (a wall, a chair, a sofa, thick books, a stair), so nothing else is bought (D-063); the number of sources with a link to their list in the repo (opens outside the app); the privacy statement (Google only after sign-in, a YouTube video only on a tap); the runtime libraries' licences |
 | Reset | Delete all data (type DELETE to confirm) |
 
 ### 3.8 First run
@@ -403,7 +404,7 @@ and the Today reminder went with D-055.
 - **Contrast:** text, primary, primary-strong, shell, sky and brick each reach 4.5:1 or more on both the background and
   the surface, in both themes (computed with the WCAG formula).
 - **Type:** the system font (SF Pro on iPhone), so nothing has to load. Timers are 64–96 px; headings 22–28 px semibold.
-- **Icon:** a geometric tortoise whose shell is made of hexagons, matching the Shell calendar. App icons at 192 and
+- **Icon:** a geometric tortoise whose shell is made of hexagons, matching the tortoise theme. App icons at 192 and
   512 px, a maskable version, and the 180 px Apple touch icon.
 - **Layout:** one column; safe-area insets for the notch and the home indicator; tap targets of 44 pt or more.
 - **Motion:** small and short; none when the system asks for reduced motion.
@@ -446,5 +447,4 @@ and the Today reminder went with D-055.
 | Later, optional | Condition |
 |---|---|
 | Weather hint for outdoor days | Only from an official source that browsers can call (Environment and Climate Change Canada), with a city-level location the user sets; off by default (D-020) |
-| Progress photos (posture, splits) | Stored on the phone and in its Google Drive copy only |
 | Spoken coaching for whole sessions | If the cues prove useful |

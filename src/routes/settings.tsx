@@ -5,6 +5,7 @@ import { DriveCard } from '@/components/settings/DriveCard'
 import { Choice, inputClass, numberIn, SavedField, SectionTitle } from '@/components/settings/fields'
 import { ResetCard } from '@/components/settings/ResetCard'
 import { Button, Card, Screen } from '@/components/ui'
+import { EQUIPMENT, HOUSEHOLD } from '@/data/equipment'
 import { plan } from '@/data/plan'
 import { kgToLb, lbToKg } from '@/lib/calc'
 import { week0Monday } from '@/lib/calendar'
@@ -214,10 +215,20 @@ function AboutSection() {
       <p className="mt-1 text-sm">
         App {__APP_VERSION__} · plan {plan.version}.
       </p>
+      <h3 className="mt-3 text-sm font-semibold">Equipment</h3>
+      <ul className="mt-1 list-disc pl-5 text-sm" data-testid="equipment">
+        {EQUIPMENT.map((e) => (
+          <li key={e}>{e}</li>
+        ))}
+      </ul>
+      <p className="mt-1 text-sm">
+        That is all. The rest is already at home: {HOUSEHOLD.join(', ')}. Nothing else has to be bought.
+      </p>
       <h3 className="mt-3 text-sm font-semibold">Privacy</h3>
       <p className="mt-1 text-sm">
         The data stays on this phone: no server and no tracking. Only after you sign in with Google does the
-        app talk to Google, to sync with a hidden folder of your own Drive (D-054).
+        app talk to Google, to sync with a hidden folder of your own Drive (D-054). An exercise video loads
+        from YouTube only when you tap its name (D-060).
       </p>
       <h3 className="mt-3 text-sm font-semibold">Sources</h3>
       <p className="mt-1 text-sm">

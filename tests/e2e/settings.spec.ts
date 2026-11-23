@@ -100,6 +100,12 @@ test('Settings keeps the data only through the Google Drive sync: no backup file
   await expect(page.getByRole('heading', { name: 'Backup file' })).toHaveCount(0)
   await expect(page.getByLabel('Backup file to import')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Back up now' })).toHaveCount(0)
+  // About names the three things to have (D-063).
+  await expect(page.getByTestId('equipment').getByRole('listitem')).toHaveText([
+    'A yoga mat',
+    'A jump rope',
+    'One pair of fixed dumbbells, 7–15 kg each',
+  ])
 })
 
 test('Delete all data empties every store and returns to the first run', async ({ page }) => {

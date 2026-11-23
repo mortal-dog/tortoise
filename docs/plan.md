@@ -21,8 +21,8 @@ only.
   stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself (D-054, D-055); there is no
   server.
 - Four tabs: **Today** (the day's cards and one-tap logging), **Week** (each day's exercises, and what was done),
-  **Progress** (the Shell honeycomb calendar, test trends, badges, the At-99 board) and **Settings** (profile, units,
-  the Google Drive sync). Each exercise's name opens its YouTube video (D-056).
+  **Progress** (the streak numbers, badges, the At-99 board, D-062) and **Settings** (profile, units, the Google Drive
+  sync, and in About the equipment: a yoga mat, a jump rope, one pair of dumbbells, D-063). Each exercise's name opens its YouTube video (D-056).
 - A full-screen **session player** with timers and sound cues, and a **test wizard** for the Tortoise Test.
 - A forgiving streak: a 15-minute **Shell day** counts, and only two missed days in a row break it.
 
@@ -87,3 +87,7 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
   library, the Tortoise Test and Progress, settings with backup and reminders), and Phase 9's offline parts (spoken
   coaching, progress photos). CI/CD now runs twice a day and by hand, never on a push (D-039). Next is Phase 8: the
   domain, the first deployment and the checks on the phone.
+- **2026-11-23:** the owner's asks reshaped the app: the Drive sync as the only backup (D-054, D-055); safer and fewer
+  exercises, 35 under well-known names, no bar, no library, the videos played in the app on a tap (D-056, D-060,
+  D-061); day pages that show what was done and no pause (D-057); badges (D-058); a shorter Progress without the Shell,
+  photos or charts (D-062); the equipment in About (D-063).

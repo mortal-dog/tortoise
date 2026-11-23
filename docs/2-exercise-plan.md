@@ -3,14 +3,15 @@
 > **The goal:** at 99, stand with a straight back, jump, and run.
 > **On the way:** a freestanding handstand, a front split and a side split.
 
-This is the training plan the Tortoise app runs. It needs only what is already at home: one pair of fixed dumbbells
-(7–15 kg each), a jump rope, and a wall, a chair, a sofa, a stair and the floor. There is no bar. Nothing has to be
-bought. Running happens outdoors whenever the weather allows; a longer brisk walk around a room replaces it indoors.
+This is the training plan the Tortoise app runs. It needs three things: a yoga mat, a jump rope and one pair of fixed
+dumbbells, 7–15 kg each (D-063). The rest is already at home: a wall, a chair, a sofa, a few thick books (supports in
+the splits), a stair or a thick book (calf raises). There is no bar. Running happens outdoors whenever the weather
+allows; a longer brisk walk around a room replaces it indoors.
 
 **Safe before clever** (*our rule*, D-056): every exercise is one that is hard to get wrong in a way that hurts. A drill
 whose usual mistake injures (a rounded back under load, a fall, a hard one-leg or sideways landing, a sprint, a sudden
-heavy lowering) was replaced by a safer one that trains the same thing. The handstand and split drills stay as they
-are, by the owner's choice.
+heavy lowering) was replaced by a safer one that trains the same thing. The handstand and split goals stay, by the
+owner's choice; D-061 later cut every drill whose work another one already does.
 
 It is written for a healthy adult starting in their late 30s. It starts gently, with the Week 0 tests followed by a 3-week
 ramp, and the tests set the starting level of every exercise.

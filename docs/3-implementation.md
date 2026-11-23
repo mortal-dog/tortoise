@@ -185,6 +185,8 @@ migration and keeps its records; 22,000 days are written and read in one test.
   - the day ring and the daylight strip.
 - Week: statuses, swaps with rule warnings, and day detail with editing.
 
+*Since D-057 there is no sick day, no Paused status and no day ring; the day page only shows what was done.*
+
 **Done when:** e2e tests log a full day, a Shell day and a sick day, and the streak numbers match the rules
 ([design §5.2](1-app-design.md#52-day-status-and-the-tortoise-streak)). It all works offline. Screenshots in the iPhone
 profile have been reviewed.
@@ -247,6 +249,7 @@ and dark.
 **Goal:** the long view.
 
 - The test wizard: Day 1 and Day 2, resumable; the calculators; starting levels in Week 0.
+- *Since D-062 Progress keeps only the numbers, the milestones with their badges (D-058) and the At-99 board.*
 - Progress: the Shell honeycomb, the numbers, SVG trend charts with aim lines, level step charts, the milestone grid, and
   the At-99 board.
 
@@ -359,6 +362,8 @@ a picker.
   browser (to be checked then), with a city-level location and off by default (D-020).
 - Progress photos kept on the phone.
 - Spoken coaching for whole sessions.
+
+*Since D-062 the photos have no screen; the store and its Drive copy stay.*
 
 **Done (2026-11-22), the offline parts (D-044):** spoken coaching in the player, and progress photos on Progress (a new
 store, in backups too; `tests/e2e/photos.spec.ts` adds, keeps and deletes one offline). The weather hint is left out by
