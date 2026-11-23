@@ -317,3 +317,8 @@ then "don't write any code; write all the plan documents first; prepare everythi
 
 **Don't forget:** the repo is public: no personal facts in any committed file (D-022). No code until the owner starts
 Phase 0 (D-021).
+
+## Badge detail popup (owner ask 2026-11-23)
+- What: Progress badges — tap opens a modal (medal, name, status, how to earn, progress, X close); no hover `title`;
+  one-line short labels under each badge (`label` in src/lib/badges.ts).
+- Done (D-066): build, tests (e2e test-wizard badge step, unit badges labels), gates, D-066, commit, push, compact.

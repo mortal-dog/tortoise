@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { plan, sessionById } from '@/data/plan'
 import type { Session } from '@/data/schema'
-import { badges } from '@/lib/badges'
+import { badges, LABEL_MAX } from '@/lib/badges'
 import type { Metrics } from '@/lib/milestones'
 import { dayItems } from '@/lib/plan-view'
 
@@ -23,6 +23,15 @@ describe('badges (D-058)', () => {
       expect(b.icon, b.milestone.id).toBeDefined()
       expect(b.earned, b.milestone.id).toBe(false)
     }
+  })
+
+  it('have a short label that fits one line under the medal, each one different', () => {
+    const list = badges(plan.milestones, {}, none)
+    for (const b of list) {
+      expect(b.label.length, b.milestone.id).toBeLessThanOrEqual(LABEL_MAX)
+      expect(b.label.length, b.milestone.id).toBeGreaterThan(0)
+    }
+    expect(new Set(list.map((b) => b.label)).size).toBe(list.length)
   })
 
   it('are earned the moment the goal is reached, before the award is stored, and not a step before', () => {

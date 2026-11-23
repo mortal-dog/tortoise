@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ClipboardList } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { BadgeDialog } from '@/components/progress/BadgeDialog'
 import { BadgeMedal } from '@/components/progress/BadgeMedal'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
 import type { Metric, Milestone } from '@/data/schema'
 import { badges } from '@/lib/badges'
 import { dayTemplate } from '@/lib/calendar'
-import { addDays, compareDates, daysBetween, formatShort, type LocalDate, mondayOf } from '@/lib/dates'
+import { cn } from '@/lib/cn'
+import { addDays, compareDates, daysBetween, type LocalDate, mondayOf } from '@/lib/dates'
 import { useLive } from '@/lib/live'
 import { type Metrics, progress, reached } from '@/lib/milestones'
 import { addPillars, donePillars, PILLARS, plannedPillars, zeroPillars } from '@/lib/pillars'
@@ -165,6 +167,20 @@ function Numbers({
   )
 }
 
+/** A split milestone counts down from the first test's distance; the others count up from zero. */
+function startValueOf(tests: TestRecord[]) {
+  const first = tests[0]
+  return (m: Milestone): number | undefined => {
+    if (m.direction !== 'atMost' || !first) return undefined
+    if (m.metric === 'sideSplitCm') return first.results.splits?.side
+    if (m.metric === 'frontSplitCm') {
+      const s = first.results.splits
+      return s?.frontL === undefined || s.frontR === undefined ? undefined : Math.max(s.frontL, s.frontR)
+    }
+    return undefined
+  }
+}
+
 function Milestones({
   earned,
   metrics,
@@ -174,16 +190,7 @@ function Milestones({
   metrics: Metrics
   tests: TestRecord[]
 }) {
-  const first = tests[0]
-  const startOf = (m: Milestone): number | undefined => {
-    if (m.direction !== 'atMost' || !first) return undefined
-    if (m.metric === 'sideSplitCm') return first.results.splits?.side
-    if (m.metric === 'frontSplitCm') {
-      const s = first.results.splits
-      return s?.frontL === undefined || s.frontR === undefined ? undefined : Math.max(s.frontL, s.frontR)
-    }
-    return undefined
-  }
+  const startOf = startValueOf(tests)
   const next = plan.milestones
     .filter((m) => !earned.has(m.id) && !reached(m, metrics))
     .map((m) => ({ m, p: progress(m, metrics, startOf(m)) }))
@@ -207,74 +214,82 @@ function Milestones({
           ))}
         </ul>
       </Card>
-      <Badges earned={earned} metrics={metrics} />
+      <Badges earned={earned} metrics={metrics} tests={tests} />
     </div>
   )
 }
 
-/** Every milestone as a badge (D-058); tapping one shows how to earn it, or when it was earned. */
+/**
+ * Every milestone as a badge (D-058). A tap opens the badge's card (D-066): how to earn it, or when it was earned. The
+ * label under each medal is one line; the card holds the full name. No hover tooltips.
+ */
 function Badges({
   earned,
   metrics,
+  tests,
 }: {
   earned: ReadonlyMap<string, { earnedAt: LocalDate }>
   metrics: Metrics
+  tests: TestRecord[]
 }) {
   const list = badges(plan.milestones, metrics, earned)
   const [open, setOpen] = useState<string | null>(null)
+  const close = useCallback(() => setOpen(null), [])
   const shown = list.find((b) => b.milestone.id === open)
   const got = list.filter((b) => b.earned).length
+  const startOf = startValueOf(tests)
   return (
     <Card>
-      <h3 className="font-semibold">
-        Badges · {got} of {list.length}
-      </h3>
-      {shown && (
-        <div
-          className="mt-2 rounded-xl border border-edge bg-field p-3"
-          data-testid="badge-detail"
-          aria-live="polite"
-        >
-          <p className="font-semibold text-primary">{shown.milestone.name}</p>
-          <p className="mt-1 text-sm">
-            {shown.earned
-              ? shown.earnedAt
-                ? `Earned ${formatShort(shown.earnedAt)}.`
-                : 'Earned.'
-              : `To earn it: ${shown.how}`}
-          </p>
-        </div>
-      )}
+      <div className="flex items-baseline justify-between gap-2">
+        <h3 className="font-semibold">Badges</h3>
+        <span className="font-semibold text-primary-strong text-sm tabular-nums">
+          {got} of {list.length}
+        </span>
+      </div>
       {(['habit', 'ability'] as const).map((group) => (
-        <div key={group} className="mt-3">
-          <h4 className="font-semibold text-sm text-primary-strong">
+        <div key={group} className="mt-4">
+          <h4 className="font-semibold text-primary-strong text-xs uppercase tracking-wide">
             {group === 'habit' ? 'Habit' : 'Ability'}
           </h4>
           <ul
-            className="mt-2 grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-4"
+            className="mt-2 grid grid-cols-3 gap-x-1 gap-y-2 sm:grid-cols-4"
             data-testid={`badges-${group}`}
           >
             {list
               .filter((b) => b.milestone.group === group)
               .map((b) => (
-                <li key={b.milestone.id}>
+                <li key={b.milestone.id} className="min-w-0">
                   <button
                     type="button"
-                    title={b.earned ? b.milestone.name : `${b.milestone.name}: ${b.how}`}
-                    aria-pressed={open === b.milestone.id}
+                    aria-haspopup="dialog"
                     aria-label={`${b.milestone.name}, ${b.earned ? 'earned' : 'locked'}`}
                     data-earned={b.earned}
-                    onClick={() => setOpen(open === b.milestone.id ? null : b.milestone.id)}
-                    className="flex w-full flex-col items-center gap-1 rounded-xl p-1 text-center"
+                    onClick={() => setOpen(b.milestone.id)}
+                    className="flex w-full min-w-0 flex-col items-center gap-1.5 rounded-2xl px-0.5 pt-1 pb-2 text-center transition-transform duration-150 active:scale-95"
                   >
-                    <BadgeMedal badge={b} />
-                    <span className="font-semibold text-xs leading-tight">{b.milestone.name}</span>
+                    <BadgeMedal badge={b} size={76} />
+                    <span
+                      className={cn(
+                        'block w-full truncate whitespace-nowrap font-semibold text-xs',
+                        b.earned ? 'text-primary' : 'text-text',
+                      )}
+                      data-testid="badge-label"
+                    >
+                      {b.label}
+                    </span>
                   </button>
                 </li>
               ))}
           </ul>
         </div>
       ))}
+      {shown && (
+        <BadgeDialog
+          badge={shown}
+          share={progress(shown.milestone, metrics, startOf(shown.milestone))}
+          onClose={close}
+        />
+      )}
     </Card>
   )
 }

@@ -326,3 +326,23 @@ input[type="date"]::-webkit-datetime-edit {
 .badge-locked .badge-sparkle {
   display: none;
 }
+
+/* The badge card (D-066): the page dims behind it and the card springs up. Transform only on the card and colour only
+   on the scrim, no opacity, as with the screens' rise. */
+.badge-scrim {
+  background-color: rgb(8 16 10 / 0.5);
+  animation: badge-scrim 0.2s ease-out backwards;
+}
+.badge-pop {
+  animation: badge-pop 0.34s cubic-bezier(0.2, 1.3, 0.4, 1) backwards;
+}
+@keyframes badge-scrim {
+  from {
+    background-color: rgb(8 16 10 / 0);
+  }
+}
+@keyframes badge-pop {
+  from {
+    transform: translateY(18px) scale(0.9);
+  }
+}

@@ -52,12 +52,31 @@ test('a completed Week 0 test sets the starting levels, and Progress shows the r
   await page.getByRole('link', { name: 'Progress', exact: true }).click()
   for (const gone of ['The Shell, 2026', 'Photos', 'Test trends', 'Levels over time', 'Outdoor sessions'])
     await expect(page.getByText(gone, { exact: true })).toHaveCount(0)
-  // Badges (D-058): the reached one shines, a locked one tells how to earn it.
+  // Badges (D-058, D-066): the reached one shines; a tap opens a card that tells how to earn a locked one, closed by ✕.
+  // No hover tooltips, and every label under a medal is one line that fits, not cut off.
   await expect(page.getByRole('button', { name: '10 push-ups, earned' })).toBeVisible()
-  await page.getByRole('button', { name: 'Ancient, locked' }).click()
-  await expect(page.getByTestId('badge-detail')).toContainText(
-    'To earn it: Reach a tortoise streak of 1000 days',
+  const labels = page.getByTestId('badge-label')
+  await expect(labels).toHaveCount(37)
+  const fits = await labels.evaluateAll((els) =>
+    els.map((el) => {
+      const h = Number.parseFloat(getComputedStyle(el).lineHeight)
+      return { text: el.textContent, ok: el.scrollWidth <= el.clientWidth && el.clientHeight <= h + 1 }
+    }),
   )
+  expect(fits.filter((f) => !f.ok)).toEqual([])
+  await expect(page.locator('[data-testid^="badges-"] [title]')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Ancient, locked' }).click()
+  const card = page.getByRole('dialog', { name: 'Ancient' })
+  await expect(card).toContainText('How to earn it')
+  await expect(card).toContainText('Reach a tortoise streak of 1000 days')
+  await expect(card).toContainText('Locked')
+  await page.screenshot({ path: info.outputPath('badge-card.png') })
+  await card.getByRole('button', { name: 'Close' }).click()
+  await expect(card).toHaveCount(0)
+  await page.getByRole('button', { name: '10 push-ups, earned' }).click()
+  await expect(page.getByRole('dialog', { name: '10 push-ups' })).toContainText('What it took')
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.getByTestId('at99')).toContainText('9 points')
   await page.screenshot({ path: info.outputPath('progress.png'), fullPage: true })
 })

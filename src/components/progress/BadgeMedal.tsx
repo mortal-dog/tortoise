@@ -11,6 +11,14 @@ const METAL: Record<Tier, { rim: [string, string]; face: [string, string] }> = {
   sapphire: { rim: ['#c9dcff', '#23408f'], face: ['#5b8cf0', '#1d2f7a'] },
 }
 
+/** The soft halo behind a large medal, one per metal (the badge card, D-066). */
+export const TIER_GLOW: Record<Tier, string> = {
+  bronze: 'rgb(217 138 78 / 0.38)',
+  gold: 'rgb(245 197 49 / 0.4)',
+  jade: 'rgb(63 196 138 / 0.36)',
+  sapphire: 'rgb(91 140 240 / 0.36)',
+}
+
 /** A hexagon, the shape of a tortoise's shell scute, pointing up. */
 function hex(cx: number, cy: number, r: number): string {
   return Array.from({ length: 6 }, (_, i) => {
