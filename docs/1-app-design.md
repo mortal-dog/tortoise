@@ -178,7 +178,7 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
 | Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax and Rockport |
 | Units | kg or lb; km or mi. One card |
 | Google Drive sync | The last sync's date and time, and nothing else to read; Sign in with Google, or Sync now and Sign out ([§10](#10-backup-and-restore), D-054, D-055) |
-| About | App version, plan version; **the equipment**: a yoga mat, a jump rope and one pair of fixed dumbbells (7–15 kg each), with what is already at home (a wall, a chair, a sofa, thick books, a stair), so nothing else is bought (D-063); the number of sources with a link to their list in the repo (opens outside the app); the privacy statement (Google only after sign-in, a YouTube video only on a tap); the runtime libraries' licences |
+| About | App version (built from git: major.minor and the commit count, with the commit hash; D-065), plan version; **the equipment**: a yoga mat, a jump rope and one pair of fixed dumbbells (7–15 kg each), with what is already at home (a wall, a chair, a sofa, thick books, a stair), so nothing else is bought (D-063); the number of sources with a link to their list in the repo (opens outside the app); the privacy statement (Google only after sign-in, a YouTube video only on a tap); the runtime libraries' licences |
 | Reset | Delete all data (type DELETE to confirm) |
 
 ### 3.8 First run

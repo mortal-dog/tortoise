@@ -213,7 +213,7 @@ function AboutSection() {
     <Card>
       <SectionTitle>About</SectionTitle>
       <p className="mt-1 text-sm">
-        App {__APP_VERSION__} · plan {plan.version}.
+        App {__APP_VERSION__} ({__APP_COMMIT__}) · plan {plan.version}.
       </p>
       <h3 className="mt-3 text-sm font-semibold">Equipment</h3>
       <ul className="mt-1 list-disc pl-5 text-sm" data-testid="equipment">
