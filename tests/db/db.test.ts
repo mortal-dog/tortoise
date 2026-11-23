@@ -141,5 +141,6 @@ describe('the IndexedDB wrapper on fake-indexeddb', () => {
     expect(range).toHaveLength(365)
     expect(performance.now() - t0).toBeLessThan(20_000)
     db.close()
-  })
+    // Its own budget is the 20 s above; vitest's 5-s default failed it on a loaded machine (2026-11-23).
+  }, 30_000)
 })
