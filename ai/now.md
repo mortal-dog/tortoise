@@ -3,23 +3,24 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-23, 11:29 ET)
+## Open work and next steps (as of 2026-11-23, 11:46 ET)
 
 - **Nothing in flight; the handoff sheet is empty.** The owner's asks of 2026-11-23 are built, pushed and live: a
   beginner's handstand ladder (D-051), the day's timing (D-052), no pocket lock (D-050), the settings sweep (D-053),
   the Google Drive backup (D-054) and **the Drive sync as the only backup, renewing its own sign-in (D-055)**. Live
   build `687985c`, deployed by manual run 45214620004 (green) on the owner's picker "Push and deploy now"; the live
   CSP has `frame-src 'self' https://accounts.google.com`, and `/oauth-silent.html` and `/oauth-silent.js` answer 200.
-- **The owner's Google Cloud steps** for the French app's Web client
+- **The owner's Google Cloud steps are both done** (2026-11-23) on the French app's Web client
   (`392431386089-a3baa70ro45r5uegru6hjc23o9ptkhgj.apps.googleusercontent.com`, his picker "reuse"):
-  - authorised redirect URI `https://tortoise.doctornova.net/oauth-silent.html` (D-055): **done**, the owner reported
-    on 2026-11-23 ("https://tortoise.doctornova.net/oauth-silent.html is done"). Without it every renewal would wait
-    for a tap.
-  - authorised JavaScript origin `https://tortoise.doctornova.net` (D-054): **not separately confirmed**; without it
-    Google's window says "origin_mismatch" (the Settings card no longer explains this since D-055, only the error
-    shows). Ask, or see it in the Phase 8 sign-in.
-  - Its consent screen is in Testing (only its test users can sign in). For `pnpm dev` sign-in,
+  - authorised JavaScript origin `https://tortoise.doctornova.net` (D-054), confirmed by the owner ("i confirm
+    confirmed the other Google step, adding https://tortoise.doctornova.net as an authorised JavaScript origin");
+  - authorised redirect URI `https://tortoise.doctornova.net/oauth-silent.html` (D-055), reported by the owner
+    ("https://tortoise.doctornova.net/oauth-silent.html is done").
+  - So an "origin_mismatch" in Google's window, or renewals that always wait for a tap in Chrome, would now point to
+    another cause (a typo in the console entry, Google's propagation delay of a few minutes, the consent screen's test
+    users). Its consent screen is in Testing (only its test users can sign in). For `pnpm dev` sign-in,
     `http://localhost:5173` would also need adding (the French client already lists it).
+  - Nothing is left before the owner's Phase 8 sign-in on the phone.
 - **Found in the French app, not fixed there (not asked):** its armed next-tap renewal (`~/Repo/french`
   `src/features/sync/sync.ts` `armNextTap`) listens for `pointerdown`; by the HTML spec a touch's pointerdown gives no
   user activation (only its pointerup, touchend and click), so on a phone its renewal popup is likely blocked and the

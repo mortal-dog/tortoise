@@ -47,9 +47,10 @@ parser and the merge (`importBackup` is merge-only; `repo.ts` `mergeBackup()`).
   revoke) so the empty phone cannot sync over its copy.
 - **Client ID and the owner's steps:** the French app's Web client
   `392431386089-a3baa70ro45r5uegru6hjc23o9ptkhgj.apps.googleusercontent.com` (owner's picker "reuse"), consent screen in
-  Testing. Authorised redirect URI `https://tortoise.doctornova.net/oauth-silent.html`: **done** (owner, 2026-11-23).
-  Authorised JavaScript origin `https://tortoise.doctornova.net` (and `http://localhost:5173` for dev): not separately
-  confirmed; without it Google's window says "origin_mismatch".
+  Testing. Both of the owner's steps are **done** (he confirmed each on 2026-11-23): the authorised JavaScript origin
+  `https://tortoise.doctornova.net` (without it Google's window says "origin_mismatch") and the authorised redirect URI
+  `https://tortoise.doctornova.net/oauth-silent.html` (without it every renewal waits for a tap). For dev sign-in,
+  `http://localhost:5173` would be needed as an origin too.
 - **Tests:** `tests/db/drive-sync.test.ts` drives `exchange()`, `syncNow()` and `autoSync()` with an in-memory fake
   `Drive` set by `resetSyncForTests(drive)` (it also re-reads the state from storage and disarms the tap);
   `resetGoogleForTests()` clears the cooldown and the cached script; a live token is faked by writing
