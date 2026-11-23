@@ -150,6 +150,8 @@ export const videos: Readonly<Record<string, VideoLink>> = {
 export const noLinkFound: readonly string[] = [
   'upper-back-extension',
   'prone-chest-lift',
+  'hand-plank',
+  'pike-hold',
   'pistol-squat',
   'scapular-push-up',
   'archer-push-up',

@@ -28,7 +28,7 @@ describe('every exercise', () => {
       whyTable.set(name, why)
     }
     const byName = new Map(plan.exercises.map((e) => [e.name, e]))
-    expect(whyTable.size).toBe(44)
+    expect(whyTable.size).toBe(46)
     for (const [name, why] of whyTable) expect(byName.get(name)?.why, name).toBe(why)
     // The rest take theirs from a session table's "Why" column; tests/content/verbatim.test.ts finds each one there.
   })

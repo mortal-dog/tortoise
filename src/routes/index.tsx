@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Check, Play, Sun, Undo2 } from 'lucide-react'
+import { Check, Clock, Play, Sun, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { BackupReminder } from '@/components/BackupReminder'
 import { DayRing } from '@/components/DayRing'
@@ -7,6 +7,7 @@ import { FirstRun } from '@/components/FirstRun'
 import { Banner, Button, Card } from '@/components/ui'
 import { plan } from '@/data/plan'
 import type { Session } from '@/data/schema'
+import { dayTimes } from '@/data/week'
 import { adjustDose, dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { addDays, compareDates, daysBetween, formatShort, type LocalDate } from '@/lib/dates'
@@ -190,6 +191,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
       <PlanCard
         testId="card-morning"
         title={morning.name}
+        when={dayTimes.morning}
         minutes={minutesText(morning.minutes)}
         lines={[sessionSummary(morning, variant, levels, pd).join(' · ')]}
         done={morningDone}
@@ -203,6 +205,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
           <PlanCard
             testId="card-main"
             title={`Tortoise Test · Day ${tmpl.testDay}`}
+            when={dayTimes.main}
             minutes={tmpl.testDay === 1 ? 'outdoors' : 'indoors'}
             lines={[
               testsForDay(tmpl.testDay)
@@ -219,6 +222,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
             <PlanCard
               testId="card-main"
               title={main.name}
+              when={dayTimes.main}
               minutes={minutesText(sessionMinutes(main, pd, variant))}
               lines={[sessionSummary(main, variant, levels, pd).join(' · ')]}
               done={mainDone}
@@ -237,6 +241,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
         <PlanCard
           testId="card-split"
           title={split.name}
+          when={dayTimes.split}
           minutes={minutesText(split.minutes)}
           lines={[sessionSummary(split, variant, levels, pd).join(' · ')]}
           done={splitDone}
@@ -317,6 +322,8 @@ function DaylightStrip({ settings, t }: { settings: SettingsRecord; t: LocalDate
 interface PlanCardProps {
   testId: string
   title: string
+  /** When in the day (plan §4). */
+  when: string
   minutes: string
   lines: string[]
   done: boolean
@@ -332,6 +339,7 @@ interface PlanCardProps {
 function PlanCard({
   testId,
   title,
+  when,
   minutes,
   lines,
   done,
@@ -350,6 +358,9 @@ function PlanCard({
           {done && <Check aria-label="done" className="size-5 text-primary" strokeWidth={3} />}
         </span>
       </div>
+      <p className="mt-0.5 flex items-center gap-1 text-xs font-semibold" data-testid={`${testId}-when`}>
+        <Clock aria-hidden className="size-3.5 text-sky" /> {when}
+      </p>
       {lines.map((l) => (
         <p key={l} className="mt-1 text-sm">
           {l}

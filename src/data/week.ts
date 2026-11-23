@@ -6,6 +6,13 @@ import type { WeekTemplate } from './schema'
 
 type WeekTemplateInput = z.input<typeof WeekTemplate>
 
+/** The "When" column of plan §4, shown on the Today cards (D-052). */
+export const dayTimes = {
+  morning: 'After waking',
+  main: 'Lunch to mid-afternoon, 3–4 h after the morning block',
+  split: 'Right after the main session, in the same sitting',
+} as const
+
 export const week: WeekTemplateInput = {
   mon: {
     morning: 'morning',

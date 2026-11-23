@@ -130,7 +130,8 @@ function unitFor(step: Step, input: BuildInput): Unit {
     part: step.part,
     exercises: [exercise],
     perSide: !!(step.perSide || level?.pass.perSide),
-    askFeedback: mainWork && session.kind !== 'morning',
+    // The morning block asks only after its ladder steps (the handstand, the one-leg stance), so "too hard" can step down.
+    askFeedback: mainWork && (session.kind !== 'morning' || level !== undefined),
     logged: mainWork || step.part === 'split',
   }
 

@@ -34,7 +34,7 @@ describe('search', () => {
 
   it('needs every word, and puts name matches first', () => {
     const found = ids({ query: 'plank' })
-    expect(found.slice(0, 3)).toEqual(['wall-plank', 'copenhagen-plank', 'side-plank'])
+    expect(found.slice(0, 4)).toEqual(['hand-plank', 'wall-plank', 'copenhagen-plank', 'side-plank'])
     // "Plank" also appears in other exercises' texts (the push-up's "body a plank"); those come after.
     expect(found).toContain('push-up')
     const named = found.map((id) => /plank/i.test(plan.exercises.find((e) => e.id === id)?.name ?? ''))

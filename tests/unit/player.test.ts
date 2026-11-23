@@ -69,6 +69,18 @@ describe('the step engine', () => {
     expect(byStep(list, 'a0').askFeedback).toBe(true)
   })
 
+  it("runs the morning handstand as the level's holds, and asks after the ladder steps only", () => {
+    const list = units('morning', '2026-12-28')
+    const handstand = byStep(list, 'handstand')
+    expect(handstand.kind).toBe('hold')
+    expect(handstand.target).toBe('3 × 20 s')
+    expect(handstand.restS).toBe(30)
+    expect(handstand.exercises[0]?.title).toBe('Handstand: skill track · H1')
+    expect(handstand.askFeedback).toBe(true)
+    expect(byStep(list, 'cat-camel').askFeedback).toBe(false)
+    expect(byStep(units('morning', '2026-12-28', { 'handstand-skill': 7 }), 'handstand').kind).toBe('reps')
+  })
+
   it('applies Week 0, the ramp and the light week to strength sets', () => {
     expect(byStep(units('strength-a', '2026-11-23'), 'a1').sets).toBe(2) // 3 halved, rounded up
     expect(byStep(units('strength-a', '2026-11-30'), 'a1').sets).toBe(2) // the ramp

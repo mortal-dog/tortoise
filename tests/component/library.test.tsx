@@ -22,7 +22,7 @@ function names(): string[] {
 describe('the library list', () => {
   it('lists every exercise, then narrows to a search', async () => {
     const router = await renderAt('/library')
-    expect(await screen.findByText('78 exercises')).toBeInTheDocument()
+    expect(await screen.findByText('80 exercises')).toBeInTheDocument()
     fireEvent.change(screen.getByRole('textbox', { name: 'Search exercises' }), {
       target: { value: 'hollow' },
     })
@@ -36,12 +36,12 @@ describe('the library list', () => {
     })
     expect(await screen.findByText('1 exercise')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Clear the search' }))
-    expect(await screen.findByText('78 exercises')).toBeInTheDocument()
+    expect(await screen.findByText('80 exercises')).toBeInTheDocument()
   })
 
   it('filters by area and by video, and says when nothing matches', async () => {
     await renderAt('/library')
-    await screen.findByText('78 exercises')
+    await screen.findByText('80 exercises')
     fireEvent.click(screen.getByRole('button', { name: 'Playground' }))
     expect(await screen.findByText('5 exercises')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Playground' })).toHaveAttribute('aria-pressed', 'true')

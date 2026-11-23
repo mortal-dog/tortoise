@@ -129,12 +129,18 @@ A heart-rate monitor is optional; the talk test works everywhere.
 | Part | When | Time | What |
 |---|---|---|---|
 | **Morning block** | After waking | 15 min | Straight-back routine, wrist prep, handstand practice, balance |
-| **Main session** | Lunch or evening | About 45 min (50–55 on run and interval days, longer on Saturday) | Warm-up, the day's main work, then a split block |
+| **Main session** | Lunch to mid-afternoon, 3–4 h after the morning block | About 45 min (50–55 on run and interval days, longer on Saturday) | Warm-up, then the day's main work |
+| **Split block** | Right after the main session, in the same sitting | 10 min | Front split, side split, or both in the short form (§6.9) |
 | **Daily habits** | All day | — | Steps, three short vigorous bursts, time outdoors, breaks from sitting |
 
 - **Shell day:** the morning block alone (15 min). It counts toward the streak. The app colours it amber and a full day
   green.
-- **Winter run days:** move the main session to lunch, so the run happens in daylight.
+- **Two sittings a day** (*our rule*): the morning block alone, and later the main session with the split block straight
+  after it. Between the main session and the split block there is only a drink and 2 minutes of easy walking, so the
+  muscles are still warm for the stretch; a longer break means warming up again first.
+- **Why lunch to mid-afternoon** (*our rule*): the 3–4 hours after the morning block rest the wrists and shoulders
+  before the day's pressing work, the runs happen in daylight even in winter, and hard work stays well away from bed.
+- **Winter run days:** start early in the window, so a long Saturday run ends in daylight.
 
 ---
 
@@ -181,7 +187,7 @@ hours and the ramp-up weeks about 6½.
 | 5 | Prone chest lift, arms in a W | 5 × 3–5 s hold | The UK consensus dose for the back extensors [ros2022]. Eight years after a back-extension programme, fewer spine bones had fractured: 1.6% against 4.3% [sinaki2002] |
 | 6 | Half-kneeling hip-flexor stretch | 30 s per side | Undoes sitting; prepares the front split's back leg |
 | 7 | Wrist prep | 90 s | Readies the wrists to carry body weight |
-| 8 | Handstand practice at your level (§7.4) | 6 min | A skill grows with frequency: little, often, and fresh (*our rule*) |
+| 8 | Handstand practice at your level (§7.4) | Your level's holds, with rests: 3–6 min in all | A skill grows with frequency: little, often, and fresh (*our rule*) |
 | 9 | One-leg stance at your level (§7.12) | The level's time per leg (10–60 s) | At 51–75, people who could not stand 10 s on one leg died at a 1.84 times higher rate [araujo2022] |
 | 10 | Heel-to-toe walk | 10 steps forward, 10 back | Balance in motion; balance work at least twice a week [octftf] |
 
@@ -400,14 +406,20 @@ When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, 
 
 | Level | Drill | Pass at |
 |---|---|---|
-| H1 | Wall plank: hands on the floor, feet on the wall at hip height, body in an L | 3 × 40 s |
-| H2 | Wall walk: walk the feet up the wall and the hands in, to 60–80° | 3 × 3 controlled walks |
-| H3 | Chest-to-wall handstand: body hollow, shoulders pushed tall | 3 × 60 s |
-| H4 | Kick-up with your back to the wall, and bail practice (turn a hand and step out sideways, a cartwheel exit) | 10 soft kick-ups; a bail to either side on demand |
-| H5 | Heel pulls: from the back-to-wall handstand, ease the heels off and balance | 10 × 5 s balanced |
-| H6 | Freestanding kick-ups in open space | 3 holds of 10 s in one session |
-| H7 | Freestanding hold | 30 s, then 60 s |
-| H8 | Variations: tuck, straddle, and later a press to handstand (it needs the pancake, so the splits help) | — |
+| H1 | Plank on the hands: arms straight, body in one line, push the floor away | 3 × 20 s |
+| H2 | Pike hold: hips high, head between the arms | 3 × 30 s |
+| H3 | Pike hold, feet on a chair | 3 × 30 s |
+| H4 | Wall plank, feet on the wall at knee height | 3 × 20 s |
+| H5 | Wall plank, feet on the wall at thigh height | 3 × 30 s |
+| H6 | Wall plank: feet on the wall at hip height, body in an L | 3 × 40 s |
+| H7 | Wall walk: walk the feet up the wall and the hands in, to 60–80° | 3 × 3 controlled walks |
+| H8 | Chest-to-wall handstand: body hollow, shoulders pushed tall | 3 × 30 s |
+| H9 | Chest-to-wall handstand, longer | 3 × 60 s |
+| H10 | Kick-up with your back to the wall, and bail practice (turn a hand and step out sideways, a cartwheel exit) | 10 soft kick-ups; a bail to either side on demand |
+| H11 | Heel pulls: from the back-to-wall handstand, ease the heels off and balance | 10 × 5 s balanced |
+| H12 | Freestanding kick-ups in open space | 3 holds of 10 s in one session |
+| H13 | Freestanding hold | 30 s, then 60 s |
+| H14 | Variations: tuck, straddle, and later a press to handstand (it needs the pancake, so the splits help) | — |
 
 **Strength track** (Wednesday A2; the overhead press on Friday, hollow holds on Monday and hangs on Saturday support it)
 
@@ -419,9 +431,7 @@ When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, 
 | S4 | Wall handstand push-up, partial range | 3 × 5 |
 | S5 | Wall handstand push-up, full range | 3 × 5 |
 
-**How long:** no trial has measured adults learning a handstand. Coaches commonly report many months to a couple of years
-from zero to a steady freestanding hold, with near-daily practice. That is why it gets 6 minutes every morning instead of
-one long session a week.
+**How long:** no trial has measured adults learning a handstand. Coaches commonly report many months to a couple of years from zero to a steady freestanding hold, with near-daily practice. That is why it gets a few minutes every morning instead of one long session a week. The first six levels stay on the floor or low on the wall, so a beginner starts where the shoulders and wrists can carry the weight. The time in the morning block is a limit, not a hold: a level asks for 3 holds of 20–60 s with 30 s of rest between them, 3–6 min in all. Move up only when all the holds are done with a straight body and the next morning feels fine. Wrists or shoulders that hurt mean going back a level.
 
 ### 7.5 Pull (playground on Saturday, dumbbell rows on weekdays)
 
@@ -761,7 +771,9 @@ base exercise's entry.
 | Exercise | How | Key cue | Common mistake |
 |---|---|---|---|
 | Wrist prep | Circles 10 each way; on hands and knees rock over the palms 10 times with the fingers forward, then with the fingers back; lift the palms with the fingertips down; finger pulses | Gentle, pain-free range | Skipping it |
-| Wall plank (L) | Back to the wall, hands a leg's length from it; walk the feet up to hip height | Push the floor away | Sagging shoulders |
+| Plank on the hands | Hands under the shoulders, arms straight, body in one line from head to heels; push the floor away so the shoulder blades spread. On the knees if the line sags | Push the floor away | Sagging in the lower back |
+| Pike hold | Hands shoulder-width apart, hips high, an upside-down V with the head between the arms; push the floor away. Knees may bend. Feet on a chair put more weight on the hands | Push the floor away, ears between the arms | Letting the chest sink toward the floor |
+| Wall plank | Back to the wall, hands on the floor; walk the feet up the wall to your step's height: knee, thigh, then hip height. At hip height the hands are a leg's length from the wall and the body makes an L | Push the floor away | Sagging shoulders |
 | Wall walk | Face down with the feet at the wall; walk the feet up and the hands in; walk out under control | Stop where you can still hold the line | Arched back |
 | Chest-to-wall handstand | Hands 10–20 cm from the wall; body straight, ribs in, glutes tight; push tall through the shoulders | Look at the floor between the hands | Banana back |
 | Kick-up | Lunge stance, hands down, swing the back leg up and push with the front leg | Soft, controlled kicks | Kicking hard into the wall |
@@ -858,7 +870,9 @@ steps, the playground and split drills, and the walks.
 
 | Exercise | Why |
 |---|---|
-| Wall plank (L) | The first handstand step: the shoulders learn to carry the body upside down, with the feet on the wall |
+| Plank on the hands | The first handstand step: the wrists and shoulders learn to carry weight with both feet on the floor |
+| Pike hold | Teaches the open shoulders and the weight over the hands that a handstand needs, with the feet still on the floor or a chair |
+| Wall plank | The first wall steps: the shoulders learn to carry the body upside down, with the feet on the wall and a little more weight each step |
 | Wall walk | Builds the strength and the straight line of the handstand, step by step, with the wall for support |
 | Chest-to-wall handstand | Teaches the straight, hollow handstand line and builds the shoulders' endurance |
 | Kick-up | The way into every freestanding handstand; soft kicks teach how much push is enough |

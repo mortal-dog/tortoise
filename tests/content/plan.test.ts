@@ -279,7 +279,7 @@ function appendixRows(): { name: string; how: string; cue: string; mistake: stri
 describe('against the plan text', () => {
   it('has an exercise for every row of Appendix A, with its texts verbatim', () => {
     const rows = appendixRows()
-    expect(rows.length).toBe(78)
+    expect(rows.length).toBe(80)
     const byName = new Map(plan.exercises.map((e) => [e.name, e]))
     for (const r of rows) {
       const e = byName.get(r.name)
@@ -298,7 +298,7 @@ describe('against the plan text', () => {
     expect(ladderCodes('hinge')).toHaveLength(5)
     expect(ladderCodes('nordic')).toHaveLength(5)
     expect(ladderCodes('push')).toHaveLength(7)
-    expect(ladderCodes('handstand-skill')).toEqual(['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8'])
+    expect(ladderCodes('handstand-skill')).toEqual(Array.from({ length: 14 }, (_, i) => `H${i + 1}`))
     expect(ladderCodes('handstand-strength')).toEqual(['S1', 'S2', 'S3', 'S4', 'S5'])
     expect(ladderCodes('pull')).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'])
     expect(ladderCodes('back-extension')).toHaveLength(5)

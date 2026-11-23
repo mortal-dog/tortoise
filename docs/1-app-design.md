@@ -91,8 +91,9 @@ and the test wizard open full screen above the tabs.
 ```
 
 - **Day ring** (top right, not drawn above): empty, shell or full, filling as cards are done.
-- **Cards in the order of the day:** morning block, main session, split block, habits. Each card shows its time, its
-  exercises with their current ladder levels, **Start** (opens the player) and **Done as planned** (one tap). The main
+- **Cards in the order of the day:** morning block, main session, split block, habits. Each card shows when in the day
+  it belongs (plan §4: after waking; lunch to mid-afternoon; right after the main session, in the same sitting, D-052),
+  its time, its exercises with their current ladder levels, **Start** (opens the player) and **Done as planned** (one tap). The main
   card includes the session's warm-up.
 - **Run days** (Tuesday, Thursday, Saturday): an **Outdoor ☀ / Indoor** switch picks the variant; the default comes
   from Settings.
@@ -122,7 +123,8 @@ and the test wizard open full screen above the tabs.
   | Stretch | A hold timer per position and side |
 
 - **After each exercise:** "Too easy / Right / Too hard". Two "too hard" answers in a row suggest one level down; the pass
-  rule suggests one level up.
+  rule suggests one level up. The morning block asks only after its ladder steps, the handstand and the one-leg stance
+  (D-051).
 - **No lock layer (D-050).** The screen stays on for as long as the app is open, and only the phone's side button locks
   it. There is no pocket lock: on an outdoor run a stray touch in a pocket can tap a button, which the owner accepted.
 - **Summary at the end:** total time, sets, a 1–10 effort pick, and an optional note. Saving marks the card done.

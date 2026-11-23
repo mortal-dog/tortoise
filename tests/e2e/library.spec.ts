@@ -31,7 +31,7 @@ test('the library searches and opens an exercise page offline', async ({ page })
   await goOffline(page)
 
   await page.goto('/library')
-  await expect(page.getByTestId('library-count')).toHaveText('78 exercises')
+  await expect(page.getByTestId('library-count')).toHaveText('80 exercises')
   await page.getByRole('textbox', { name: 'Search exercises' }).fill('chest wall')
   const list = page.getByRole('list', { name: 'Exercises' })
   await expect(list.getByRole('link').first()).toContainText('Chest-to-wall handstand')

@@ -28,8 +28,9 @@ only.
 ### 2. [Exercise plan](2-exercise-plan.md)
 
 - Equipment: one pair of fixed dumbbells, a jump rope, and playground bars on outdoor days. Nothing to buy.
-- Every day: a 15-minute **morning block** (straight back, wrists, handstand practice, balance), then a main session of
-  about 45 minutes, ending with a split block.
+- Every day: a 15-minute **morning block** after waking (straight back, wrists, handstand practice, balance), then at
+  lunch to mid-afternoon a main session of about 45 minutes with a 10-minute split block straight after it, in one
+  sitting.
 
   | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
   |---|---|---|---|---|---|---|
