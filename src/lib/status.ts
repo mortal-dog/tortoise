@@ -6,7 +6,7 @@ export type DayStatus = 'full' | 'shell' | 'missed' | 'ahead' | 'none'
 /** The parts of a day record the status reads. */
 export interface DayFacts {
   morning?: { doneAt: string } | null
-  /** On a test day the day's part of the Tortoise Test is saved here; on Sunday, the Light session. */
+  /** On Sunday, the Light session. */
   main?: { doneAt: string } | null
 }
 

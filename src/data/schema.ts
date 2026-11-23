@@ -191,9 +191,6 @@ export type IntervalStage = z.infer<typeof IntervalStage>
 export const BlockRules = z.object({
   blockWeeks: z.number().int().positive(),
   lightWeekInBlock: z.number().int().positive(),
-  /** A test week is a light week whose block number is a multiple of this. Week 0 is a test week too. */
-  testEveryBlocks: z.number().int().positive(),
-  testDays: z.array(Weekday),
   week0: z.object({
     halfVolumeDays: z.array(Weekday),
     setsFactor: z.number(),
@@ -213,52 +210,16 @@ export const BlockRules = z.object({
 })
 export type BlockRules = z.infer<typeof BlockRules>
 
-export const Calculator = z.enum(['rockport', 'sitRise', 'height', 'none'])
-
-export const TestDef = z.object({
-  id: z.string().regex(/^[a-z0-9-]+$/),
-  name: z.string(),
-  day: z.union([z.literal(1), z.literal(2)]),
-  order: z.number().int().positive(),
-  how: z.string(),
-  /** What is recorded: "cm", "s", "reps", "bpm", "points", or the Rockport inputs. */
-  unit: z.string(),
-  aim: z.string(),
-  calculator: Calculator,
-  /** Asked only once a year (height). */
-  yearly: z.boolean().optional(),
-  /** The aim as a line on the trend chart: a value from the aim text. */
-  aimLine: z
-    .object({
-      value: z.number(),
-      direction: z.enum(['atLeast', 'atMost']),
-    })
-    .optional(),
-  ...evidence,
-})
-export type TestDef = z.infer<typeof TestDef>
-
-/** What a milestone or an At-99 line measures. The milestone engine (Phase 2) knows each one. */
+/** What a milestone measures. The milestone engine knows each one; `level` reads the milestone's own ladder. */
 export const Metric = z.enum([
   'noMissDays', // days in a row with none missed (Hatchling)
   'streak', // the tortoise streak
   'outdoorSessions',
   'runKm',
-  'pushups',
-  'handstandWallS',
-  'handstandFreeS',
-  'frontSplitCm',
-  'sideSplitCm',
-  'sitRise',
-  'oneLegClosedS',
   'continuousRunKm',
   'longRunMin',
-  'vo2maxGainPct', // VO2max estimate against Week 0, in per cent
-  'wallZeroTests', // wall tests in a row at 0 cm
-  'wallCm',
-  'farmerS',
-  'jumpReachCm',
-  'vo2max',
+  'splitBlocks', // split blocks done
+  'level', // the highest level ever reached on the milestone's ladder (D-067)
 ])
 export type Metric = z.infer<typeof Metric>
 
@@ -266,8 +227,10 @@ export const Milestone = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string(),
   group: z.enum(['habit', 'ability']),
-  kind: z.enum(['streak', 'count', 'test', 'level']),
+  kind: z.enum(['streak', 'count', 'log', 'level']),
   metric: Metric,
+  /** The ladder a `level` milestone reads; its threshold is that ladder's level number. */
+  ladderId: z.string().optional(),
   /** atLeast: the value must reach the threshold; atMost: it must come down to it (split distances). */
   direction: z.enum(['atLeast', 'atMost']),
   threshold: z.number(),
@@ -275,27 +238,15 @@ export const Milestone = z.object({
 })
 export type Milestone = z.infer<typeof Milestone>
 
-export const At99Line = z.object({
-  ability: z.string(),
-  /** The metric shown, or "trend" lines that have no fixed value. */
-  metric: Metric,
-  line: z.string(),
-  /** The value to reach, when the line has one. */
-  value: z.number().optional(),
-  direction: z.enum(['atLeast', 'atMost', 'trend']),
-  ...evidence,
-})
-export type At99Line = z.infer<typeof At99Line>
-
 /**
- * A start rule (plan §8): a tested or asked value v sets a ladder's starting level code. A band matches when
+ * A start rule (plan §8): a value asked when the plan starts sets a ladder's starting level code. A band matches when
  * min ≤ v and (max is null or v < max): half-open, so bands meet without a gap for any value, whole or not. When
  * several rules match one ladder, the highest level wins.
  */
 export const StartRule = z.object({
   ladderId: z.string(),
-  /** A test id, or one of the start answers. */
-  input: z.enum(['pushups', 'runMin']),
+  /** One of the start answers. */
+  input: z.enum(['runMin']),
   bands: z.array(z.object({ min: z.number(), max: z.number().nullable(), code: z.string() })).min(1),
   ...evidence,
 })
@@ -325,12 +276,10 @@ export const Plan = z.object({
   sessions: z.array(Session),
   week: WeekTemplate,
   blockRules: BlockRules,
-  tests: z.array(TestDef),
   milestones: z.array(Milestone),
-  at99: z.array(At99Line),
   startRules: z.array(StartRule),
   rationale: z.array(Rationale).default([]),
-  /** The plan's own doses, ladder steps, pass targets, test aims and milestones are our rule as a whole (plan, "How to read the numbers"). */
+  /** The plan's own doses, ladder steps, pass targets and milestones are our rule as a whole (plan, "How to read the numbers"). */
   ourRule: z.literal(true),
 })
 export type Plan = z.infer<typeof Plan>

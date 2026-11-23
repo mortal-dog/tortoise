@@ -31,9 +31,4 @@ describe('the plan data and the app', () => {
       expect(s?.steps.some((st) => st.variant === 'indoor')).toBe(true)
     }
   })
-
-  it('has tests for both test days', () => {
-    expect(plan.tests.some((t) => t.day === 1)).toBe(true)
-    expect(plan.tests.some((t) => t.day === 2)).toBe(true)
-  })
 })

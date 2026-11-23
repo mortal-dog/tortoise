@@ -1,7 +1,7 @@
 # 1 · App design
 
 Tortoise is a phone app (a PWA, installed from the browser) that runs the [exercise plan](2-exercise-plan.md). It shows the
-day's session, guides it with timers, records what was done, and keeps the tests and milestones for decades. Exercise
+day's session, guides it with timers, records what was done, and keeps the levels and milestones for decades. Exercise
 only: nutrition, sleep and medicine are out of scope.
 
 **At a glance**
@@ -26,7 +26,7 @@ only: nutrition, sleep and medicine are out of scope.
    ten taps to log.
 4. **Forgiving streaks.** A 15-minute Shell day counts. The streak breaks only on two missed days in a row. There is no
    pause: the app counts what was done, not why not (D-057). ([§5.2](#52-day-status-and-the-tortoise-streak))
-5. **The plan is data.** Sessions, ladders, tests and milestones live in one typed data file built from
+5. **The plan is data.** Sessions, ladders and milestones live in one typed data file built from
    [2-exercise-plan.md](2-exercise-plan.md). Changing the plan means changing data, not screens.
 6. **Show the why.** Every exercise shows one line of why. A tap opens the detail and its sources, and every number names
    a source in [sources.md](sources.md).
@@ -63,13 +63,13 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 
 A bottom tab bar, within thumb reach, floating as a glass bar (D-048), holds four tabs: **Today · Week · Progress · Settings** (D-056). Only the pill that marks the open tab moves; the bar
 itself stays still (D-059). The session player
-and the test wizard open full screen above the tabs.
+open full screen above the tabs.
 
 ### 3.1 Today (home)
 
 ```
 ┌────────────────────────────────────────┐
-│ Mon 23 Nov · Block 1 · Week 1          │  date, block, week (build / light / test)
+│ Mon 23 Nov · Block 1 · Week 1          │  date, block, week (build / light)
 │ 🐢 Tortoise streak 8 days              │
 ├────────────────────────────────────────┤
 │ MORNING BLOCK                15 min  ✓ │  card: done in green
@@ -96,8 +96,7 @@ and the test wizard open full screen above the tabs.
   (D-053).
 - **Sunday:** the split work is inside the Light session, so there is no split card; finishing the session records the
   split as well.
-- **Light and test weeks** show a banner: "Light week: 2 sets, runs 30% shorter", "Test weekend: the Tortoise Test". On
-  the two test days the main card is that day's part of the test, and there is no split card.
+- **Light weeks** show a banner: "Light week: 2 sets, runs 30% shorter". There is no test (D-067).
 - **Make it a Shell day** folds the cards that are still open, so the day ends with the morning block. It only tidies
   the screen: the status still follows [§5.2](#52-day-status-and-the-tortoise-streak), and a tap unfolds the cards
   again.
@@ -128,7 +127,7 @@ and the test wizard open full screen above the tabs.
 ### 3.3 Week
 
 - Seven rows, Monday to Sunday: each shows the main session, the split block, and the day's status colour.
-- The week's label: build, light or test.
+- The week's label: build or light.
 - **Swap days:** pick two days of the week to swap their main sessions; each session takes its split block along. The
   app warns if the swap breaks a rule (two strength days in a row, intervals the day before the long run).
 - **Tapping any day** opens its page (D-057): each part (morning block, main session, split block) with its exercises,
@@ -141,8 +140,9 @@ and the test wizard open full screen above the tabs.
 
 ### 3.4 Progress
 
-Since D-062 Progress holds only the numbers, the milestones with their badges and the At-99 board: the Shell
-honeycomb, the outdoor-sessions count, the photos, the test trends and the level charts went (the owner's ask).
+Since D-062 Progress holds only the numbers and the milestones with their badges: the Shell honeycomb, the
+outdoor-sessions count, the photos, the test trends and the level charts went (the owner's ask), and with the test
+the Tortoise Test button and the At-99 board (D-067).
 
 - **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; minutes per pillar
   (strength, aerobic, skills, mobility) this week against the plan.
@@ -150,26 +150,9 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
   medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon and a ribbon. Earned medals shine (a
   glint sweeps across, two sparkles twinkle); locked ones are grey with a lock. A tap opens the badge's card (D-066):
   the medal large, its full name, Earned with the date or Locked, how to earn it and, while locked, how far along; ✕,
-  a tap outside or Escape closes it. No hover tooltips. Under each medal a short label on one line. A badge counts as earned when stored or when its goal is reached now, so a reached goal never
-  shows locked.
-- **The At-99 board:** each 99-year ability with its latest result ([plan §11](2-exercise-plan.md#11-milestones)).
-
-### 3.5 Tortoise Test wizard
-
-- Opens from Today on a test weekend, or from Progress at any time.
-- Two parts, Day 1 (outdoors) and Day 2 (indoors), resumable across days.
-- Each test card has its instructions, a built-in stopwatch where needed (the mile walk, the 15-second pulse count,
-  one-leg stance capped at 60 s, farmer hold, squat hold), and input fields. Day 1 is the Rockport walk; Day 2 holds
-  everything else, jump and reach included (D-056).
-- Built-in calculators:
-  - sit-to-rise: two steppers counting down from 5;
-  - Rockport: time, heart rate and weight give the VO2max estimate; age and sex come from the profile, or are asked
-    here;
-  - height: the change against the tallest earlier record.
-- Height is asked once a year: when the last height record is 48 weeks old or more.
-- In Week 0 the wizard also asks the start question (how long an easy run is comfortable).
-- On saving: comparison with the last test; milestones awarded; and, in Week 0, the starting levels set by the rules in
-  [plan §8](2-exercise-plan.md#8-the-first-13-weeks).
+  a tap outside or Escape closes it. No hover tooltips. Under each medal a short label on one line. A badge counts as
+  earned when stored or when its goal is reached now, so a reached goal never shows locked. The ability badges are
+  ladder levels reached (the highest level ever, so a step back keeps them), split blocks done and runs (D-067).
 
 ### 3.7 Settings
 
@@ -197,10 +180,11 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
   - Apple's installed web apps keep their own data, apart from the browser's, so on an iPhone, iPad or Mac the plan is
     started in the installed app, not the tab. Chromium's installed app shares the browser's data.
 - **In the installed app:** pick the Monday on which Week 0 begins: the coming Monday by default, or today on a
-  Monday. Week 1 starts seven days later.
+  Monday. Week 1 starts seven days later. The start question (how long an easy run is comfortable, in minutes) sets
+  the run–walk's first step; every other ladder starts at level 1 (D-067).
 - **Until Week 0 begins:** Today shows the days left. The morning block can be tried; days
   before Week 0 have no status and no streak.
-- The profile is optional. The Rockport test asks for age, sex and weight when it needs them.
+- The profile is optional.
 - A link leads to Settings → Google Drive sync: signing in there restores the Drive copy instead of starting afresh (a
   new phone, or the move from the Safari tab to the home-screen app).
 
@@ -209,14 +193,11 @@ honeycomb, the outdoor-sessions count, the photos, the test trends and the level
 ## 4. Navigation map
 
 ```
-First run ─ Install card → start Monday
+First run ─ Install card → start Monday and the start question
 Today ──┬─ Session player (full screen)
-        ├─ Test wizard (full screen, on test weekends)
         └─ Day detail (yesterday / any past day)
 Week ───── Day detail, swap days
-Progress ┬ Tortoise Test → test wizard
-         ├ Milestones and badges
-         └ At-99 board
+Progress ─ Numbers, milestones and badges (a badge's card)
 Settings ─ Profile / Units / Google Drive sync / About
 ```
 
@@ -228,10 +209,8 @@ Settings ─ Profile / Units / Google Drive sync / About
 
 - **Week 1** starts on the Monday chosen as the start date; **Week 0** is the seven days before it.
 - **Block** = ceil(week ÷ 4). **Week in block** = ((week − 1) mod 4) + 1.
-- **Light week:** week in block = 4. **Test week:** a light week whose block number is a multiple of 3, and Week 0.
-- **Test days:** the Saturday and Sunday of a test week. The day's part of the Tortoise Test takes the place of the
-  main session and the split block.
-- **Week 0 changes:** half volume from Monday to Friday: sets halved (rounded up), run and rope minutes halved,
+- **Light week:** week in block = 4. There are no test weeks (D-067).
+- **Week 0 changes:** half volume from Monday to Sunday: sets halved (rounded up), run and rope minutes halved,
   interval reps halved (rounded up), and every ladder at level 1.
 - **Ramp changes:** strength at 2 sets in Weeks 1 and 2.
 - **Light-week changes:** strength sets −1 (never below 2); run and rope minutes × 0.7; interval reps halved, rounded up.
@@ -248,8 +227,7 @@ Settings ─ Profile / Units / Google Drive sync / About
 | Missed | Neither done, once the day is over | Brick | Outline |
 | Ahead | A future day, or today while nothing is done yet | Pale beige | Faint fill |
 
-- On a test day, the day's part of the Tortoise Test counts as the main session. On Sunday the Light session is the
-  main session.
+- On Sunday the Light session is the main session.
 - The split block does not change the status; it feeds its own counts and milestones.
 - **Tortoise streak:** the number of done days, Full or Shell, in the current run.
   - Count back from today, or from yesterday while today has nothing done.
@@ -278,7 +256,7 @@ Settings ─ Profile / Units / Google Drive sync / About
 | `days` | `YYYY-MM-DD` | morning {doneAt, steps}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned"), steps}; split {doneAt, kind (front, side, both or long), steps}; folded (the "Make it a Shell day" tap). `steps` lists the step ids the player finished; without it the whole part counts (D-057). Records from before D-057 may hold paused; it is dropped when read |
 | `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
 | `levels` | ladderId | level, since, history [{level, date}] |
-| `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, jumpReachCm, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answer {runMin} (Week 0 only); computed {vo2max, sitRiseScore} |
+| `tests` | date of Day 1 | (no screen since D-067; the store keeps any test records taken before) results {rockport {minutes, heartRate, weightKg}, jumpReachCm, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answer {runMin} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
 | `photos` | a random id; index on date | (no screen since D-062; the store and its Drive copy keep any photos taken before) date, dataUrl (a JPEG of at most 1280 px), note (optional); added by migration 2 (D-044) |
@@ -302,11 +280,9 @@ One typed data module, validated by a schema in the tests and at start-up:
 | ladders | id, name, levels [{level, exerciseId, target (sets × reps or seconds, per side), pass rule}] |
 | sessions | id, kind (morning, strength, run, intervals, long, light, split), minutes (in total and per pillar), steps [{ladderId or exerciseId, sets, reps / seconds / minutes, rest, paired with}], variants {outdoor, indoor}. A main session's steps begin with its warm-up |
 | week template | Monday–Sunday → {morning, main, split (none on Sunday)} |
-| block rules | block length, light week, test cadence and test days, Week 0 and ramp changes, light-week changes, interval stages |
-| tests | id, name, how, unit, aim, sources, day (1 or 2), order, calculator (rockport, sitRise, height or none) |
-| milestones | id, name, kind (streak, count, test or level), metric, threshold |
-| start rules | Week 0 results and start answers → starting levels |
-| At-99 board | ability, measure (a test or a log metric), line |
+| block rules | block length, light week, Week 0 and ramp changes, light-week changes, interval stages |
+| milestones | id, name, kind (streak, count, log or level), metric, ladder (for a level), threshold |
+| start rules | the start answer → starting levels |
 | plan version | a date, shown in About and written into every backup |
 
 **Content rules, enforced by tests:**
@@ -323,9 +299,6 @@ One typed data module, validated by a schema in the tests and at start-up:
 |---|---|---|
 | HRmax | 208 − 0.7 × age | [tanaka2001] |
 | Easy ceiling / hard band | ≤ 0.70 × HRmax; 0.90–0.95 × HRmax | [helgerud2007] |
-| Rockport VO2max | L/min = 6.9652 + 0.0091 × weight (lb) − 0.0257 × age + 0.5955 × sex (1 male, 0 female) − 0.2240 × time (min) − 0.0115 × heart rate. mL/kg/min = 1000 × L/min ÷ weight (kg). Flag ages outside 30–69 | [kline1987] |
-| Sit-to-rise | (5 − supports sitting) + (5 − supports rising), each part at least 0 | [brito2014] |
-| Height loss | The tallest earlier record − today's height; flag more than 2 cm | [oc2023] |
 | Units | 1 kg = 2.20462 lb; 1 km = 0.621371 mi | — |
 | Pillar minutes | Four pillars: strength, aerobic, skills, mobility. Planned: each session template's minutes per pillar. Done: the logged minutes in the template's shares, or the template's own minutes for a "Done as planned" | — |
 

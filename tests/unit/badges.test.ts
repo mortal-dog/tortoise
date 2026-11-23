@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { plan, sessionById } from '@/data/plan'
-import type { Session } from '@/data/schema'
+import { type Session, WEEKDAYS } from '@/data/schema'
 import { badges, LABEL_MAX } from '@/lib/badges'
-import type { Metrics } from '@/lib/milestones'
+import { computeMetrics, type Metrics, metricKey } from '@/lib/milestones'
 import { dayItems } from '@/lib/plan-view'
 
 const none = new Map<string, { earnedAt: string }>()
@@ -10,7 +10,7 @@ const none = new Map<string, { earnedAt: string }>()
 /** The metric value that just meets a milestone, and one that just misses it. */
 function at(m: (typeof plan.milestones)[number], miss: boolean): Metrics {
   const step = m.direction === 'atLeast' ? -1 : 1
-  return { [m.metric]: miss ? m.threshold + step * 0.5 : m.threshold }
+  return { [metricKey(m)]: miss ? m.threshold + step * 0.5 : m.threshold }
 }
 
 describe('badges (D-058)', () => {
@@ -34,6 +34,36 @@ describe('badges (D-058)', () => {
     expect(new Set(list.map((b) => b.label)).size).toBe(list.length)
   })
 
+  it('can each be earned: the metric is computed, a level exists on a ladder the week uses (D-068)', () => {
+    const used = new Set(
+      [...WEEKDAYS.flatMap((d) => [plan.week[d].morning, plan.week[d].main, plan.week[d].split])]
+        .filter((id): id is string => !!id)
+        .flatMap((id) => sessionById.get(id)?.steps.map((st) => st.ladderId) ?? []),
+    )
+    const computed = new Set(
+      Object.keys(
+        computeMetrics({
+          days: [],
+          levels: [],
+          longestStreak: 0,
+          longestDoneRun: 0,
+          kindOf: () => undefined,
+        }),
+      ),
+    )
+    for (const m of plan.milestones) {
+      if (m.metric === 'level') {
+        expect(used.has(m.ladderId), `${m.id}: its ladder is in the week`).toBe(true)
+        const top = plan.ladders.find((l) => l.id === m.ladderId)?.levels.at(-1)?.level ?? 0
+        expect(m.threshold, `${m.id}: at most the ladder's top`).toBeLessThanOrEqual(top)
+        expect(m.threshold, `${m.id}: above the first level`).toBeGreaterThan(1)
+      } else {
+        expect(computed.has(m.metric), `${m.id}: ${m.metric} is computed`).toBe(true)
+        expect(m.threshold, m.id).toBeGreaterThan(0)
+      }
+    }
+  })
+
   it('are earned the moment the goal is reached, before the award is stored, and not a step before', () => {
     for (const m of plan.milestones) {
       const reached = badges([m], at(m, false), none)[0]
@@ -51,11 +81,15 @@ describe('badges (D-058)', () => {
     }
   })
 
-  it('climb the metals along one metric: bronze, gold, jade, sapphire', () => {
+  it('climb the metals along one ladder or metric: bronze, gold, jade, sapphire', () => {
     const tiers = badges(plan.milestones, {}, none)
-      .filter((b) => b.milestone.metric === 'handstandFreeS')
+      .filter((b) => b.milestone.ladderId === 'handstand-skill')
       .map((b) => b.tier)
     expect(tiers).toEqual(['bronze', 'gold', 'jade', 'sapphire'])
+    const row = badges(plan.milestones, {}, none).find((b) => b.milestone.id === 'row-3')
+    expect(row?.tier).toBe('gold')
+    expect(row?.mark).toBe('P3')
+    expect(row?.how).toContain('One-arm row, a 2-s squeeze at the top and 3 s down')
     expect(badges(plan.milestones, {}, none).find((b) => b.milestone.id === 'hatchling')?.tier).toBe('bronze')
   })
 })

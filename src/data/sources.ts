@@ -47,14 +47,6 @@ export const sources: SourceInput[] = [
       '16 cohort studies. Muscle-strengthening went with a 10–17% lower risk of death, heart disease, cancer and diabetes. The largest reduction, about 10–20%, came at about 30–60 minutes a week (a J-shaped curve). The effect of larger volumes was unclear. Strength plus aerobic activity beat neither.',
   },
   {
-    id: 'brito2014',
-    citation:
-      'Brito et al. Ability to sit and rise from the floor as a predictor of all-cause mortality. Eur J Prev Cardiol 2014.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/23242910/',
-    finding:
-      '2,002 adults aged 51–80, median 6.3 years. On the sitting-rising test (0–10 points), a score of 0–3 against 8–10 gave a hazard ratio of 5.44. Each extra point went with 21% better survival.',
-  },
-  {
     id: 'araujo2022',
     citation:
       'Araujo et al. Successful 10-second one-legged stance performance predicts survival in middle-aged and older individuals. Br J Sports Med 2022.',
@@ -116,14 +108,6 @@ export const sources: SourceInput[] = [
     url: 'https://pubmed.ncbi.nlm.nih.gov/11153730/',
     finding:
       'HRmax ≈ 208 − 0.7 × age in healthy adults (351 studies, 18,712 people, plus a laboratory check on 514). The same for men and women and at any activity level.',
-  },
-  {
-    id: 'kline1987',
-    citation:
-      'Kline et al. Estimation of VO2max from a one-mile track walk, gender, age, and body weight. Med Sci Sports Exerc 1987.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/3600239/',
-    finding:
-      'The Rockport one-mile walk test, 343 adults aged 30–69. VO2max (L/min) = 6.9652 + 0.0091 × weight (lb) − 0.0257 × age + 0.5955 × sex (1 = male, 0 = female) − 0.2240 × walk time (min) − 0.0115 × heart rate in the last quarter mile. r = 0.93; a cross-validation group gave r = 0.92.',
   },
   {
     id: 'lee2014',
@@ -317,20 +301,5 @@ export const sources: SourceInput[] = [
     url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5873977/',
     finding:
       '99 adults of 60 or older with a curve of 40° or more (full text). Spine strengthening with posture training cut the curve by 3.0° against controls in 6 months; it rose 1.6° again in the 6 months after the programme ended.',
-  },
-  {
-    id: 'green2004',
-    citation: 'Green et al. Does this woman have osteoporosis? JAMA 2004.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/15598921/',
-    finding:
-      'A review of physical signs in women. A gap between the back of the head and the wall carried a positive likelihood ratio of 4.6 for a hidden spine fracture: it multiplies the odds by 4.6. No single sign was enough to rule a fracture in or out.',
-  },
-  {
-    id: 'wiyanad2018',
-    citation:
-      'Wiyanad et al. Is the occiput-wall distance valid and reliable to determine the presence of thoracic hyperkyphosis? Musculoskelet Sci Pract 2018.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/30278368/',
-    finding:
-      '99 people. The occiput-to-wall distance tracked the X-ray angle (r = 0.68); 6.5 cm or more best marked hyperkyphosis.',
   },
 ]

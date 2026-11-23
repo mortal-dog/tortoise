@@ -12,12 +12,12 @@ phone checks, is next. See `docs/3-implementation.md`.
 |---|---|
 | `docs/plan.md` | The general plan: goals, the three parts, constraints, status |
 | `docs/1-app-design.md` | Screens, rules (calendar, streak, progression), data model, iPhone constraints, visual design |
-| `docs/2-exercise-plan.md` | The week, every session and dose, progression ladders, the first 13 weeks, the stages to 99, the Tortoise Test, milestones, safety, the exercise library |
+| `docs/2-exercise-plan.md` | The week, every session and dose, progression ladders, the first 13 weeks, the stages to 99, milestones, safety, the exercise videos |
 | `docs/3-implementation.md` | Stack, phases 0–9 with done-criteria, testing, deploy, risks |
 | `docs/decisions.md` | Every decision as a D-number (the next number is at the top) |
 | `docs/sources.md` | Every source, with the finding read in its raw text |
 | `ai/resume.md` | The handoff sheet (global §0); finished entries move to `ai/resume-done.md` |
-| `src/data/` | The plan as data (schema, sessions, ladders, tests, milestones, sources); changes with the plan docs (rule 6) |
+| `src/data/` | The plan as data (schema, sessions, ladders, milestones, sources); changes with the plan docs (rule 6) |
 | `src/lib/` | The rules as pure functions (calendar, streak, progression, daylight, milestones) and the IndexedDB layer |
 | `src/routes/`, `src/components/` | The screens (TanStack Router, file-based) |
 | `tests/` | Vitest (`unit`, `content`, `db`, `component`, `guard`) and Playwright (`e2e`) |
@@ -55,6 +55,12 @@ phone checks, is next. See `docs/3-implementation.md`.
    special instruction from me needed, it is the default routine" (his picker: this repo only). It replaces, here only,
    the picker before a push to `main` and the global "do not run compact-ai unasked". A manual deploy run
    (`gh workflow run ci.yml` with deploy on) still needs his yes; the scheduled runs publish by themselves.
+10. **Before every commit, docs, code and badges agree (D-068).** Read the change against every doc that describes it
+    (`docs/plan.md`, `docs/1-app-design.md`, `docs/2-exercise-plan.md`, `docs/3-implementation.md`,
+    `docs/decisions.md`, this file) and fix what no longer matches. Then check the badges (`src/data/milestones.ts`,
+    `src/lib/badges.ts`): no badge may become impossible, much harder or much easier to earn through the change
+    (a removed or renamed ladder, level, session, metric or record). `tests/unit/badges.test.ts` catches an
+    unearnable badge; difficulty is judged by hand. The owner: "check this before every commit".
 
 ## Commands
 

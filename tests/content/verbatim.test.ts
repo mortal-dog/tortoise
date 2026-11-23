@@ -9,7 +9,6 @@ const doc = readRepoFile('docs/2-exercise-plan.md')
   .replace(/\*our rule\*/g, 'our rule')
   .replace(/\n +/g, ' ')
   .replace(/\n(?![|#\n-])/g, ' ')
-const docNoBrackets = doc.replace(/ \[[a-z][a-z0-9]*(?:, [a-z][a-z0-9]*)*\]/g, '')
 
 /** Texts the data writes itself, each with its reason. */
 const COMPOSED: Record<string, string> = {
@@ -20,7 +19,7 @@ const COMPOSED: Record<string, string> = {
     'capitalised',
   'Winter sun at southern Canadian latitudes makes none. On cloudless days, skin made no previtamin D3 from November through February at 42° N, and from October through March at 52° N [webb1988]. In the rest of the year the sun does make it. Vitamin D intake is nutrition, which is outside this app; that is a question for a doctor.':
     'capitalised',
-  'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip. So progress is measured in centimetres from the floor, and any steady gain counts.':
+  'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip, so any steady gain counts.':
     'capitalised',
   'Keep the upper back straight; avoid deep forward bending under load [ros2022]. The plan has no lift that bends forward under load.':
     'capitalised',
@@ -68,16 +67,10 @@ describe('texts copied from the plan', () => {
       if (l.note) texts.push(l.note)
       for (const lv of l.levels) texts.push(lv.name, lv.pass.text)
     }
-    for (const a of plan.at99) texts.push(a.line)
     for (const st of plan.blockRules.intervalStages) texts.push(st.text)
     for (const r of plan.rationale) texts.push(...parts(r.text))
 
     const missing = [...new Set(texts)].filter((t) => !COMPOSED[t] && !doc.includes(t))
-    expect(missing).toEqual([])
-  })
-
-  it('in the Tortoise Test are found verbatim without their brackets', () => {
-    const missing = plan.tests.flatMap((t) => [t.how, t.aim]).filter((t) => !docNoBrackets.includes(t))
     expect(missing).toEqual([])
   })
 

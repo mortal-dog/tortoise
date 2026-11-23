@@ -1,4 +1,5 @@
 // Reading and writing the app's records. Every write stamps updatedAt (D-032) and tells the UI to refresh.
+import { plan } from '@/data/plan'
 import type { Weekday } from '@/data/schema'
 import { type BackupFile, type ImportResult, importBackup, wipeAll } from './backup'
 import type { Swap } from './calendar'
@@ -16,6 +17,7 @@ import {
   SettingsRecord as SettingsSchema,
   type Variant,
 } from './records'
+import { type StartAnswers, startingLevels } from './start-levels'
 
 let dbPromise: Promise<Db> | null = null
 
@@ -85,8 +87,15 @@ export async function saveSettings(
 }
 
 /** Starts the plan: Week 0 begins on the chosen Monday, so Week 1 (the stored start date) is seven days later. */
-export async function startPlan(week0Monday: LocalDate): Promise<void> {
-  await saveSettings({ startDate: addDays(week0Monday, 7) })
+/**
+ * Starts the plan: Week 0 begins on the given Monday. The start answers set the starting levels, dated Week 1's Monday
+ * (Week 0 runs every ladder at level 1 anyway); every other ladder starts at level 1 (plan §8, D-067).
+ */
+export async function startPlan(week0Monday: LocalDate, answers: StartAnswers = {}): Promise<void> {
+  const week1 = addDays(week0Monday, 7)
+  await saveSettings({ startDate: week1 })
+  for (const [ladderId, level] of startingLevels(plan.startRules, plan.ladders, answers))
+    await setLevel(ladderId, level, week1)
   // Ask once, at the moment the data starts to matter (design §2).
   await requestPersistentStorage().catch(() => null)
 }

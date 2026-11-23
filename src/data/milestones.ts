@@ -1,31 +1,33 @@
 // Milestones (plan §11). Every threshold is our rule. Habit milestones count days and logs; ability milestones read
-// the logs and the tests. Split distances count down to the floor, so they use `atMost`.
+// the ladder levels reached, the split blocks done and the run logs (D-067: no test).
 import type { z } from 'zod'
 import type { Metric, Milestone } from './schema'
 
 type MilestoneInput = z.input<typeof Milestone>
 
-function ability(
-  id: string,
-  name: string,
-  metric: Metric,
-  threshold: number,
-  atMost = false,
-): MilestoneInput {
+/** An ability milestone: a ladder level reached (D-067). The threshold is the ladder's level number. */
+function level(id: string, name: string, ladderId: string, threshold: number): MilestoneInput {
   return {
     id,
     name,
     group: 'ability',
-    kind: 'test',
-    metric,
-    direction: atMost ? 'atMost' : 'atLeast',
+    kind: 'level',
+    metric: 'level',
+    ladderId,
+    direction: 'atLeast',
     threshold,
     ourRule: true,
   }
 }
 
+/** An ability milestone read from the run logs. */
+function logged(id: string, name: string, metric: Metric, threshold: number): MilestoneInput {
+  return { id, name, group: 'ability', kind: 'log', metric, direction: 'atLeast', threshold, ourRule: true }
+}
+
 function count(id: string, name: string, metric: Metric, threshold: number): MilestoneInput {
-  return { id, name, group: 'habit', kind: 'count', metric, direction: 'atLeast', threshold, ourRule: true }
+  const group = metric === 'splitBlocks' ? 'ability' : 'habit'
+  return { id, name, group, kind: 'count', metric, direction: 'atLeast', threshold, ourRule: true }
 }
 
 export const milestones: MilestoneInput[] = [
@@ -87,30 +89,34 @@ export const milestones: MilestoneInput[] = [
   count('long-road-100', 'Long road 100 km', 'runKm', 100),
   count('long-road-500', 'Long road 500 km', 'runKm', 500),
   count('long-road-1000', 'Long road 1,000 km', 'runKm', 1000),
-  // Ability milestones (from logs and tests)
-  ability('push-ups-10', '10 push-ups', 'pushups', 10),
-  ability('push-ups-20', '20 push-ups', 'pushups', 20),
-  ability('push-ups-30', '30 push-ups', 'pushups', 30),
-  ability('push-ups-40', '40 push-ups', 'pushups', 40),
-  ability('push-ups-50', '50 push-ups', 'pushups', 50),
-  ability('handstand-wall-30', 'Handstand at the wall 30 s', 'handstandWallS', 30),
-  ability('handstand-wall-60', 'Handstand at the wall 60 s', 'handstandWallS', 60),
-  ability('handstand-free-5', 'The first freestanding handstand, 5 s', 'handstandFreeS', 5),
-  ability('handstand-free-10', 'Freestanding handstand 10 s', 'handstandFreeS', 10),
-  ability('handstand-free-30', 'Freestanding handstand 30 s', 'handstandFreeS', 30),
-  ability('handstand-free-60', 'Freestanding handstand 60 s', 'handstandFreeS', 60),
-  ability('front-split-20', 'Front split within 20 cm (each side)', 'frontSplitCm', 20, true),
-  ability('front-split-10', 'Front split within 10 cm (each side)', 'frontSplitCm', 10, true),
-  ability('front-split-flat', 'Front split flat (each side)', 'frontSplitCm', 0, true),
-  ability('side-split-30', 'Side split within 30 cm', 'sideSplitCm', 30, true),
-  ability('side-split-15', 'Side split within 15 cm', 'sideSplitCm', 15, true),
-  ability('side-split-flat', 'Side split flat', 'sideSplitCm', 0, true),
-  ability('sit-to-rise-10', 'Sit-to-rise 10 out of 10', 'sitRise', 10),
-  ability('one-leg-closed-30', 'One leg, eyes closed 30 s', 'oneLegClosedS', 30),
-  ability('one-leg-closed-60', 'One leg, eyes closed 60 s', 'oneLegClosedS', 60),
-  ability('run-5k', 'The first continuous 5 km', 'continuousRunKm', 5),
-  ability('run-10k', 'The first continuous 10 km', 'continuousRunKm', 10),
-  ability('long-run-90', 'A 90-minute long run', 'longRunMin', 90),
-  ability('vo2max-10', 'Aerobic power: VO2max estimate up 10% from Week 0', 'vo2maxGainPct', 10),
-  ability('straight-back', 'Straight back: the wall test at 0 cm in four tests in a row', 'wallZeroTests', 4),
+  // Ability milestones: ladder levels reached, split blocks done, and runs from the logs (D-067)
+  level('push-3', 'Push L3', 'push', 3),
+  level('push-4', 'Push L4', 'push', 4),
+  level('push-5', 'Push L5', 'push', 5),
+  level('push-6', 'Push L6', 'push', 6),
+  level('squat-3', 'Squat L3', 'squat', 3),
+  level('squat-5', 'Squat L5', 'squat', 5),
+  level('bridge-3', 'Bridge L3', 'bridge', 3),
+  level('bridge-5', 'Bridge L5', 'bridge', 5),
+  level('row-3', 'Row P3', 'row', 3),
+  level('back-3', 'Back L3', 'back-extension', 3),
+  level('back-5', 'Back L5', 'back-extension', 5),
+  level('core-3', 'Core L3', 'core', 3),
+  level('handstand-6', 'Handstand H6', 'handstand-skill', 6),
+  level('handstand-8', 'Handstand H8', 'handstand-skill', 8),
+  level('handstand-10', 'Handstand H10', 'handstand-skill', 10),
+  level('handstand-13', 'Handstand H13', 'handstand-skill', 13),
+  level('pike-3', 'Pike push S3', 'handstand-strength', 3),
+  level('balance-3', 'Balance Ba3', 'balance', 3),
+  level('balance-6', 'Balance Ba6', 'balance', 6),
+  level('jumps-3', 'Jumps L3', 'jumps', 3),
+  level('run-walk-4', 'Run–walk R4', 'run', 4),
+  level('run-walk-8', 'Run–walk R8', 'run', 8),
+  count('splits-10', 'Splits 10', 'splitBlocks', 10),
+  count('splits-50', 'Splits 50', 'splitBlocks', 50),
+  count('splits-100', 'Splits 100', 'splitBlocks', 100),
+  count('splits-365', 'Splits 365', 'splitBlocks', 365),
+  logged('run-5k', 'The first continuous 5 km', 'continuousRunKm', 5),
+  logged('run-10k', 'The first continuous 10 km', 'continuousRunKm', 10),
+  logged('long-run-90', 'A 90-minute long run', 'longRunMin', 90),
 ]

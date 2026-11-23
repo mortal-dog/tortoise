@@ -32,15 +32,11 @@ describe('the plan calendar (design §5.1)', () => {
     expect(week(3).isLight).toBe(false)
   })
 
-  it('puts the Tortoise Test in Week 0 and every third light week', () => {
-    expect(week(0).isTestWeek).toBe(true)
-    expect(week(12).kind).toBe('test')
-    expect(week(24).kind).toBe('test')
+  it('has no test weeks: every fourth week is light, Week 0 is its own kind (D-067)', () => {
+    expect(week(0).kind).toBe('week0')
+    expect(week(12).kind).toBe('light')
+    expect(week(24).kind).toBe('light')
     expect(week(8).kind).toBe('light')
-    expect(week(12, 5).isTestDay).toBe(true) // Saturday
-    expect(week(12, 6).isTestDay).toBe(true) // Sunday
-    expect(week(12, 4).isTestDay).toBe(false)
-    expect(week(0, 5).isTestDay).toBe(true)
   })
 
   it('moves through the interval stages by block, staying at the 4 × 4 from Block 4', () => {
@@ -120,12 +116,9 @@ describe('swaps and their warnings', () => {
     expect(swapWarnings(w3, (id) => kinds[id]).some((x) => x.message.startsWith('Intervals'))).toBe(true)
   })
 
-  it('replace the main session and drop the split block on test days', () => {
-    const sat = dayTemplate(week(12, 5), template)
-    expect(sat?.testDay).toBe(1)
-    expect(sat?.split).toBeNull()
-    expect(dayTemplate(week(12, 6), template)?.testDay).toBe(2)
-    expect(dayTemplate(week(11, 5), template)?.testDay).toBeNull()
+  it('give every day of Week 0 and after its template, the weekend too (D-067: no test days)', () => {
+    expect(dayTemplate(week(12, 5), template)).toEqual(template.sat)
+    expect(dayTemplate(week(0, 6), template)).toEqual(template.sun)
     expect(dayTemplate(planDay(START, '2026-11-01', rules), template)).toBeNull()
   })
 })

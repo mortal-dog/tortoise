@@ -4,10 +4,8 @@ import type { BlockRules, Ladder } from '@/data/schema'
 export const rules: BlockRules = {
   blockWeeks: 4,
   lightWeekInBlock: 4,
-  testEveryBlocks: 3,
-  testDays: ['sat', 'sun'],
   week0: {
-    halfVolumeDays: ['mon', 'tue', 'wed', 'thu', 'fri'],
+    halfVolumeDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
     setsFactor: 0.5,
     enduranceFactor: 0.5,
     intervalRepsFactor: 0.5,

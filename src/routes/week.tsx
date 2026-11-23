@@ -46,8 +46,8 @@ function Week() {
     pd.kind === 'before'
       ? 'Before Week 0'
       : pd.kind === 'week0'
-        ? 'Week 0 · learn and test'
-        : `Week ${pd.week} · Block ${pd.block} · ${pd.kind === 'test' ? 'test' : pd.kind === 'light' ? 'light' : 'build'}`
+        ? 'Week 0 · learn'
+        : `Week ${pd.week} · Block ${pd.block} · ${pd.kind === 'light' ? 'light' : 'build'}`
 
   const toggle = (d: Weekday) => {
     if (!picking) return
@@ -92,12 +92,8 @@ function Week() {
           const status = history.statusOf(date)
           const isToday = date === t
           const picked = picking?.includes(wd)
-          const mainName = tmpl
-            ? tmpl.testDay
-              ? `Tortoise Test · Day ${tmpl.testDay}`
-              : sessionOf(tmpl.main).name
-            : '—'
-          const splitName = tmpl?.split ? sessionOf(tmpl.split).name : tmpl?.testDay ? '' : 'In the session'
+          const mainName = tmpl ? sessionOf(tmpl.main).name : '—'
+          const splitName = tmpl?.split ? sessionOf(tmpl.split).name : 'In the session'
           const body = (
             <div className="flex items-center gap-3">
               <StatusMark status={status} size={22} />

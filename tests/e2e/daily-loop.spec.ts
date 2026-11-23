@@ -64,11 +64,11 @@ test('a full day, a Shell day and missed days follow the streak rules, offline',
     .click()
   await expect(page.getByTestId('streak')).toHaveText('3')
 
-  // Friday: nothing. Saturday is the Week 0 test day; one missed day does not end the run.
+  // Friday: nothing. Saturday is an ordinary Week 0 day, no test (D-067); one missed day does not end the run.
   await at(page, '2026-11-28')
-  await expect(page.getByText('Test weekend: the Tortoise Test, Day 1.')).toBeVisible()
-  await expect(page.getByTestId('card-main')).toContainText('Tortoise Test · Day 1')
-  await expect(page.getByTestId('card-split')).toHaveCount(0)
+  await expect(page.getByText(/Tortoise Test/)).toHaveCount(0)
+  await expect(page.getByTestId('card-main')).toBeVisible()
+  await expect(page.getByTestId('card-split')).toBeVisible()
   await expect(page.getByTestId('streak')).toHaveText('3')
 
   // Sunday, with Saturday missed as well: two missed days in a row end the run.

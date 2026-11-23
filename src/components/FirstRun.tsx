@@ -35,6 +35,8 @@ function Welcome({ onBrowser }: { onBrowser: () => void }) {
 function PickMonday() {
   const t = useToday()
   const [monday, setMonday] = useState(() => defaultWeek0Monday(t))
+  const [runMin, setRunMin] = useState('')
+  const run = runMin.trim() === '' ? undefined : Number(runMin)
   const valid = isLocalDate(monday) && weekday(monday) === 'mon' && compareDates(monday, t) >= 0
 
   return (
@@ -44,8 +46,8 @@ function PickMonday() {
           Week 0 begins on
         </label>
         <p className="mt-1 text-sm text-primary-strong">
-          A Monday: learn the movements at half volume, then the Tortoise Test on the weekend. Week 1 starts
-          seven days later.
+          A Monday: learn the movements at half volume, every exercise at its first level. Week 1 starts seven
+          days later.
         </p>
         <input
           id="week0"
@@ -64,11 +66,33 @@ function PickMonday() {
             Week 0: {formatShort(monday)} to {formatShort(addDays(monday, 6))}.
           </p>
         )}
-        <Button className="mt-4 w-full" disabled={!valid} onClick={() => void startPlan(monday)}>
+        <label htmlFor="run-min" className="mt-5 block font-semibold text-primary">
+          How long is an easy run comfortable?
+        </label>
+        <p className="mt-1 text-sm text-primary-strong">
+          In minutes, without stopping; 0 if you do not run yet. It sets where the run–walk starts. Every
+          other exercise starts at its first level and moves up when it feels easy.
+        </p>
+        <div className="mt-2 flex items-center gap-2">
+          <input
+            id="run-min"
+            type="number"
+            inputMode="numeric"
+            min={0}
+            value={runMin}
+            onChange={(e) => setRunMin(e.target.value)}
+            className="min-h-11 w-28 rounded-xl border border-edge bg-field px-3 text-text"
+          />
+          <span className="text-sm">min</span>
+        </div>
+        <Button
+          className="mt-4 w-full"
+          disabled={!valid}
+          onClick={() => void startPlan(monday, run !== undefined && run >= 0 ? { runMin: run } : {})}
+        >
           Start the plan
         </Button>
       </Card>
-      <p className="mt-4 text-sm">The profile is optional; the Tortoise Test asks for what it needs.</p>
       <p className="mt-4 text-sm">
         Moving from another phone or browser?{' '}
         <Link to="/settings" hash="drive" className="font-semibold text-primary underline">

@@ -5,7 +5,6 @@
 Tortoise is a private, offline phone app (a PWA) for a lifelong exercise plan. It offers:
 - a session for every day, guided with timers;
 - a forgiving streak, where a 15-minute day counts;
-- a fitness test every 12 weeks;
 - milestones that look decades ahead.
 
 The plan's goal: at 99, a straight back, still able to jump and run; on the way, a handstand and the splits. The app
@@ -20,7 +19,7 @@ covers exercise only.
 |---|---|
 | [General plan](docs/plan.md) | Goals, the three parts, constraints, status |
 | [1 · App design](docs/1-app-design.md) | Screens, rules, data, iPhone constraints, look and feel |
-| [2 · Exercise plan](docs/2-exercise-plan.md) | The week, sessions, ladders, tests, milestones, safety |
+| [2 · Exercise plan](docs/2-exercise-plan.md) | The week, sessions, ladders, milestones, safety |
 | [3 · Implementation](docs/3-implementation.md) | Stack and phases |
 | [Decisions](docs/decisions.md) | Every choice and why |
 | [Sources](docs/sources.md) | Studies and guidelines |

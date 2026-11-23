@@ -1,8 +1,8 @@
-// The plan calendar (design §5.1): week, block, light and test weeks, the interval stage, and the week's changes.
+// The plan calendar (design §5.1): week, block, light weeks, the interval stage, and the week's changes.
 import type { BlockRules, DayTemplate, Session, Step, Weekday, WeekTemplate } from '@/data/schema'
-import { addDays, compareDates, daysBetween, type LocalDate, weekday, weekdayIndex } from './dates'
+import { addDays, compareDates, daysBetween, type LocalDate, weekday } from './dates'
 
-export type WeekKind = 'before' | 'week0' | 'build' | 'light' | 'test'
+export type WeekKind = 'before' | 'week0' | 'build' | 'light'
 
 export interface PlanDay {
   date: LocalDate
@@ -14,8 +14,6 @@ export interface PlanDay {
   weekInBlock: number
   kind: WeekKind
   isLight: boolean
-  isTestWeek: boolean
-  isTestDay: boolean
   /** Weeks 1 and 2: strength at 2 sets. */
   isRamp: boolean
   /** 1–4 (design §5.1); Week 0 uses stage 1. 0 before Week 0. */
@@ -39,8 +37,6 @@ export function planDay(startDate: LocalDate, date: LocalDate, rules: BlockRules
       weekInBlock: 0,
       kind: 'before',
       isLight: false,
-      isTestWeek: false,
-      isTestDay: false,
       isRamp: false,
       intervalStage: 0,
       monday,
@@ -55,8 +51,6 @@ export function planDay(startDate: LocalDate, date: LocalDate, rules: BlockRules
       weekInBlock: 0,
       kind: 'week0',
       isLight: false,
-      isTestWeek: true,
-      isTestDay: rules.testDays.includes(wd),
       isRamp: false,
       intervalStage: 1,
       monday,
@@ -65,7 +59,6 @@ export function planDay(startDate: LocalDate, date: LocalDate, rules: BlockRules
   const block = Math.ceil(week / rules.blockWeeks)
   const weekInBlock = ((week - 1) % rules.blockWeeks) + 1
   const isLight = weekInBlock === rules.lightWeekInBlock
-  const isTestWeek = isLight && block % rules.testEveryBlocks === 0
   const stage = [...rules.intervalStages].reverse().find((s) => block >= s.fromBlock)?.stage ?? 1
   return {
     date,
@@ -73,10 +66,8 @@ export function planDay(startDate: LocalDate, date: LocalDate, rules: BlockRules
     week,
     block,
     weekInBlock,
-    kind: isTestWeek ? 'test' : isLight ? 'light' : 'build',
+    kind: isLight ? 'light' : 'build',
     isLight,
-    isTestWeek,
-    isTestDay: isTestWeek && rules.testDays.includes(wd),
     isRamp: rules.ramp.weeks.includes(week),
     intervalStage: stage,
     monday,
@@ -133,20 +124,14 @@ export function swapWarnings(
   return out
 }
 
-/** The day's template, or null for a day before Week 0. On test days the test part replaces main and split. */
+/** The day's template, or null for a day before Week 0. */
 export function dayTemplate(
   day: PlanDay,
   template: WeekTemplate,
   swaps: readonly Swap[] = [],
-): (DayTemplate & { testDay: 1 | 2 | null }) | null {
+): DayTemplate | null {
   if (day.kind === 'before') return null
-  const week = weekWithSwaps(template, swaps)
-  const base = week[day.weekday]
-  if (day.isTestDay) {
-    const testDay = weekdayIndex(day.weekday) === 5 ? 1 : 2
-    return { ...base, split: null, testDay }
-  }
-  return { ...base, testDay: null }
+  return weekWithSwaps(template, swaps)[day.weekday]
 }
 
 export interface StepDose {
@@ -156,7 +141,7 @@ export interface StepDose {
 }
 
 /**
- * The week's changes to a step's dose (design §5.1): Week 0 at half volume from Monday to Friday, the ramp's 2 sets,
+ * The week's changes to a step's dose (design §5.1): Week 0 at half volume all week, the ramp's 2 sets,
  * and the light week. The morning block, the split blocks and the warm-ups are unchanged.
  */
 export function adjustDose(

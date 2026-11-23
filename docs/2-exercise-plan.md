@@ -13,14 +13,14 @@ whose usual mistake injures (a rounded back under load, a fall, a hard one-leg o
 heavy lowering) was replaced by a safer one that trains the same thing. The handstand and split goals stay, by the
 owner's choice; D-061 later cut every drill whose work another one already does.
 
-It is written for a healthy adult starting in their late 30s. It starts gently, with the Week 0 tests followed by a 3-week
-ramp, and the tests set the starting level of every exercise.
+It is written for a healthy adult starting in their late 30s. It starts gently, with a Week 0 at half volume followed by a 3-week
+ramp; there is no fitness test (D-067).
 
 **How to read the numbers.**
 - A number taken from evidence names its study or guideline in [sources.md](sources.md), in square brackets like
   `[lee2014]`.
-- The doses in the tables (sets, reps, seconds, minutes, rests), the ladder steps and pass targets, the test aims and
-  the milestones are this plan's own choices, *our rule*, unless a source is named beside them.
+- The doses in the tables (sets, reps, seconds, minutes, rests), the ladder steps and pass targets and the
+  milestones are this plan's own choices, *our rule*, unless a source is named beside them.
 - In running text, a number that is this plan's own choice is marked *our rule*.
 
 **Not medical advice.** Read [§13 Safety](#13-safety) before starting.
@@ -36,7 +36,7 @@ ramp, and the tests set the starting level of every exercise.
 7. [Progression ladders](#7-progression-ladders)
 8. [The first 13 weeks](#8-the-first-13-weeks)
 9. [Over the years: cycles and stages to 99](#9-over-the-years-cycles-and-stages-to-99)
-10. [The Tortoise Test](#10-the-tortoise-test)
+10. [No fitness test](#10-no-fitness-test)
 11. [Milestones](#11-milestones)
 12. [Outdoors, weather and daylight](#12-outdoors-weather-and-daylight)
 13. [Safety](#13-safety)
@@ -108,7 +108,7 @@ this is an injury or quitting, not a slow start. So the plan ramps up over 3 wee
    not statistically significant [nielsen2014].
 5. **Every fourth week is light** (a deload week): fewer sets, shorter runs, half the intervals. The morning block and the
    splits continue as usual (*our rule*).
-6. **Test every 12 weeks** with the Tortoise Test (§10), and move up by the numbers, not by mood (*our rule*).
+6. **Move up by the ladder rules** (§7), one level at a time (*our rule*).
 7. **Outdoors when the weather allows.** Runs and the long Saturday session are outside in daylight; a longer brisk walk
    indoors is the indoor version (§12).
 8. **Respect the pain rules** (§13). Muscle burn is fine; joint or tendon pain means going back a level.
@@ -160,8 +160,8 @@ A heart-rate monitor is optional; the talk test works everywhere.
 | **Sat** | Morning block | **Long outdoor:** long easy run 45–90 min (a brisk walk indoors, at most 60 min), then rows and farmer holds at home | Both, short form (10 min) | ~1.5–2 h |
 | **Sun** | Morning block | **Light:** an easy walk, then the flexibility session (30 min) | In the session | ~45 min + walk |
 
-A full week is about 7½ hours, and about 8 with the longest Saturday run, plus the Sunday walk. Week 0 is about 5½
-hours and the ramp-up weeks about 6½.
+A full week is about 7½ hours, and about 8 with the longest Saturday run, plus the Sunday walk. Week 0 is about 6
+hours (half volume every day, D-067) and the ramp-up weeks about 6½.
 
 **The week against the evidence**
 
@@ -316,8 +316,8 @@ stretching did [afonso2021], which is why the wide goblet squats, bridges and hi
 
 **What to expect:** in the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle.
 What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to
-years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip. So progress is
-measured in centimetres from the floor, and any steady gain counts.
+years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip, so any steady
+gain counts.
 
 **Sunday flexibility session (30 min), after the easy walk:** both split blocks in their long form (the seated
 straddle is the pancake), and a deep squat hold 2 × 60 s.
@@ -334,7 +334,7 @@ straddle is the pancake), and a deep squat hold 2 × 60 s.
 - **Endurance:** one ladder step at a time, with at least a week on each; beyond the ladders, at most +10% a week.
 - **Too hard twice in a row:** go one level down.
 - **After two or more weeks off:** go one level down for a week.
-- **Starting higher:** the Week 0 test and the start question set the first levels (§8).
+- **Starting higher:** the start question sets the first run–walk step (§8).
 
 ### 7.1 Squat
 
@@ -495,28 +495,25 @@ shins and strains the calves, and a criss-cross trips (D-056).
 
 ### 7.13 Splits
 
-The splits have no levels; they are measured. Record the distance from the crotch to the floor each test (§10). Progress
-in the supported split itself: hold it for 60 s, later 2 × 60 s, and lower the supports (thick books, then thinner,
+The splits have no levels. Progress in the supported split itself: hold it for 60 s, later 2 × 60 s, and lower the supports (thick books, then thinner,
 then none).
 
 ---
 
 ## 8. The first 13 weeks
 
-### Week 0: learn and test
+### Week 0: learn
 
-- **Monday to Friday:** the morning block, and each main session at half volume, to learn the movements. Half volume
+- **Monday to Sunday:** the morning block, and each main session at half volume, to learn the movements. Half volume
   means half the sets (rounded up), half the run or rope minutes and half the interval repeats, all at an easy effort,
   with every ladder at level 1 (*our rule*). If running is new, walk briskly instead of running.
-- **Saturday and Sunday:** the Tortoise Test (§10), in place of the two main sessions.
 
-**Starting levels from the test and three start questions**
+**Starting levels from the start question**
 
-The test cannot show everything, so one question is asked with it: how long an easy run is comfortable.
+One question is asked when the plan starts: how long an easy run is comfortable.
 
 | Family | Rule |
 |---|---|
-| Push | Maximum push-ups (tested) 0–4 → level 1; 5–9 → 2; 10–19 → 3; 20–29 → 4; 30 or more → 5 |
 | Run | 30 min of easy running is comfortable (asked) → R8; 10 min → R4; less → R1 |
 | Everything else | Level 1, to learn the form; the ladder rules move it up fast (§7) |
 
@@ -535,7 +532,7 @@ Intervals 6 × (1 min, 1 min); Saturday up by at most 10% a week. Week 8 is ligh
 
 ### Block 3 (Weeks 9–12)
 
-Intervals 5 × (2 min, 2 min). Week 12 is light, with the first retest (Tortoise Test #1) on its weekend.
+Intervals 5 × (2 min, 2 min). Week 12 is light.
 
 ### From Week 13
 
@@ -545,13 +542,12 @@ The 4 × 4 intervals begin, and the 12-week cycle repeats (§9).
 
 ## 9. Over the years: cycles and stages to 99
 
-**The cycle** (*our rule*): a block is 4 weeks (3 building, 1 light). Three blocks make 12 weeks, and the Tortoise Test falls
-in every third light week. Once a year, the plan itself gets a review: new evidence, and what worked.
+**The cycle** (*our rule*): a block is 4 weeks (3 building, 1 light). Three blocks make 12 weeks. Once a year, the plan itself gets a review: new evidence, and what worked.
 
 | Ages | Focus | What changes |
 |---|---|---|
 | **Late 30s to 40** (year 1) | The habit, a safe ramp, learning the skills | Week 0 to the full plan; handstand H1–H10; the long run up to 60–75 min |
-| **40–49** | Build the reserve: peak aerobic power, strength, skills | Weekly 4 × 4; the top squat, bridge and push-up levels; a freestanding handstand; splits progress; add backpack load when the dumbbells get light. Keep measuring height once a year: more than 2 cm below an earlier measurement is a reason for a spine X-ray [oc2023] |
+| **40–49** | Build the reserve: peak aerobic power, strength, skills | Weekly 4 × 4; the top squat, bridge and push-up levels; a freestanding handstand; splits progress; add backpack load when the dumbbells get light. |
 | **50–59** | Keep the intensity, protect the joints | The same structure, with more recovery if needed. A bone-density check after a fracture or with two risk factors [oc2023] |
 | **60–69** | Protect bone and power | Keep jumps and intervals while the bones allow. Bone density at 65 with one risk factor [oc2023]. After a spine fracture, impact only up to brisk walking [ros2022] |
 | **70–84** | Test and treat; balance first | Bone density at 70 for everyone [oc2023]. Keep the intervals [stensvold2020]. Balance daily [sherrington2019]. Practise getting up off the floor every week |
@@ -559,42 +555,16 @@ in every third light week. Once a year, the plan itself gets a review: new evide
 
 ---
 
-## 10. The Tortoise Test
+## 10. No fitness test
 
-- **When:** in Week 0, then every 12 weeks in the light week (§9). On a test weekend the two test days take the place
-  of Saturday's and Sunday's main sessions and split blocks; the morning block stays (*our rule*).
-- **How:** rested, over two days, in the same conditions and the same order each time. The app keeps the results only on
-  the phone.
-
-### Day 1 — outdoors (Saturday)
-
-| Test | How | Record | Aim |
-|---|---|---|---|
-| **Rockport walk** | After 5 min of easy walking, walk 1 mile as fast as possible on flat ground. A mile is 1,609 m: four laps of a 400 m track and 9 m more, or a route measured on a map. Take the heart rate at the finish (a monitor, or count 15 s and multiply by 4) | Time, heart rate, body weight | The app estimates VO2max with the Rockport equation [kline1987], valid at ages 30–69. Aim: rising over the years and far above 18 mL/kg/min [paterson1999]. A pulse counted after stopping reads a little low, so compare like with like (*our rule*) |
-
-### Day 2 — indoors (Sunday), in this order
-
-| Test | How | Record | Aim |
-|---|---|---|---|
-| **Resting heart rate** | In the morning before getting up, count for 60 s | Beats per minute | A falling or steady trend |
-| **Height** (once a year) | Without shoes, in the morning | cm | More than 2 cm below an earlier measurement means seeing a doctor [oc2023] |
-| **Wall test** | Heels, buttocks and back against a wall, eyes level; measure the gap between the back of the head and the wall | cm | 0 cm. In women, any gap multiplied the odds of a hidden spine fracture by 4.6 [green2004]; more than 5 cm means seeing a doctor [oc2023]; 6.5 cm or more best marked hyperkyphosis [wiyanad2018] |
-| **Sit-to-rise** | From standing, sit down on the floor and stand up again, using as little support as possible. Each way starts at 5 points; subtract 1 for each support used (hand or knee) | 0–10 | 10. At 51–80, each extra point went with 21% better survival [brito2014] |
-| **One-leg stance** | Each leg, eyes open (stop at 60 s), then eyes closed (stop at 60 s) | Seconds | Eyes closed 30 s or more (*our rule*). 10 s with eyes open is the floor that predicted survival at 51–75 [araujo2022] |
-| **Jump and reach** | After the warm-up (§6.2). Stand side-on to a wall, heels down, and mark the highest point the near hand reaches. Jump from both feet, touch the wall as high as you can and land softly on both feet. Measure from the mark to the touch; best of 3 | cm | Rising, or holding steady in later decades (*our rule*) |
-| **Push-ups** | After the warm-up (§6.2). Strict: chest to fist height, no rest at the top | Maximum reps | More than 40 [yang2019] |
-| **Handstand** | Chest-to-wall hold; best freestanding hold | Seconds | 60 s at the wall, then freestanding |
-| **Farmer hold** | Both dumbbells, standing tall | Seconds | Rising (*our rule*); grip strength predicted survival [leong2015] |
-| **Deep squat hold** | Heels down, feet hip-width | Seconds, up to 120 | 120 s (*our rule*) |
-| **Splits** | Last, after one round of the split holds (§6.9). Front split (each side) and side split, hands on supports; measure from the crotch to the floor | cm | 0 cm |
-
-Rest about 3 minutes between the jumps, the push-ups, the handstand and the two holds (*our rule*).
+There is no fitness test (D-067). Every ladder starts at level 1, except the run–walk, which starts where the start
+question puts it (§8); the ladder rules move each one up (§7). The milestones read the levels reached (§11).
 
 ---
 
 ## 11. Milestones
 
-Every threshold here is *our rule*. Where a test's benchmark comes from a study, §10 names it.
+Every threshold here is *our rule*.
 
 ### Habit milestones
 
@@ -610,32 +580,16 @@ The tortoise streak counts the days done, full or Shell, with no two missed days
 | Bask 10 / 50 / 100 / 500 | Outdoor sessions logged |
 | Long road 100 / 500 / 1,000 km | Running distance logged |
 
-### Ability milestones (from logs and tests)
+### Ability milestones (from the levels reached, the split blocks and the runs)
 
-- **Push-ups:** 10, 20, 30, 40, 50.
-- **Handstand:** wall 30 s, wall 60 s, the first freestanding 5 s, then 10, 30 and 60 s.
-- **Front split** (each side): within 20 cm, within 10 cm, flat.
-- **Side split:** within 30 cm, within 15 cm, flat.
-- **Sit-to-rise:** 10 out of 10.
-- **One leg, eyes closed:** 30 s, 60 s.
+A level counts once it is reached, even after a step back (D-067).
+
+- **Push:** L3, L4, L5, L6.
+- **Squat:** L3, L5. **Bridge:** L3, L5. **Row:** P3. **Back extension:** L3, L5. **Core:** L3.
+- **Handstand:** H6, H8, H10, H13; the strength track's S3.
+- **Balance:** Ba3, Ba6. **Jumps:** L3. **Run–walk:** R4, R8.
+- **Splits:** 10, 50, 100 and 365 split blocks done (Sunday's Light session counts as one).
 - **Running:** the first continuous 5 km and 10 km; a 90-minute long run.
-- **Aerobic power:** VO2max estimate up 10% from Week 0.
-- **Straight back:** the wall test at 0 cm in four tests in a row.
-
-### The At-99 board
-
-The app's long view. Each ability shows its latest result next to its line:
-
-| Ability | Measured by |
-|---|---|
-| Stand straight | Wall test 0 cm |
-| Get up off the floor | Sit-to-rise 8 or more, the best-surviving group in [brito2014] |
-| Jump | Jump-and-reach trend |
-| Run | Continuous 5 km |
-| Balance | One leg, eyes closed 30 s |
-| Carry | Farmer hold 60 s |
-| Aerobic reserve | VO2max estimate trend |
-| Bonus | Handstand and splits |
 
 ---
 

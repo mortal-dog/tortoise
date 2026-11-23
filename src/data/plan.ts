@@ -1,9 +1,7 @@
 // The whole exercise plan (docs/2-exercise-plan.md) as one typed, validated data module (design §7).
 //
 // Text conventions: text is copied from the plan verbatim. Citations stay in square brackets, as in the plan, and
-// every bracketed id is also in the object's `sources`; the Tortoise Test's `how` and `aim` drop the brackets. The
-// markdown emphasis is dropped ("*our rule*" reads "our rule").
-import { at99 } from './at99'
+// every bracketed id is also in the object's `sources`. The markdown emphasis is dropped ("*our rule*" reads "our rule").
 import { exercises } from './exercises'
 import { ladders } from './ladders'
 import { milestones } from './milestones'
@@ -13,7 +11,6 @@ import { type Exercise, type Ladder, Plan, type PlanInput, type Session } from '
 import { sessions } from './sessions'
 import { sources } from './sources'
 import { startRules } from './start-rules'
-import { tests } from './tests'
 import { week } from './week'
 
 export const planInput: PlanInput = {
@@ -24,9 +21,7 @@ export const planInput: PlanInput = {
   sessions,
   week,
   blockRules,
-  tests,
   milestones,
-  at99,
   startRules,
   rationale,
   ourRule: true,

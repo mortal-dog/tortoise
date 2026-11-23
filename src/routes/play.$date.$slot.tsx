@@ -36,7 +36,7 @@ function Play() {
   const tmpl = pd ? dayTemplate(pd, plan.week, override?.swaps ?? []) : null
   const validSlot = (SLOTS as readonly string[]).includes(slot) ? (slot as Slot) : null
   const sessionId =
-    tmpl && validSlot && !(validSlot === 'main' && tmpl.testDay)
+    tmpl && validSlot
       ? validSlot === 'morning'
         ? tmpl.morning
         : validSlot === 'main'

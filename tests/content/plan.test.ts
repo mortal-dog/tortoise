@@ -65,7 +65,6 @@ describe('the plan', () => {
     expect(duplicates(plan.exercises.map((e) => e.id))).toEqual([])
     expect(duplicates(plan.ladders.map((l) => l.id))).toEqual([])
     expect(duplicates(plan.sessions.map((s) => s.id))).toEqual([])
-    expect(duplicates(plan.tests.map((t) => t.id))).toEqual([])
     expect(duplicates(plan.milestones.map((m) => m.id))).toEqual([])
     expect(duplicates(plan.rationale.map((r) => r.id))).toEqual([])
   })
@@ -81,13 +80,6 @@ describe('the plan', () => {
         l.id,
       ).toEqual(l.levels.map((_, i) => i + 1))
       expect(duplicates(l.levels.map((lv) => lv.code)), l.id).toEqual([])
-    }
-  })
-
-  it('numbers each test day 1..n', () => {
-    for (const day of [1, 2] as const) {
-      const orders = plan.tests.filter((t) => t.day === day).map((t) => t.order)
-      expect(orders).toEqual(orders.map((_, i) => i + 1))
     }
   })
 })
@@ -223,13 +215,6 @@ describe('the evidence rule (D-018)', () => {
   it('catches a digit without a source (the rule itself)', () => {
     expect(covered({ target: '8,000', sources: [] })).toBe(false)
     expect(covered({ target: '8,000', ourRule: true })).toBe(true)
-  })
-
-  it('keeps the brackets out of the test texts', () => {
-    for (const t of plan.tests) {
-      expect(t.how, t.id).not.toMatch(/\[[a-z]+\d{4}[a-z]?\]/)
-      expect(t.aim, t.id).not.toMatch(/\[[a-z]+\d{4}[a-z]?\]/)
-    }
   })
 })
 
@@ -374,39 +359,16 @@ describe('against the plan text', () => {
     for (const s of plan.sessions) expect(s.ourRule, s.id).toBe(true)
   })
 
-  it('has the Tortoise Test of §10 in its order', () => {
-    const day = (n: 1 | 2) =>
-      plan.tests
-        .filter((t) => t.day === n)
-        .sort((a, b) => a.order - b.order)
-        .map((t) => t.id)
-    expect(day(1)).toEqual(['rockport'])
-    expect(day(2)).toEqual([
-      'resting-hr',
-      'height',
-      'wall',
-      'sit-to-rise',
-      'one-leg',
-      'jump-reach',
-      'push-ups',
-      'handstand',
-      'farmer',
-      'deep-squat',
-      'splits',
-    ])
-    expect(plan.tests.find((t) => t.id === 'height')).toMatchObject({ yearly: true, calculator: 'height' })
-  })
-
-  it('has the milestones and the At-99 board of §11', () => {
+  it('has the milestones of §11, the ability ones read from ladder levels (D-067)', () => {
     const ids = plan.milestones.map((m) => m.id)
     expect(ids).toContain('hatchling')
     expect(ids).toContain('ancient')
-    expect(plan.milestones.find((m) => m.id === 'side-split-flat')).toMatchObject({
-      direction: 'atMost',
-      threshold: 0,
+    expect(plan.milestones.find((m) => m.id === 'handstand-13')).toMatchObject({
+      kind: 'level',
+      ladderId: 'handstand-skill',
+      threshold: 13,
     })
     for (const m of plan.milestones) expect(m.ourRule, m.id).toBe(true)
-    expect(plan.at99.find((l) => l.metric === 'sitRise')).toMatchObject({ value: 8, sources: ['brito2014'] })
   })
 })
 
@@ -425,18 +387,6 @@ describe('start rules', () => {
   }
 
   it('follow the table of §8', () => {
-    expect([0, 4, 5, 9, 10, 19, 20, 29, 30, 60].map((n) => startCode('push', { pushups: n }))).toEqual([
-      '1',
-      '1',
-      '2',
-      '2',
-      '3',
-      '3',
-      '4',
-      '4',
-      '5',
-      '5',
-    ])
     expect([0, 9.5, 10, 29, 30, 45].map((n) => startCode('run', { runMin: n }))).toEqual([
       'R1',
       'R1',
@@ -445,7 +395,7 @@ describe('start rules', () => {
       'R8',
       'R8',
     ])
-    expect(plan.startRules.map((r) => r.ladderId)).toEqual(['push', 'run'])
+    expect(plan.startRules.map((r) => r.ladderId)).toEqual(['run'])
   })
 })
 

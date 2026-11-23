@@ -1,7 +1,7 @@
 // The block rules (design §5.1; plan §2, §6.7, §8, §9): our rule throughout.
-// - A block is 4 weeks, the fourth light; the Tortoise Test falls in every third light week, and in Week 0.
-// - Week 0: half volume Monday to Friday (sets halved and rounded up, run and rope minutes halved, interval repeats
-//   halved), every ladder at level 1; the test on Saturday and Sunday.
+// - A block is 4 weeks, the fourth light.
+// - Week 0: half volume all week (sets halved and rounded up, run and rope minutes halved, interval repeats halved),
+//   every ladder at level 1. No test (D-067).
 // - The ramp: strength at 2 sets in Weeks 1 and 2.
 // - A light week: strength sets −1 (never below 2), runs and rope 30% shorter, half the intervals.
 // - The interval stage follows the block: 1, 2, 3, then the 4 × 4 from Block 4 on.
@@ -13,10 +13,8 @@ type BlockRulesInput = z.input<typeof BlockRules>
 export const blockRules: BlockRulesInput = {
   blockWeeks: 4,
   lightWeekInBlock: 4,
-  testEveryBlocks: 3,
-  testDays: ['sat', 'sun'],
   week0: {
-    halfVolumeDays: ['mon', 'tue', 'wed', 'thu', 'fri'],
+    halfVolumeDays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
     setsFactor: 0.5,
     enduranceFactor: 0.5,
     intervalRepsFactor: 0.5,

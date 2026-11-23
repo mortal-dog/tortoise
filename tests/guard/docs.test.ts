@@ -46,7 +46,7 @@ describe('sources', () => {
   const citing = markdownFiles().filter((f) => f.path.startsWith('docs/') || f.path === 'README.md')
 
   it('are defined once each', () => {
-    expect(defined.length).toBeGreaterThan(40)
+    expect(defined.length).toBeGreaterThan(30)
     expect(new Set(defined).size).toBe(defined.length)
   })
 

@@ -185,8 +185,16 @@ export const rationale: RationaleInput[] = [
     id: 'stretch-expect',
     topic: 'What to expect from the splits',
     section: '6.9',
-    text: 'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip. So progress is measured in centimetres from the floor, and any steady gain counts.',
+    text: 'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip, so any steady gain counts.',
     sources: ['weppler2010'],
+  },
+  // §9 Over the years
+  {
+    id: 'bone-density-checks',
+    topic: 'Bone-density checks',
+    section: '9',
+    text: 'Bone density at 70 for everyone [oc2023].',
+    sources: ['oc2023'],
   },
   // §12 Outdoors, weather and daylight
   {

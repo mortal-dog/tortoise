@@ -8,7 +8,7 @@ import type { Session } from '@/data/schema'
 import { dayTimes } from '@/data/week'
 import { adjustDose, dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
-import { addDays, compareDates, daysBetween, formatShort, type LocalDate } from '@/lib/dates'
+import { compareDates, daysBetween, formatShort, type LocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
 import {
   currentLevel,
@@ -18,8 +18,6 @@ import {
   sessionSummary,
   splitKind,
   stepsFor,
-  TEST_SESSION_ID,
-  testsForDay,
 } from '@/lib/plan-view'
 import { type LadderLog, type Suggestion, suggest } from '@/lib/progression'
 import { type DayRecord, type LevelRecord, nowIso, type Variant } from '@/lib/records'
@@ -42,8 +40,8 @@ function Today() {
 }
 
 function weekLabel(pd: PlanDay): string {
-  if (pd.kind === 'week0') return 'Week 0 · learn and test'
-  const extra = pd.kind === 'test' ? ' · test week' : pd.kind === 'light' ? ' · light week' : ''
+  if (pd.kind === 'week0') return 'Week 0 · learn'
+  const extra = pd.kind === 'light' ? ' · light week' : ''
   return `Block ${pd.block} · Week ${pd.week}${extra}`
 }
 
@@ -87,7 +85,7 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
   if (!tmpl) return null
 
   const morning = sessionOf(tmpl.morning)
-  const main = tmpl.testDay ? null : sessionOf(tmpl.main)
+  const main = sessionOf(tmpl.main)
   const split = tmpl.split ? sessionOf(tmpl.split) : null
   const morningDone = !!day?.morning?.doneAt
   const mainDone = !!day?.main?.doneAt
@@ -104,7 +102,7 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
         main: { doneAt: nowIso(), sessionId, asPlanned: true, ...(v ? { variant: v } : {}) },
       }
       // On Sunday the split work is inside the Light session, so finishing it records the split as well.
-      if (!tmpl.split && !tmpl.testDay) next.split = { doneAt: nowIso(), kind: 'long' }
+      if (!tmpl.split) next.split = { doneAt: nowIso(), kind: 'long' }
       return next
     })
 
@@ -122,16 +120,10 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
         </div>
       </header>
 
-      {pd.kind === 'week0' && !tmpl.testDay && (
+      {pd.kind === 'week0' && (
         <Banner tone="sky">Week 0: learn the movements at half volume, every ladder at level 1.</Banner>
       )}
-      {pd.isLight && !pd.isTestWeek && (
-        <Banner tone="sky">Light week: 2 sets, runs 30% shorter, half the intervals.</Banner>
-      )}
-      {pd.isTestWeek && !tmpl.testDay && pd.kind !== 'week0' && (
-        <Banner tone="sky">Test week: the Tortoise Test this weekend.</Banner>
-      )}
-      {tmpl.testDay && <Banner tone="sky">Test weekend: the Tortoise Test, Day {tmpl.testDay}.</Banner>}
+      {pd.isLight && <Banner tone="sky">Light week: 2 sets, runs 30% shorter, half the intervals.</Banner>}
 
       {suggestion && (
         <Banner tone="primary">
@@ -165,42 +157,23 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
         start={{ date: t, slot: 'morning' }}
       />
 
-      {!(folded && !mainDone) &&
-        (tmpl.testDay ? (
-          <PlanCard
-            testId="card-main"
-            title={`Tortoise Test · Day ${tmpl.testDay}`}
-            when={dayTimes.main}
-            minutes={tmpl.testDay === 1 ? 'outdoors' : 'indoors'}
-            lines={[
-              testsForDay(tmpl.testDay)
-                .map((x) => x.name)
-                .join(' · '),
-            ]}
-            done={mainDone}
-            onDone={() => void markMain(TEST_SESSION_ID[tmpl.testDay as 1 | 2])}
-            startTest={{ date: tmpl.testDay === 1 ? t : addDays(t, -1), day: tmpl.testDay }}
-            onUndo={() => void updateDay(t, (d) => ({ ...d, main: null }))}
-          />
-        ) : (
-          main && (
-            <PlanCard
-              testId="card-main"
-              title={main.name}
-              when={dayTimes.main}
-              minutes={minutesText(sessionMinutes(main, pd, variant))}
-              lines={[sessionSummary(main, variant, levels, pd).join(' · ')]}
-              done={mainDone}
-              onDone={() => void markMain(main.id, main.hasVariants ? variant : undefined)}
-              start={{ date: t, slot: 'main', ...(main.hasVariants ? { variant } : {}) }}
-              onUndo={() =>
-                void updateDay(t, (d) => ({ ...d, main: null, ...(tmpl.split ? {} : { split: null }) }))
-              }
-            >
-              {main.hasVariants && !mainDone && <VariantSwitch value={variant} onChange={setVariantChoice} />}
-            </PlanCard>
-          )
-        ))}
+      {!(folded && !mainDone) && (
+        <PlanCard
+          testId="card-main"
+          title={main.name}
+          when={dayTimes.main}
+          minutes={minutesText(sessionMinutes(main, pd, variant))}
+          lines={[sessionSummary(main, variant, levels, pd).join(' · ')]}
+          done={mainDone}
+          onDone={() => void markMain(main.id, main.hasVariants ? variant : undefined)}
+          start={{ date: t, slot: 'main', ...(main.hasVariants ? { variant } : {}) }}
+          onUndo={() =>
+            void updateDay(t, (d) => ({ ...d, main: null, ...(tmpl.split ? {} : { split: null }) }))
+          }
+        >
+          {main.hasVariants && !mainDone && <VariantSwitch value={variant} onChange={setVariantChoice} />}
+        </PlanCard>
+      )}
 
       {split && !(folded && !splitDone) && (
         <PlanCard
@@ -276,8 +249,6 @@ interface PlanCardProps {
   onUndo: () => void
   /** Opens the player for this card (design §3.1). */
   start?: { date: LocalDate; slot: Slot; variant?: Variant }
-  /** Opens the Tortoise Test wizard on a test day (design §3.5); the test is keyed by its Day 1 date. */
-  startTest?: { date: LocalDate; day: 1 | 2 }
   children?: ReactNode
 }
 
@@ -291,7 +262,6 @@ function PlanCard({
   onDone,
   onUndo,
   start,
-  startTest,
   children,
 }: PlanCardProps) {
   return (
@@ -327,17 +297,6 @@ function PlanCard({
                 to="/play/$date/$slot"
                 params={{ date: start.date, slot: start.slot }}
                 search={start.variant ? { v: start.variant } : {}}
-                aria-label={`Start ${title}`}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
-              >
-                <Play aria-hidden className="size-4" /> Start
-              </Link>
-            )}
-            {startTest && (
-              <Link
-                to="/test/$date"
-                params={{ date: startTest.date }}
-                search={{ day: startTest.day }}
                 aria-label={`Start ${title}`}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
               >

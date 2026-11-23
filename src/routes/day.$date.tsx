@@ -9,7 +9,7 @@ import { dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { compareDates, formatShort, isLocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
-import { type DayItem, dayItems, sessionOf, stepsFor, testsForDay } from '@/lib/plan-view'
+import { type DayItem, dayItems, sessionOf, stepsFor } from '@/lib/plan-view'
 import type { LevelRecord, Variant } from '@/lib/records'
 import { getLevels, getOverride } from '@/lib/repo'
 import { planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
@@ -47,7 +47,7 @@ function DayDetail() {
   const past = compareDates(date, t) < 0
   const nothingDone = !day?.morning?.doneAt && !day?.main?.doneAt && !day?.split?.doneAt
   const mark = (record: { doneAt: string } | null | undefined) => past || !!record?.doneAt
-  const main = tmpl.testDay ? null : sessionOf(tmpl.main)
+  const main = sessionOf(tmpl.main)
   const variant: Variant = day?.main?.variant ?? 'outdoor'
   const split = tmpl.split ? sessionOf(tmpl.split) : null
 
@@ -69,30 +69,15 @@ function DayDetail() {
           done={!!day?.morning?.doneAt}
           items={dayItems(sessionOf(tmpl.morning), 'outdoor', levels, pd, day?.morning, mark(day?.morning))}
         />
-        {tmpl.testDay ? (
-          <Part
-            title={`Tortoise Test · Day ${tmpl.testDay}`}
+        {main && (
+          <MainPart
+            session={main}
+            variant={variant}
+            levels={levels}
+            pd={pd}
+            record={day?.main}
             marked={mark(day?.main)}
-            done={!!day?.main?.doneAt}
-            items={testsForDay(tmpl.testDay).map((test) => ({
-              stepId: test.id,
-              name: test.name,
-              exercise: test.name,
-              dose: test.unit,
-              ...(mark(day?.main) ? { done: !!day?.main?.doneAt } : {}),
-            }))}
           />
-        ) : (
-          main && (
-            <MainPart
-              session={main}
-              variant={variant}
-              levels={levels}
-              pd={pd}
-              record={day?.main}
-              marked={mark(day?.main)}
-            />
-          )
         )}
         {split && (
           <Part

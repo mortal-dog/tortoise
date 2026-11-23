@@ -88,10 +88,6 @@ export function laddersIn(sessions: readonly Session[]): Ladder[] {
   return [...ids].map((id) => laddersById.get(id)).filter((l): l is Ladder => !!l)
 }
 
-export function testsForDay(day: 1 | 2) {
-  return plan.tests.filter((t) => t.day === day).sort((a, b) => a.order - b.order)
-}
-
 /** The split kind a split session records (the week template's split sessions, plan §6.9). */
 export function splitKind(sessionId: string): 'front' | 'side' | 'both' | 'long' {
   const kinds: Record<string, 'front' | 'side' | 'both' | 'long'> = {
@@ -102,8 +98,6 @@ export function splitKind(sessionId: string): 'front' | 'side' | 'both' | 'long'
   }
   return kinds[sessionId] ?? 'both'
 }
-
-export const TEST_SESSION_ID = { 1: 'test-day-1', 2: 'test-day-2' } as const
 
 /** One exercise of a day's part, as the day page lists it (D-057). */
 export interface DayItem {

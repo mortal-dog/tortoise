@@ -1,22 +1,19 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ClipboardList } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import { BadgeDialog } from '@/components/progress/BadgeDialog'
 import { BadgeMedal } from '@/components/progress/BadgeMedal'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
-import type { Metric, Milestone } from '@/data/schema'
 import { badges } from '@/lib/badges'
 import { dayTemplate } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
-import { addDays, compareDates, daysBetween, type LocalDate, mondayOf } from '@/lib/dates'
+import { addDays, compareDates, type LocalDate, mondayOf } from '@/lib/dates'
 import { useLive } from '@/lib/live'
+import { awardMilestones, getEarnedMilestones, loadMetrics } from '@/lib/milestone-repo'
 import { type Metrics, progress, reached } from '@/lib/milestones'
 import { addPillars, donePillars, PILLARS, plannedPillars, zeroPillars } from '@/lib/pillars'
 import { sessionsById } from '@/lib/plan-view'
-import type { TestRecord } from '@/lib/records'
 import { longestStreak } from '@/lib/status'
-import { awardMilestones, getEarnedMilestones, getTests, loadMetrics } from '@/lib/test-repo'
 import { type History, planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/progress')({
@@ -27,7 +24,6 @@ function Progress() {
   const settings = useSettings()
   const t = useToday()
   const history = useHistory(settings?.startDate, t)
-  const tests = useLive(getTests, [])
   const earned = useLive(getEarnedMilestones, [])
   const metrics = useLive(() => loadMetrics(t), [t])
 
@@ -36,7 +32,7 @@ function Progress() {
     if (settings?.startDate) void awardMilestones(t)
   }, [settings?.startDate, t])
 
-  if (!settings || !history || !tests || !earned) {
+  if (!settings || !history || !earned) {
     return (
       <Screen title="Progress">
         <p>{settings && !settings.startDate ? 'Start the plan on the Today tab first.' : null}</p>
@@ -44,29 +40,13 @@ function Progress() {
     )
   }
   const longest = longestStreak(history.statusOf, t, history.week0)
-  const testKey = tests.length && daysBetween(tests.at(-1)?.date ?? t, t) < 7 ? (tests.at(-1)?.date ?? t) : t
 
   return (
-    <Screen
-      title="Progress"
-      action={
-        <Link
-          to="/test/$date"
-          params={{ date: testKey }}
-          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-primary px-3 text-sm font-semibold text-primary"
-        >
-          <ClipboardList aria-hidden className="size-4" /> Tortoise Test
-        </Link>
-      }
-    >
+    <Screen title="Progress">
       <Numbers history={history} longest={longest} t={t} startDate={settings.startDate as LocalDate} />
 
       <Section title="Milestones">
-        <Milestones earned={earned} metrics={metrics ?? {}} tests={tests} />
-      </Section>
-
-      <Section title="At 99">
-        <At99 metrics={metrics ?? {}} />
+        <Milestones earned={earned} metrics={metrics ?? {}} />
       </Section>
     </Screen>
   )
@@ -110,7 +90,7 @@ function Numbers({
     const pd = planDayOf(startDate, date)
     const tmpl = dayTemplate(pd, plan.week)
     if (!tmpl) continue
-    const ids = [tmpl.morning, ...(tmpl.testDay ? [] : [tmpl.main]), ...(tmpl.split ? [tmpl.split] : [])]
+    const ids = [tmpl.morning, tmpl.main, ...(tmpl.split ? [tmpl.split] : [])]
     for (const id of ids) {
       const s = sessionsById.get(id)
       if (s) planned = addPillars(planned, plannedPillars(s))
@@ -167,33 +147,16 @@ function Numbers({
   )
 }
 
-/** A split milestone counts down from the first test's distance; the others count up from zero. */
-function startValueOf(tests: TestRecord[]) {
-  const first = tests[0]
-  return (m: Milestone): number | undefined => {
-    if (m.direction !== 'atMost' || !first) return undefined
-    if (m.metric === 'sideSplitCm') return first.results.splits?.side
-    if (m.metric === 'frontSplitCm') {
-      const s = first.results.splits
-      return s?.frontL === undefined || s.frontR === undefined ? undefined : Math.max(s.frontL, s.frontR)
-    }
-    return undefined
-  }
-}
-
 function Milestones({
   earned,
   metrics,
-  tests,
 }: {
   earned: ReadonlyMap<string, { earnedAt: LocalDate }>
   metrics: Metrics
-  tests: TestRecord[]
 }) {
-  const startOf = startValueOf(tests)
   const next = plan.milestones
     .filter((m) => !earned.has(m.id) && !reached(m, metrics))
-    .map((m) => ({ m, p: progress(m, metrics, startOf(m)) }))
+    .map((m) => ({ m, p: progress(m, metrics) }))
     .sort((a, b) => b.p - a.p)
     .slice(0, 3)
   return (
@@ -214,7 +177,7 @@ function Milestones({
           ))}
         </ul>
       </Card>
-      <Badges earned={earned} metrics={metrics} tests={tests} />
+      <Badges earned={earned} metrics={metrics} />
     </div>
   )
 }
@@ -226,18 +189,15 @@ function Milestones({
 function Badges({
   earned,
   metrics,
-  tests,
 }: {
   earned: ReadonlyMap<string, { earnedAt: LocalDate }>
   metrics: Metrics
-  tests: TestRecord[]
 }) {
   const list = badges(plan.milestones, metrics, earned)
   const [open, setOpen] = useState<string | null>(null)
   const close = useCallback(() => setOpen(null), [])
   const shown = list.find((b) => b.milestone.id === open)
   const got = list.filter((b) => b.earned).length
-  const startOf = startValueOf(tests)
   return (
     <Card>
       <div className="flex items-baseline justify-between gap-2">
@@ -283,52 +243,7 @@ function Badges({
           </ul>
         </div>
       ))}
-      {shown && (
-        <BadgeDialog
-          badge={shown}
-          share={progress(shown.milestone, metrics, startOf(shown.milestone))}
-          onClose={close}
-        />
-      )}
-    </Card>
-  )
-}
-
-const METRIC_UNIT: Partial<Record<Metric, string>> = {
-  wallCm: 'cm',
-  sitRise: 'points',
-  jumpReachCm: 'cm',
-  continuousRunKm: 'km',
-  oneLegClosedS: 's',
-  farmerS: 's',
-  vo2max: 'mL/kg/min',
-  handstandFreeS: 's',
-  frontSplitCm: 'cm',
-  sideSplitCm: 'cm',
-}
-
-function At99({ metrics }: { metrics: Metrics }) {
-  return (
-    <Card>
-      <ul className="divide-y divide-line" data-testid="at99">
-        {plan.at99.map((line) => {
-          const v = metrics[line.metric]
-          return (
-            <li
-              key={`${line.ability}-${line.metric}`}
-              className="flex items-baseline justify-between gap-3 py-2"
-            >
-              <span>
-                <span className="font-semibold">{line.ability}</span>
-                <span className="block text-sm text-primary-strong">{line.line}</span>
-              </span>
-              <span className="shrink-0 tabular-nums">
-                {v === undefined ? '—' : `${Math.round(v * 10) / 10} ${METRIC_UNIT[line.metric] ?? ''}`}
-              </span>
-            </li>
-          )
-        })}
-      </ul>
+      {shown && <BadgeDialog badge={shown} share={progress(shown.milestone, metrics)} onClose={close} />}
     </Card>
   )
 }

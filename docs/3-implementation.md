@@ -130,8 +130,7 @@ policy, then reloads the app with the network off (proved by a fetch that fails)
   | week template | §5 |
   | habits | §6.10 |
   | block rules, Week 0, the ramp and interval stages | §2, §6.7, §8–§9 |
-  | tests | §10 |
-  | milestones and the At-99 board | §11 |
+  | milestones | §11 |
   | start rules | §8 |
 
 - zod schemas, and content tests ([design §7](1-app-design.md#7-plan-content-model-static-shipped-with-the-app)): unique
@@ -248,6 +247,8 @@ and dark.
 
 **Goal:** the long view.
 
+- *D-067 removed the Tortoise Test: the wizard, the test days, the At-99 board and the test-only sources; the ability
+  badges read the ladder levels reached. The record of what was built stays below.*
 - The test wizard: Day 1 and Day 2, resumable; the calculators; starting levels in Week 0.
 - *Since D-062 Progress keeps only the numbers, the milestones with their badges (D-058) and the At-99 board.*
 - Progress: the Shell honeycomb, the numbers, SVG trend charts with aim lines, level step charts, the milestone grid, and
@@ -379,7 +380,7 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 | Content | Vitest + zod | The plan data's rules ([design §7](1-app-design.md#7-plan-content-model-static-shipped-with-the-app)) |
 | Database | Vitest + fake-indexeddb | Stores, transactions, migrations with fixtures |
 | Component | Vitest + Testing Library | Cards, player steps, wizard steps, settings forms |
-| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, test wizard, reset, the silent sign-in page under the service worker, offline mode |
+| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, Progress and its badges, reset, the silent sign-in page under the service worker, offline mode |
 | Real phone | Phase 8 checklist | What emulation cannot show: sound, wake lock, install, Google's sign-in |
 
 ---

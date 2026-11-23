@@ -3,7 +3,7 @@
 > Slow and steady, to 99.
 
 Tortoise is a phone app (a PWA) that keeps a 60-year exercise plan on track, one day at a time. It shows the day's session,
-guides it with timers, records what was done, and tracks tests and milestones over the decades. It is about exercise
+guides it with timers, records what was done, and tracks levels and milestones over the decades. It is about exercise
 only.
 
 ## Goals (the owner's, 2026-11-21)
@@ -21,9 +21,9 @@ only.
   stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself (D-054, D-055); there is no
   server.
 - Four tabs: **Today** (the day's cards and one-tap logging), **Week** (each day's exercises, and what was done),
-  **Progress** (the streak numbers, badges, the At-99 board, D-062) and **Settings** (profile, units, the Google Drive
+  **Progress** (the streak numbers and badges, D-062, D-067) and **Settings** (profile, units, the Google Drive
   sync, and in About the equipment: a yoga mat, a jump rope, one pair of dumbbells, D-063). Each exercise's name opens its YouTube video (D-056).
-- A full-screen **session player** with timers and sound cues, and a **test wizard** for the Tortoise Test.
+- A full-screen **session player** with timers and sound cues. There is no fitness test (D-067).
 - A forgiving streak: a 15-minute **Shell day** counts, and only two missed days in a row break it.
 
 ### 2. [Exercise plan](2-exercise-plan.md)
@@ -37,8 +37,8 @@ only.
   |---|---|---|---|---|---|---|
   | Strength A | Easy run | Strength B | Intervals | Strength C | Long outdoor run + rows at home | Light: walk + flexibility |
 
-- About 7½ hours in a full week. Every fourth week is light. The **Tortoise Test** comes every 12 weeks, and progression
-  ladders carry every exercise forward for decades.
+- About 7½ hours in a full week. Every fourth week is light, and progression ladders carry every
+  exercise forward for decades; there is no fitness test (D-067).
 - Every number taken from evidence names a source in [sources.md](sources.md); the plan's own choices are marked
   *our rule*.
 

@@ -15,7 +15,6 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as WeekRouteImport } from './routes/week'
 import { Route as DayDateRouteImport } from './routes/day.$date'
 import { Route as DebugWeekRouteImport } from './routes/debug.week'
-import { Route as TestDateRouteImport } from './routes/test.$date'
 import { Route as PlayDateSlotRouteImport } from './routes/play.$date.$slot'
 
 const IndexRoute = IndexRouteImport.update({
@@ -48,11 +47,6 @@ const DebugWeekRoute = DebugWeekRouteImport.update({
   path: '/debug/week',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestDateRoute = TestDateRouteImport.update({
-  id: '/test/$date',
-  path: '/test/$date',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PlayDateSlotRoute = PlayDateSlotRouteImport.update({
   id: '/play/$date/$slot',
   path: '/play/$date/$slot',
@@ -66,7 +60,6 @@ export interface FileRoutesByFullPath {
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
-  '/test/$date': typeof TestDateRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRoutesByTo {
@@ -76,7 +69,6 @@ export interface FileRoutesByTo {
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
-  '/test/$date': typeof TestDateRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRoutesById {
@@ -87,7 +79,6 @@ export interface FileRoutesById {
   '/week': typeof WeekRoute
   '/day/$date': typeof DayDateRoute
   '/debug/week': typeof DebugWeekRoute
-  '/test/$date': typeof TestDateRoute
   '/play/$date/$slot': typeof PlayDateSlotRoute
 }
 export interface FileRouteTypes {
@@ -99,7 +90,6 @@ export interface FileRouteTypes {
     | '/week'
     | '/day/$date'
     | '/debug/week'
-    | '/test/$date'
     | '/play/$date/$slot'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -109,7 +99,6 @@ export interface FileRouteTypes {
     | '/week'
     | '/day/$date'
     | '/debug/week'
-    | '/test/$date'
     | '/play/$date/$slot'
   id:
     | '__root__'
@@ -119,7 +108,6 @@ export interface FileRouteTypes {
     | '/week'
     | '/day/$date'
     | '/debug/week'
-    | '/test/$date'
     | '/play/$date/$slot'
   fileRoutesById: FileRoutesById
 }
@@ -130,7 +118,6 @@ export interface RootRouteChildren {
   WeekRoute: typeof WeekRoute
   DayDateRoute: typeof DayDateRoute
   DebugWeekRoute: typeof DebugWeekRoute
-  TestDateRoute: typeof TestDateRoute
   PlayDateSlotRoute: typeof PlayDateSlotRoute
 }
 
@@ -178,13 +165,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebugWeekRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test/$date': {
-      id: '/test/$date'
-      path: '/test/$date'
-      fullPath: '/test/$date'
-      preLoaderRoute: typeof TestDateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/play/$date/$slot': {
       id: '/play/$date/$slot'
       path: '/play/$date/$slot'
@@ -202,7 +182,6 @@ const rootRouteChildren: RootRouteChildren = {
   WeekRoute: WeekRoute,
   DayDateRoute: DayDateRoute,
   DebugWeekRoute: DebugWeekRoute,
-  TestDateRoute: TestDateRoute,
   PlayDateSlotRoute: PlayDateSlotRoute,
 }
 export const routeTree = rootRouteImport
