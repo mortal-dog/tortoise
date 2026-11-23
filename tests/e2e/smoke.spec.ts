@@ -10,6 +10,9 @@ test('the app loads with its manifest, icons and security policy', async ({ page
   await expect(page.getByRole('heading', { name: 'Tortoise' })).toBeVisible()
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content')
   expect(csp).toContain("default-src 'self'")
+  // Google only for the Drive backup (D-054), and nothing else from outside.
+  expect(csp).toContain("connect-src 'self' https://www.googleapis.com https://accounts.google.com")
+  expect(csp).toContain("script-src 'self' https://accounts.google.com")
   const manifest = await (await page.request.get('/manifest.webmanifest')).json()
   expect(manifest.display).toBe('standalone')
   // The installed-app check (desktop Chrome needs the app's id) and a launch that focuses a running window (D-047).

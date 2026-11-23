@@ -5,10 +5,15 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, sep } from 'node:path'
 import type { Plugin } from 'vite'
 
-/** The policy of design §11: only the app's own origin. */
+/**
+ * The policy of design §11: the app's own origin, and Google's sign-in and Drive hosts for the backup (D-054). The app
+ * loads Google's script only when the user taps to sign in, and calls Drive only while signed in.
+ */
 export const CSP = [
   "default-src 'self'",
-  "connect-src 'self'",
+  "script-src 'self' https://accounts.google.com",
+  "connect-src 'self' https://www.googleapis.com https://accounts.google.com",
+  'frame-src https://accounts.google.com',
   "img-src 'self' data: blob:",
   "object-src 'none'",
   "base-uri 'self'",

@@ -10,6 +10,14 @@ export function notifyChange(): void {
   for (const l of listeners) l()
 }
 
+/** Calls `listener` after every write; returns the unsubscribe. The Drive backup uses it (D-054). */
+export function onChange(listener: () => void): () => void {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
 export function useLive<T>(query: () => Promise<T>, deps: readonly unknown[]): T | undefined {
   const [state, setState] = useState<{ value: T } | undefined>(undefined)
   const [tick, setTick] = useState(version)

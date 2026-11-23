@@ -335,6 +335,7 @@ a picker.
 | Screen | Wake lock in the installed app, held whenever the app is open |
 | Background | Timers catch up after locking the phone mid-interval |
 | Backup | Export through the share sheet to Files; import back |
+| Google Drive | Sign in from the installed app (Google's window opens and returns); a change backs up within a minute; after an hour Sync now renews the sign-in; on a second device or after Delete all data, signing in restores everything (D-054) |
 | Layout | Safe areas, dark mode, larger text |
 | Glass | With the moving backdrop (D-048): scrolling and the player stay smooth, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 
@@ -378,7 +379,7 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 
 | Risk | Mitigation |
 |---|---|
-| Losing the data on the phone (app deleted, storage cleared) | Persistent storage, asked for when the plan starts; the 30-day backup reminder; one-tap export |
+| Losing the data on the phone (app deleted, storage cleared) | The Google Drive backup, by itself after each change (D-054); persistent storage, asked for when the plan starts; the 30-day backup reminder; one-tap export |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
 | Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0: WebKit does serve it, so the offline test runs on WebKit (D-036). The phone check of Phase 8 still covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |
@@ -386,7 +387,7 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 | Personal facts leaking into the public repo | The guard test, with its list kept as keyed hashes (D-034); the `CLAUDE.md` rule; ai/ files reviewed before each commit |
 | Scope creep (nutrition, social, sync) | Scope decision D-001 and the out-of-scope list ([design §14](1-app-design.md#14-out-of-scope-and-later)) |
 | DNS or Pages misconfiguration | The Phase 8 steps in their order; domain verification against takeover (D-035) |
-| Supply chain | Five runtime dependencies; a lockfile; the Content Security Policy blocks third-party requests |
+| Supply chain | Five runtime dependencies; a lockfile; the Content Security Policy blocks third-party requests other than Google's sign-in and Drive (D-054) |
 
 ---
 

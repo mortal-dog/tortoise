@@ -11,7 +11,7 @@ only: nutrition, sleep and medicine are out of scope.
 | Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). A backup file moves the data between them |
 | Address | <https://tortoise.doctornova.net> |
 | Data | Only on the phone (IndexedDB), with export and import of a backup file |
-| Network | None needed after the first load; only app updates use it. No account, no server, no analytics, no third-party requests |
+| Network | None needed after the first load; app updates use it, and the Google Drive backup once the user signs in (D-054). No server, no analytics, and no other third-party request |
 | Language | English |
 
 ---
@@ -181,7 +181,8 @@ and the test wizard open full screen above the tabs.
 | Plan | Start date (the Monday of Week 1); "Restart from Week 0" on a chosen Monday (keeps history) |
 | Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax, Rockport and the broad-jump aim |
 | Units | kg or lb; km or mi. One card |
-| Backup | Export, import, the last backup date, and the reminder interval (30 days by default; 7, 14, 60 or 90 to choose) |
+| Google Drive backup | Sign in with Google; the status and the last backup time; Sync now, Restore from Google Drive, Sign out ([§10](#10-backup-and-restore), D-054) |
+| Backup file | Export, import, the last backup date, and the reminder interval (30 days by default; 7, 14, 60 or 90 to choose) |
 | About | App version, plan version, the number of sources with a link to their list in the repo (opens outside the app), privacy statement, the runtime libraries' licences |
 | Reset | Delete all data (type DELETE to confirm) |
 
@@ -350,6 +351,24 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
 
 ## 10. Backup and restore
 
+**The Google Drive backup (D-054)**, after the French app's sync:
+- **Sign-in:** Google Identity Services' token model in the browser, no server; the scope `drive.appdata` (a hidden
+  folder only this app sees) and the e-mail address. A token lasts an hour; there is no refresh token, so after the
+  hour the next sync needs a tap ("Sync now"), which reopens Google's window; with consent given it closes by itself.
+- **One file per device:** `device-<id>.json` in the hidden folder, in the same format as the backup file below. A
+  device writes only its own file, so two devices never overwrite each other.
+- **By itself:** while the sign-in lasts, and only when something changed since the last upload: 20 s after the last
+  change, when the app goes to the background, and when it opens or comes back after 3 minutes.
+- **Restore:** signing in on a device for the first time, and "Restore from Google Drive", merge every device file into
+  the phone first (the newer `updatedAt` wins, as in an import). A plain sync only uploads, so a deleted photo does not
+  come back.
+- **Safety:** a phone with no plan and no days never uploads; "Delete all data" forgets the sign-in on the phone and
+  leaves the Drive copy.
+- **The owner's one step:** the Web client (the French app's, his picker) must list `https://tortoise.doctornova.net` as
+  an authorised JavaScript origin; until then Google's window says "origin_mismatch". The card says so.
+
+**The backup file**, kept as a fallback (the owner's picker):
+
 - **Export:** one JSON file, `tortoise-backup-YYYY-MM-DD.json`, holding a format tag and version, the export time, the app
   version, and every store. It goes out through the share sheet (Files, iCloud Drive, AirDrop to the Mac), with a plain
   download as the fallback.
@@ -360,7 +379,7 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
   carries the database schema version, so a future migration can upgrade an old file's records.
 - **The backup date** is written into the file's own settings record, and the phone saves the same record once the
   file has gone out, so the phone and the file hold identical data (D-042).
-- **Reminder:** a banner on Today when the last backup is 30 days old or more (the interval is set in Settings); before
+- **Reminder:** a banner on Today when the last backup, the file or the Drive copy, is 30 days old or more (the interval is set in Settings); before
   the first backup it counts from the Week 0 Monday. "Not today" hides it until the app is opened again.
 - A backup file is personal data. It goes wherever the user sends it, never into the repo.
 
@@ -368,8 +387,13 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
 
 ## 11. Privacy and security
 
-- A Content Security Policy allows only the app's own origin: `default-src 'self'`; `connect-src 'self'`;
-  `img-src 'self' data: blob:`. No third-party scripts, fonts, analytics or cookies.
+- A Content Security Policy allows the app's own origin, and Google's sign-in and Drive hosts for the backup (D-054):
+  `default-src 'self'`; `script-src 'self' https://accounts.google.com`;
+  `connect-src 'self' https://www.googleapis.com https://accounts.google.com`; `frame-src https://accounts.google.com`;
+  `img-src 'self' data: blob:`. Google's script loads only when the user taps to sign in. No other third-party
+  scripts, fonts, analytics or cookies.
+- The Drive backup uses the `drive.appdata` scope: one hidden folder that only this app can see, nothing else in the
+  user's Drive. The sign-in token stays in this browser's storage for its hour.
 - External links (videos, sources) open in the browser, outside the app.
 - The repo holds no personal facts; a test scans committed text for banned personal terms. The list itself is
   committed only as keyed hashes ([3-implementation.md](3-implementation.md), §3 and Phase 0).

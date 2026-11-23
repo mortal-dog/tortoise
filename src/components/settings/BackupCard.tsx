@@ -37,7 +37,7 @@ function countsText(p: BackupPreview): string {
   ].join(', ')
 }
 
-/** Settings → Backup (design §3.7, §10): export, import with a preview, the last backup date and the interval. */
+/** Settings → Backup file (design §3.7, §10): export, import with a preview, the last backup date and the interval. */
 export function BackupCard({ settings }: { settings: SettingsRecord }) {
   const [exportState, setExportState] = useState<'idle' | 'working' | ShareOutcome | 'failed'>('idle')
   const [pending, setPending] = useState<PreparedBackup | null>(null)
@@ -108,10 +108,10 @@ export function BackupCard({ settings }: { settings: SettingsRecord }) {
   const last = settings.backup.lastAt
   return (
     <Card id="backup">
-      <SectionTitle>Backup</SectionTitle>
+      <SectionTitle>Backup file</SectionTitle>
       <p className="mt-1 text-sm" data-testid="last-backup">
-        {last ? `Last backup: ${dateOfInstant(last)}.` : 'No backup yet.'} The data lives only on this phone;
-        a backup file is the copy that survives a lost phone.
+        {last ? `Last backup: ${dateOfInstant(last)}.` : 'No backup yet.'} A file you keep yourself, besides
+        the Google Drive copy: save it to Files, iCloud Drive or a computer.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button onClick={() => void backUp()} disabled={exportState === 'working'}>

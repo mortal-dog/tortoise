@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { BackupCard } from '@/components/settings/BackupCard'
+import { DriveCard } from '@/components/settings/DriveCard'
 import { Choice, inputClass, numberIn, SavedField, SectionTitle } from '@/components/settings/fields'
 import { ResetCard } from '@/components/settings/ResetCard'
 import { Button, Card, Screen } from '@/components/ui'
@@ -18,6 +19,7 @@ import {
 } from '@/lib/dates'
 import type { SettingsRecord } from '@/lib/records'
 import { resetAll, saveSettings, startPlan } from '@/lib/repo'
+import { driveSignOut } from '@/lib/sync/sync'
 import { useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/settings')({
@@ -38,11 +40,14 @@ function Settings() {
         <PlanSection settings={settings} t={t} />
         <ProfileSection settings={settings} />
         <UnitsSection settings={settings} />
+        <DriveCard />
         <BackupCard settings={settings} />
         <AboutSection />
         <ResetCard
           onReset={async () => {
             await resetAll()
+            // The Drive copy stays; forgetting the sign-in keeps the empty phone from syncing over it.
+            await driveSignOut(false)
             await navigate({ to: '/' })
           }}
         />
@@ -214,8 +219,9 @@ function AboutSection() {
       </p>
       <h3 className="mt-3 text-sm font-semibold">Privacy</h3>
       <p className="mt-1 text-sm">
-        All data stays on this phone: no account, no server, no tracking, no third-party requests. A backup
-        file goes only where you send it.
+        The data stays on this phone: no server and no tracking. Only after you sign in with Google does the
+        app talk to Google, to keep its backup in your own Drive (D-054). A backup file goes only where you
+        send it.
       </p>
       <h3 className="mt-3 text-sm font-semibold">Sources</h3>
       <p className="mt-1 text-sm">
