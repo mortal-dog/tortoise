@@ -24,7 +24,8 @@ feature from settings".
 - [x] ♻️ run 45214620004 green (deploy included); the live CSP has `frame-src 'self' https://accounts.google.com` and
       /oauth-silent.html and /oauth-silent.js answer 200
 
-**Don't forget:** a new redirect URI (silent renew page) is the owner's step in the Google Cloud console.
+**Don't forget:** a new redirect URI (silent renew page) is the owner's step in the Google Cloud console — the owner
+reported it done on 2026-11-23.
 
 ## 2026-11-23: beginner handstand ladder, the day's timing, and no pocket lock (owner's asks) — started 2026-11-23 10:08 ET, done 2026-11-23 10:40 ET
 
