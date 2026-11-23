@@ -231,7 +231,7 @@ export const ladders: LadderInput[] = [
       {
         level: 11,
         code: 'H11',
-        exerciseId: 'heel-pull',
+        exerciseId: 'freestanding-handstand',
         name: 'Heel pulls: from the back-to-wall handstand, ease the heels off and balance',
         pass: { sets: 10, seconds: 5, text: '10 × 5 s balanced' },
       },
@@ -283,26 +283,12 @@ export const ladders: LadderInput[] = [
       {
         level: 3,
         code: 'S3',
-        exerciseId: 'wall-handstand-push-up',
-        name: 'Wall handstand push-up negatives (chest to wall, lower in 5 s)',
-        pass: { sets: 3, reps: 5, text: '3 × 5' },
-      },
-      {
-        level: 4,
-        code: 'S4',
-        exerciseId: 'wall-handstand-push-up',
-        name: 'Wall handstand push-up, partial range',
-        pass: { sets: 3, reps: 5, text: '3 × 5' },
-      },
-      {
-        level: 5,
-        code: 'S5',
-        exerciseId: 'wall-handstand-push-up',
-        name: 'Wall handstand push-up, full range',
-        pass: { sets: 3, reps: 5, text: '3 × 5' },
+        exerciseId: 'pike-push-up',
+        name: 'Pike push-up, feet on a chair, 3 s down',
+        pass: { sets: 3, reps: 10, text: '3 × 10' },
       },
     ],
-    note: 'Wednesday A2; the one-arm press on Friday and hollow holds on Monday support it.',
+    note: 'Wednesday A2; hollow holds on Monday support it.',
   },
   {
     id: 'row',
@@ -421,7 +407,7 @@ export const ladders: LadderInput[] = [
       {
         level: 1,
         code: 'R1',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '8 × (1 min run, 2 min walk)',
         pass: {
           repeats: { repeats: 8, workS: 60, restS: 120, workLabel: 'run', restLabel: 'walk' },
@@ -431,7 +417,7 @@ export const ladders: LadderInput[] = [
       {
         level: 2,
         code: 'R2',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '6 × (2 min run, 2 min walk)',
         pass: {
           repeats: { repeats: 6, workS: 120, restS: 120, workLabel: 'run', restLabel: 'walk' },
@@ -441,7 +427,7 @@ export const ladders: LadderInput[] = [
       {
         level: 3,
         code: 'R3',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '5 × (3 min run, 90 s walk)',
         pass: {
           repeats: { repeats: 5, workS: 180, restS: 90, workLabel: 'run', restLabel: 'walk' },
@@ -451,7 +437,7 @@ export const ladders: LadderInput[] = [
       {
         level: 4,
         code: 'R4',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '4 × (5 min run, 1 min walk)',
         pass: {
           repeats: { repeats: 4, workS: 300, restS: 60, workLabel: 'run', restLabel: 'walk' },
@@ -461,7 +447,7 @@ export const ladders: LadderInput[] = [
       {
         level: 5,
         code: 'R5',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '3 × (8 min run, 1 min walk)',
         pass: {
           repeats: { repeats: 3, workS: 480, restS: 60, workLabel: 'run', restLabel: 'walk' },
@@ -471,7 +457,7 @@ export const ladders: LadderInput[] = [
       {
         level: 6,
         code: 'R6',
-        exerciseId: 'run-walk',
+        exerciseId: 'run',
         name: '2 × (12 min run, 1 min walk)',
         pass: {
           repeats: { repeats: 2, workS: 720, restS: 60, workLabel: 'run', restLabel: 'walk' },
@@ -481,14 +467,14 @@ export const ladders: LadderInput[] = [
       {
         level: 7,
         code: 'R7',
-        exerciseId: 'easy-run',
+        exerciseId: 'run',
         name: '25 min continuous',
         pass: { minutes: 25, text: '25 min continuous' },
       },
       {
         level: 8,
         code: 'R8',
-        exerciseId: 'easy-run',
+        exerciseId: 'run',
         name: '30 min continuous',
         pass: {
           minutes: 30,

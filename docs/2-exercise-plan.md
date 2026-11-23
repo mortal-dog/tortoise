@@ -52,7 +52,7 @@ ramp, and the tests set the starting level of every exercise.
 | **Jump** | Leg power, springy tendons, strong bones, confident landings | Squat jumps Monday and Thursday; rope in the strength and interval warm-ups |
 | **Run** | An aerobic base and peak aerobic power; feet, calves and tendons used to running | Easy run Tuesday, intervals Thursday, long run Saturday; calf work |
 | **Get up off the floor, carry, climb stairs, not fall** | Leg strength, grip, balance | Strength A–C, carries, daily balance |
-| **Handstand** | Wrists that carry body weight, shoulder strength, full overhead range, a hollow body line, the balance skill | 6 minutes every morning; pike push-ups, the one-arm press, hollow holds |
+| **Handstand** | Wrists that carry body weight, shoulder strength, full overhead range, a hollow body line, the balance skill | 6 minutes every morning; pike push-ups, hollow holds |
 | **Front split** | Long hamstrings (front leg) and hip flexors (back leg), and strength at that length | Front-split block 5 days a week; bridges and hip thrusts |
 | **Side split** | Long, strong adductors (inner thighs), and hips shaped to allow it | Side-split block 5 days a week; wide goblet squats |
 
@@ -153,9 +153,9 @@ A heart-rate monitor is optional; the talk test works everywhere.
 |---|---|---|---|---|
 | **Mon** | Morning block | **Strength A:** jumps, squat, push-up, row, back extension, core, calves | Front (10 min) | ~60 min |
 | **Tue** | Morning block | **Easy run** 30–40 min outdoors (a 45–60 min brisk walk indoors when needed) | Side (10 min) | ~70 min |
-| **Wed** | Morning block | **Strength B:** bridge, pike push-up, step-up, row, carry | Front (10 min) | ~60 min |
+| **Wed** | Morning block | **Strength B:** bridge, pike push-up, squat, row, carry | Front (10 min) | ~60 min |
 | **Thu** | Morning block | **Intervals:** squat jumps, then rope intervals (outdoor running in good weather) | Side (10 min) | ~55–65 min |
-| **Fri** | Morning block | **Strength C:** one-arm press, wide goblet squat, row, push-up, side plank | Both, short form (10 min) | ~60 min |
+| **Fri** | Morning block | **Strength C:** wide goblet squat, push-up, row, side plank | Both, short form (10 min) | ~60 min |
 | **Sat** | Morning block | **Long outdoor:** long easy run 45–90 min (a brisk walk indoors, at most 60 min), then rows and farmer holds at home | Both, short form (10 min) | ~1.5–2 h |
 | **Sun** | Morning block | **Light:** an easy walk, then the flexibility session (30 min) | In the session | ~45 min + walk |
 
@@ -200,7 +200,7 @@ Sunday's walk warms up the flexibility session.
 |---|---|---|
 | Easy rope (or jumping jacks) | 2 min | Raises body temperature; a couple of hundred easy impacts covers the "about 50 moderate impacts on most days" [ros2022] |
 | World's greatest stretch | 3 per side | Hips, hamstrings and upper back in one movement |
-| Bodyweight squats | 10 | Knees and hips through their full range |
+| Squats with no weight | 10 | Knees and hips through their full range |
 
 ### 6.3 Strength A — Monday, about 30 min after the warm-up
 
@@ -224,8 +224,8 @@ About 30 min after the warm-up, in pairs as on Monday.
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
 | A1 | Bridge (§7.2): glute bridge, then single-leg, then hip thrust | 3 × 8–12 | after A2 | The hips and the back of the legs, lifting with no forward bend of the back under load [ros2022] |
-| A2 | Vertical push (§7.4, strength track): pike push-up, then feet on a chair, then wall handstand push-up negatives | 3 × 5–10 | 75 s | The pressing strength a handstand stands on |
-| B1 | Step-up onto a stair, a dumbbell in each hand | 3 × 8–10 per leg | after B2 | Stairs at 99 |
+| A2 | Vertical push (§7.4, strength track): pike push-up, then feet on a chair, then slower | 3 × 5–10 | 75 s | The pressing strength a handstand stands on |
+| B1 | Squat (§7.1): the second leg day, at your level | 3 × 8–12 | after B2 | Legs twice a week: getting up, carrying and climbing stairs for life |
 | B2 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | 60 s | The second pulling day |
 | C | Farmer carry or hold, both dumbbells | 3 × 45–60 s | 60 s | Grip: each 5 kg less grip strength went with a 16% higher death rate [leong2015] |
 
@@ -235,11 +235,10 @@ About 30 min after the warm-up, in pairs as on Monday.
 
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
-| A1 | Half-kneeling one-arm dumbbell press: kneeling keeps the lower back from arching | 3 × 6–10 per side | after A2 | Shoulder strength and the locked-out arms a handstand stands on |
-| A2 | Wide goblet squat (sumo squat): feet wide, toes out, one dumbbell held at the chest | 3 × 8–12 | 75 s | Strength training improved range of motion as much as stretching did [afonso2021]; the wide stance works the inner thighs of the side split |
+| A1 | Wide goblet squat (sumo squat): feet wide, toes out, one dumbbell held at the chest | 3 × 8–12 | after A2 | Strength training improved range of motion as much as stretching did [afonso2021]; the wide stance works the inner thighs of the side split |
+| A2 | Push-up, one variant harder than Monday's, or slower | 3 × 6–12 | 75 s | The second push day |
 | B1 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | after B2 | The third pulling day |
-| B2 | Push-up, one variant harder than Monday's, or slower | 2 × 6–12 | 60 s | The second push day |
-| C | Side plank | 2 × 20–45 s per side | — | The side of the trunk [octftf] |
+| B2 | Side plank (§7.7) | 3 × 20–45 s per side | 60 s | The side of the trunk [octftf] |
 
 ### 6.6 Easy run — Tuesday
 
@@ -292,22 +291,21 @@ slowly and sink a little on each breath out. Stretch at 5–7 out of 10, never s
 | # | Position | Hold |
 |---|---|---|
 | 1 | Half-kneeling hip-flexor stretch, pelvis tucked | 45 s per side |
-| 2 | Half split: front leg straight, hips over the back knee | 60 s per side |
-| 3 | Supported front split: hands on chairs or stacked books, slide down until the stretch is 5–7 | 60 s per side |
-| 4 | Active front-leg lift: sit tall, leg straight, lift the heel 5 cm off the floor | 2 × 8 per side |
+| 2 | Half split: front leg straight, hips over the back knee | 90 s per side |
+| 3 | Supported front split: hands on chairs or stacked books, slide down until the stretch is 5–7 | 90 s per side |
 
 **Side-split block** (Tuesday and Thursday; in the short form on Friday and Saturday; in the long form on Sunday)
 
 | # | Position | Hold |
 |---|---|---|
-| 1 | Frog stretch: knees wide, rock the hips back | 60 s |
-| 2 | Horse stance (a wide squat hold) | 45 s |
-| 3 | Seated straddle, leaning forward from the hips with a flat back | 60 s |
-| 4 | Supported side split: hands on chairs, slide the feet apart | 60 s |
-| 5 | Side-lying leg raise | 2 × 8 per side |
+| 1 | Seated straddle, leaning forward from the hips with a flat back | 2 × 90 s |
+| 2 | Supported side split: hands on chairs, slide the feet apart | 2 × 90 s |
+
+Each block keeps the two or three positions that stretch the split itself, held longer (D-061): weekly time and
+frequency are what count [thomas2018], so fewer positions held longer give the same stretch time.
 
 **Short form, both splits in 10 min** (Friday and Saturday): the half split and the supported front split, 60 s per
-side each; then the frog stretch, the seated straddle and the supported side split, 60 s each.
+side each; then the seated straddle and the supported side split, 90 s each.
 
 **Long form** (Sunday): every hold of both blocks done twice.
 
@@ -321,8 +319,7 @@ years, not weeks. Hip bones differ in shape, and a flat side split is not possib
 measured in centimetres from the floor, and any steady gain counts.
 
 **Sunday flexibility session (30 min), after the easy walk:** both split blocks in their long form (the seated
-straddle is the pancake); 90/90 hip switches × 10; a deep squat hold 2 × 60 s; and for the handstand, a shoulder
-stretch (puppy pose, hands on a chair) 2 × 45 s.
+straddle is the pancake), and a deep squat hold 2 × 60 s.
 
 ---
 
@@ -395,15 +392,16 @@ their usual mistakes, a rounded back under load and an uncontrolled fall forward
 | H13 | Freestanding hold | 30 s, then 60 s |
 | H14 | Variations: tuck, straddle, and later a press to handstand (it needs the pancake, so the splits help) | — |
 
-**Strength track** (Wednesday A2; the one-arm press on Friday and hollow holds on Monday support it)
+**Strength track** (Wednesday A2; hollow holds on Monday support it)
 
 | Level | Drill | Pass at |
 |---|---|---|
 | S1 | Pike push-up, feet on the floor | 3 × 10 |
 | S2 | Pike push-up, feet on a chair | 3 × 10 |
-| S3 | Wall handstand push-up negatives (chest to wall, lower in 5 s) | 3 × 5 |
-| S4 | Wall handstand push-up, partial range | 3 × 5 |
-| S5 | Wall handstand push-up, full range | 3 × 5 |
+| S3 | Pike push-up, feet on a chair, 3 s down | 3 × 10 |
+
+No wall handstand push-ups (D-061): lowering the head to the floor upside down loads the neck, and the pike push-ups
+build the same pressing strength.
 
 **How long:** no trial has measured adults learning a handstand. Coaches commonly report many months to a couple of years from zero to a steady freestanding hold, with near-daily practice. That is why it gets a few minutes every morning instead of one long session a week. The first six levels stay on the floor or low on the wall, so a beginner starts where the shoulders and wrists can carry the weight. The time in the morning block is a limit, not a hold: a level asks for 3 holds of 20–60 s with 30 s of rest between them, 3–6 min in all. Move up only when all the holds are done with a straight body and the next morning feels fine. Wrists or shoulders that hurt mean going back a level.
 
@@ -696,7 +694,7 @@ The app's long view. Each ability shows its latest result next to its line:
 
 Every exercise the sessions (§6) and the ladders (§7) name, by its well-known name, with one teaching video each
 (D-056). The app shows the name, and a tap plays the video inside the app (D-060); there are no written descriptions. A harder or easier
-variant is a level of its base exercise. Jump rope, running and walking have no video: everyone knows them. Each
+variant is a level of its base exercise. Jump rope, running and walking have no video: everyone knows them. 35 exercises since D-061. Each
 video was chosen by looking at its frames (YouTube's storyboard, stills through the whole video) with its title,
 channel and length: the frames had to show the movement as the plan does it, with the plan's equipment. A health body
 or physiotherapist came first, then an established coach or professional body. The link text is the video's title and
@@ -724,24 +722,18 @@ channel as YouTube gives them; the list with its check date is in `src/data/vide
 | Wall walk | [The Wall Walk (CrossFit)](https://www.youtube.com/watch?v=2TnX8j29tRY) |
 | Chest-to-wall handstand | [3 Ways to get into a Chest-To-Wall Handstand (Yuri Marmerstein)](https://www.youtube.com/watch?v=fj6lKSg5bSM) |
 | Handstand kick-up | [HANDSTAND KICK UP TUTORIAL All the Levels! Wall to Freestanding (Paul Twyman)](https://www.youtube.com/watch?v=Z1BEEzg5L6Q) |
-| Handstand bail | [How to Bail a Handstand (Yuri Marmerstein)](https://www.youtube.com/watch?v=P_h4rUJnJTY) |
-| Back-to-wall handstand | [How to Balance a Handstand: Heel pulls (Emmet Louis)](https://www.youtube.com/watch?v=OYehg2ruMN0) |
 | Freestanding handstand | [Handstand Progression for Perfect Freestanding Handstands (GMB Fitness (Praxis))](https://www.youtube.com/watch?v=d6_lcWtQDxw) |
 | Pike push-up | [How to do a Pike Push-Up (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=XckEEwa1BPI) |
-| Wall handstand push-up | [The Chest-to-Wall Handstand Push-Up (CrossFit)](https://www.youtube.com/watch?v=lkPPVyExFpU) |
 
 ### Strength
 
 | Exercise | Video |
 |---|---|
-| Bodyweight squat | [The Right Way to Do a Squat (Hospital for Special Surgery)](https://www.youtube.com/watch?v=jyQgzil5KY8) |
 | Goblet squat | [How to do a Goblet Squat  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=nfX7IFK9UNI) |
 | Split squat | [U.S. Marine Corps Fitness - Dumbbell Split Squat (U.S. Forces Fitness)](https://www.youtube.com/watch?v=SX7BtPh_pL0) |
 | Push-up | [How to work up to a full pushup progression (WeShape)](https://www.youtube.com/watch?v=tf3VNkmzHq0) |
 | One-arm dumbbell row | [How to do a Supported Bent-Over Dumbbell Row (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=DmUX88nWClo) |
 | Glute bridge | [How to Do a Glute Bridge Exercise: A Guide from Physical Therapists (Hinge Health)](https://www.youtube.com/watch?v=PhTDzR0TpZs) |
-| Step-up | [Single leg step up with dumbbells (Mountain Ridge Physical Therapy)](https://www.youtube.com/watch?v=_-E6Cf9vDSg) |
-| Half-kneeling dumbbell press | [Half Kneeling Single Arm DB Shoulder Press (Exercise Library) (Horton Barbell)](https://www.youtube.com/watch?v=d3CRIDSCOhw) |
 | Farmer's carry | [The Dumbbell Farmers Carry (CrossFit)](https://www.youtube.com/watch?v=p5MNNosenJc) |
 | Side plank | [Complete Physio – 16: Simple Side Plank with Progressions (Complete Physio)](https://www.youtube.com/watch?v=FwbhtRs8uj4) |
 | Single-leg calf raise | [Single Leg Calf Raise Off Step (John Kahl PT DPT SCS CSCS)](https://www.youtube.com/watch?v=NVMrM-e8eoY) |
@@ -754,8 +746,7 @@ channel as YouTube gives them; the list with its check date is in `src/data/vide
 |---|---|
 | Squat jump | [How to do a Squat Jump  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=tZSYZdtbONc) |
 | Jump rope | None: everyone knows it |
-| Run–walk | None: everyone knows it |
-| Easy run | None: everyone knows it |
+| Run | None: everyone knows it |
 | Walk | None: everyone knows it |
 
 ### Splits and flexibility
@@ -765,12 +756,6 @@ channel as YouTube gives them; the list with its check date is in `src/data/vide
 | World's greatest stretch | [The World's Greatest Stretch (Mobility Exercise) by Squat University (Squat University)](https://www.youtube.com/watch?v=-CiWQ2IvY34) |
 | Half split | [Half Split (Ardha Hanumansana) For Hamstring Stretch with Dr. Jenn of Root To Rise PT (Jenn Gelfand ~ Root To Rise PT)](https://www.youtube.com/watch?v=gTjRgU8M_B0) |
 | Front split (on blocks) | [How to get your Front Splits / Blocks & Slider edition (Hip Pilates Method)](https://www.youtube.com/watch?v=qWN7irIeWSc) |
-| Seated straight-leg raise | [Seated Straight Leg Raise (Ashley Burr Athletic Therapy)](https://www.youtube.com/watch?v=AscrGMs4Fzc) |
-| Frog stretch | [Frog Stretch (Dr. James Chung - Sports Physical Therapist)](https://www.youtube.com/watch?v=6-JQqiI_Plo) |
-| Horse stance | [Middle/Straddle Splits Tutorial with Antranik (Gain Passive & Active Flexibility using Horse Stance) (Antranik Kizirian)](https://www.youtube.com/watch?v=kXWtk3NLESk) |
 | Pancake stretch | [Pancake Straddle Stretch (Tom Morrison)](https://www.youtube.com/watch?v=mVisirHzJqk) |
 | Middle split (on blocks) | [Begin Your Middle Split Journey! (FOLLOW ALONG) #BIG5FLEX (Tom Merrick)](https://www.youtube.com/watch?v=GSwx0yGxtPk) |
-| Side-lying leg raise | [How to do a Side-Lying Leg Raise (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=xVSwJhJCsgo) |
-| 90/90 hip switch | [90/90 Hip Switch (Improve Hip Health & Mobility) (Simone Sports Performance)](https://www.youtube.com/watch?v=qq_Z7sAmVrA) |
-| Puppy pose | [Puppy Pose (FitLife Fitness, Aquatics and Physical Therapy)](https://www.youtube.com/watch?v=o-H-MB7foaA) |
 | Deep squat | [How to Do a Deep Squat According to Physical Therapists (Hinge Health)](https://www.youtube.com/watch?v=IHApHfNA2Ag) |

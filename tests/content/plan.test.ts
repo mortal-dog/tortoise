@@ -137,8 +137,7 @@ describe('references', () => {
       ...plan.sessions.flatMap((s) => s.steps.map((st) => st.exerciseId)),
       ...plan.ladders.flatMap((l) => l.levels.map((lv) => lv.exerciseId)),
     ])
-    // The bail is practised inside H10 with the kick-up; it keeps its own video because it is the safety skill.
-    expect(plan.exercises.filter((e) => !usedExercises.has(e.id)).map((e) => e.id)).toEqual(['bail'])
+    expect(plan.exercises.filter((e) => !usedExercises.has(e.id)).map((e) => e.id)).toEqual([])
   })
 })
 
@@ -288,7 +287,7 @@ describe('against the plan text', () => {
     expect(ladderCodes('bridge')).toHaveLength(5)
     expect(ladderCodes('push')).toHaveLength(6)
     expect(ladderCodes('handstand-skill')).toEqual(Array.from({ length: 14 }, (_, i) => `H${i + 1}`))
-    expect(ladderCodes('handstand-strength')).toEqual(['S1', 'S2', 'S3', 'S4', 'S5'])
+    expect(ladderCodes('handstand-strength')).toEqual(['S1', 'S2', 'S3'])
     expect(ladderCodes('row')).toEqual(['P1', 'P2', 'P3'])
     expect(ladderCodes('back-extension')).toHaveLength(5)
     expect(ladderById.get('back-extension')?.sources).toContain('katzman2010')

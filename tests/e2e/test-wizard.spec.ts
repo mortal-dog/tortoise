@@ -48,11 +48,10 @@ test('a completed Week 0 test sets the starting levels, and Progress shows the r
   await expect(page.getByTestId('card-main')).toContainText('Push L3')
   await expect(page.getByTestId('card-main')).toContainText('Squat L1')
 
-  // Progress: the trends, the milestone and the At-99 board.
+  // Progress: the badges and the At-99 board; no Shell, photos, trends or level charts (D-062).
   await page.getByRole('link', { name: 'Progress', exact: true }).click()
-  await expect(page.getByTestId('trend-push-ups')).toContainText('Latest: 12 reps')
-  await expect(page.getByTestId('trend-push-ups').getByTestId('aim-line')).toContainText('Aim 40 reps')
-  await expect(page.getByTestId('trend-sit-to-rise')).toContainText('Latest: 9 points')
+  for (const gone of ['The Shell, 2026', 'Photos', 'Test trends', 'Levels over time', 'Outdoor sessions'])
+    await expect(page.getByText(gone, { exact: true })).toHaveCount(0)
   // Badges (D-058): the reached one shines, a locked one tells how to earn it.
   await expect(page.getByRole('button', { name: '10 push-ups, earned' })).toBeVisible()
   await page.getByRole('button', { name: 'Ancient, locked' }).click()
@@ -60,6 +59,5 @@ test('a completed Week 0 test sets the starting levels, and Progress shows the r
     'To earn it: Reach a tortoise streak of 1000 days',
   )
   await expect(page.getByTestId('at99')).toContainText('9 points')
-  await expect(page.getByTestId('honeycomb')).toBeVisible()
   await page.screenshot({ path: info.outputPath('progress.png'), fullPage: true })
 })

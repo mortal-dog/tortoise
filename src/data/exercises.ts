@@ -27,20 +27,14 @@ const rows: Row[] = [
   { id: 'wall-walk', name: 'Wall walk', area: 'handstand', unit: 'reps' },
   { id: 'chest-to-wall-handstand', name: 'Chest-to-wall handstand', area: 'handstand', unit: 'seconds' },
   { id: 'kick-up', name: 'Handstand kick-up', area: 'handstand', unit: 'reps' },
-  { id: 'bail', name: 'Handstand bail', area: 'handstand', unit: 'reps' },
-  { id: 'heel-pull', name: 'Back-to-wall handstand', area: 'handstand', unit: 'seconds' },
   { id: 'freestanding-handstand', name: 'Freestanding handstand', area: 'handstand', unit: 'seconds' },
   { id: 'pike-push-up', name: 'Pike push-up', area: 'handstand', unit: 'reps' },
-  { id: 'wall-handstand-push-up', name: 'Wall handstand push-up', area: 'handstand', unit: 'reps' },
   // Strength
-  { id: 'bodyweight-squat', name: 'Bodyweight squat', area: 'strength', unit: 'reps' },
   { id: 'goblet-squat', name: 'Goblet squat', area: 'strength', unit: 'reps' },
   { id: 'split-squat', name: 'Split squat', area: 'strength', unit: 'reps' },
   { id: 'push-up', name: 'Push-up', area: 'strength', unit: 'reps' },
   { id: 'one-arm-row', name: 'One-arm dumbbell row', area: 'strength', unit: 'reps' },
   { id: 'glute-bridge', name: 'Glute bridge', area: 'strength', unit: 'reps' },
-  { id: 'step-up', name: 'Step-up', area: 'strength', unit: 'reps' },
-  { id: 'overhead-press', name: 'Half-kneeling dumbbell press', area: 'strength', unit: 'reps' },
   { id: 'farmer-carry', name: "Farmer's carry", area: 'strength', unit: 'seconds' },
   { id: 'side-plank', name: 'Side plank', area: 'strength', unit: 'seconds' },
   { id: 'calf-raise', name: 'Single-leg calf raise', area: 'strength', unit: 'reps' },
@@ -49,26 +43,19 @@ const rows: Row[] = [
   // Jumps, rope, running and walking
   { id: 'squat-jump', name: 'Squat jump', area: 'cardio', unit: 'reps' },
   { id: 'rope-basics', name: 'Jump rope', area: 'cardio', unit: 'minutes' },
-  { id: 'run-walk', name: 'Run–walk', area: 'cardio', unit: 'minutes' },
-  { id: 'easy-run', name: 'Easy run', area: 'cardio', unit: 'minutes' },
+  { id: 'run', name: 'Run', area: 'cardio', unit: 'minutes' },
   { id: 'walk', name: 'Walk', area: 'cardio', unit: 'minutes' },
   // Splits and flexibility
   { id: 'worlds-greatest-stretch', name: "World's greatest stretch", area: 'splits', unit: 'reps' },
   { id: 'half-split', name: 'Half split', area: 'splits', unit: 'seconds' },
   { id: 'supported-front-split', name: 'Front split (on blocks)', area: 'splits', unit: 'seconds' },
-  { id: 'active-front-leg-lift', name: 'Seated straight-leg raise', area: 'splits', unit: 'reps' },
-  { id: 'frog-stretch', name: 'Frog stretch', area: 'splits', unit: 'seconds' },
-  { id: 'horse-stance', name: 'Horse stance', area: 'splits', unit: 'seconds' },
   { id: 'straddle-lean', name: 'Pancake stretch', area: 'splits', unit: 'seconds' },
   { id: 'supported-side-split', name: 'Middle split (on blocks)', area: 'splits', unit: 'seconds' },
-  { id: 'side-lying-leg-raise', name: 'Side-lying leg raise', area: 'splits', unit: 'reps' },
-  { id: 'switch-90-90', name: '90/90 hip switch', area: 'splits', unit: 'reps' },
-  { id: 'puppy-pose', name: 'Puppy pose', area: 'splits', unit: 'seconds' },
   { id: 'deep-squat-hold', name: 'Deep squat', area: 'splits', unit: 'seconds' },
 ]
 
 /** Everyday movements everyone knows: no video (D-056). */
-export const NO_VIDEO: readonly string[] = ['rope-basics', 'run-walk', 'easy-run', 'walk']
+export const NO_VIDEO: readonly string[] = ['rope-basics', 'run', 'walk']
 
 /** Every exercise with its video; the content tests fail a missing one that is not in NO_VIDEO. */
 export const exercises: ExerciseInput[] = rows.map((e) => {

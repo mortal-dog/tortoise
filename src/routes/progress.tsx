@@ -2,10 +2,6 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { ClipboardList } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { BadgeMedal } from '@/components/progress/BadgeMedal'
-import { Honeycomb } from '@/components/progress/Honeycomb'
-import { Photos } from '@/components/progress/Photos'
-import { type ChartPoint, TrendChart } from '@/components/progress/TrendChart'
-import { StatusMark, statusLabel } from '@/components/StatusMark'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
 import type { Metric, Milestone } from '@/data/schema'
@@ -16,11 +12,9 @@ import { useLive } from '@/lib/live'
 import { type Metrics, progress, reached } from '@/lib/milestones'
 import { addPillars, donePillars, PILLARS, plannedPillars, zeroPillars } from '@/lib/pillars'
 import { sessionsById } from '@/lib/plan-view'
-import type { LevelRecord, TestRecord } from '@/lib/records'
-import { getLevels } from '@/lib/repo'
+import type { TestRecord } from '@/lib/records'
 import { longestStreak } from '@/lib/status'
 import { awardMilestones, getEarnedMilestones, getTests, loadMetrics } from '@/lib/test-repo'
-import { aimValue, SERIES, seriesPoints } from '@/lib/test-results'
 import { type History, planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/progress')({
@@ -32,7 +26,6 @@ function Progress() {
   const t = useToday()
   const history = useHistory(settings?.startDate, t)
   const tests = useLive(getTests, [])
-  const levels = useLive(getLevels, [])
   const earned = useLive(getEarnedMilestones, [])
   const metrics = useLive(() => loadMetrics(t), [t])
 
@@ -41,7 +34,7 @@ function Progress() {
     if (settings?.startDate) void awardMilestones(t)
   }, [settings?.startDate, t])
 
-  if (!settings || !history || !tests || !levels || !earned) {
+  if (!settings || !history || !tests || !earned) {
     return (
       <Screen title="Progress">
         <p>{settings && !settings.startDate ? 'Start the plan on the Today tab first.' : null}</p>
@@ -66,106 +59,14 @@ function Progress() {
     >
       <Numbers history={history} longest={longest} t={t} startDate={settings.startDate as LocalDate} />
 
-      <Section title={`The Shell, ${t.slice(0, 4)}`}>
-        <Card>
-          <Honeycomb
-            year={Number(t.slice(0, 4))}
-            statusOf={history.statusOf}
-            week0={history.week0}
-            today={t}
-          />
-          <ul className="mt-3 grid grid-cols-2 gap-1 text-sm" aria-label="Status key">
-            {(['full', 'shell', 'missed'] as const).map((s) => (
-              <li key={s} className="flex items-center gap-2">
-                <StatusMark status={s} />
-                {statusLabel(s)}
-              </li>
-            ))}
-          </ul>
-        </Card>
-      </Section>
-
       <Section title="Milestones">
         <Milestones earned={earned} metrics={metrics ?? {}} tests={tests} />
-      </Section>
-
-      <Section title="Photos">
-        <Photos today={t} />
       </Section>
 
       <Section title="At 99">
         <At99 metrics={metrics ?? {}} />
       </Section>
-
-      <Section title="Test trends">
-        <ChartList
-          empty="No result yet"
-          items={SERIES.map((s) => ({
-            key: s.id,
-            title: s.name,
-            points: seriesPoints(s, tests),
-            render: (points: ChartPoint[]) => (
-              <TrendChart
-                key={s.id}
-                testId={`trend-${s.id}`}
-                title={s.name}
-                unit={s.unit}
-                points={points}
-                aim={aimValue(plan.tests.find((x) => x.id === s.testId))}
-              />
-            ),
-          }))}
-        />
-      </Section>
-
-      <Section title="Levels over time">
-        <ChartList
-          empty="No level set yet"
-          items={plan.ladders.map((ladder) => ({
-            key: ladder.id,
-            title: ladder.name,
-            points: levelPoints(levels.get(ladder.id), t),
-            render: (points: ChartPoint[]) => (
-              <TrendChart
-                key={ladder.id}
-                title={ladder.name}
-                unit="level"
-                step
-                points={points}
-                valueLabel={(v) => ladder.levels.find((l) => l.level === v)?.code ?? String(v)}
-              />
-            ),
-          }))}
-        />
-      </Section>
     </Screen>
-  )
-}
-
-/** The charts with data, then the names of those still empty in one line, so the page stays short. */
-function ChartList({
-  items,
-  empty,
-}: {
-  items: Array<{
-    key: string
-    title: string
-    points: ChartPoint[]
-    render: (p: ChartPoint[]) => React.ReactNode
-  }>
-  empty: string
-}) {
-  const withData = items.filter((i) => i.points.length > 0)
-  const without = items.filter((i) => i.points.length === 0)
-  return (
-    <div className="space-y-3">
-      {withData.map((i) => i.render(i.points))}
-      {without.length > 0 && (
-        <p className="text-sm">
-          {empty}: {without.map((i) => i.title).join(', ')}.
-        </p>
-      )}
-    </div>
   )
 }
 
@@ -176,14 +77,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       {children}
     </section>
   )
-}
-
-/** A ladder's level history as steps up to today; level 1 from its first record when nothing else is known. */
-function levelPoints(rec: LevelRecord | undefined, t: LocalDate): ChartPoint[] {
-  if (!rec) return []
-  const pts = rec.history.map((h) => ({ date: h.date, value: h.level }))
-  if (pts.length && (pts.at(-1)?.date ?? t) < t) pts.push({ date: t, value: rec.level })
-  return pts
 }
 
 function Numbers({
@@ -205,9 +98,6 @@ function Numbers({
     if (s === 'full') full++
     if (s === 'shell') shell++
   }
-  const outdoor = [...history.days.values()].filter(
-    (d) => d.main?.doneAt && d.main.variant === 'outdoor',
-  ).length
 
   // Minutes per pillar this week: planned from the week's sessions, done from the day records (design §8).
   const monday = mondayOf(t)
@@ -249,7 +139,6 @@ function Numbers({
         {tile('Longest streak', longest, 'text-primary', 'progress-longest')}
         {tile('Full days this month', full)}
         {tile('Shell days this month', shell, 'text-shell')}
-        {tile('Outdoor sessions', outdoor, 'text-sky')}
       </dl>
       <Card className="mt-3">
         <h3 className="font-semibold">Minutes this week, against the plan</h3>

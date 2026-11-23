@@ -103,12 +103,12 @@ describe('the step engine', () => {
 
   it("does Friday's push-up one level above Monday's, capped at the top", () => {
     expect(
-      byStep(units('strength-c', '2027-01-01', { push: 2 }), 'b2').exercises.find((e) => e.stepId === 'b2')
+      byStep(units('strength-c', '2027-01-01', { push: 2 }), 'a2').exercises.find((e) => e.stepId === 'a2')
         ?.level,
     ).toBe(3)
     const top = plan.ladders.find((l) => l.id === 'push')?.levels.length ?? 0
     expect(
-      byStep(units('strength-c', '2027-01-01', { push: top }), 'b2').exercises.find((e) => e.stepId === 'b2')
+      byStep(units('strength-c', '2027-01-01', { push: top }), 'a2').exercises.find((e) => e.stepId === 'a2')
         ?.level,
     ).toBe(top)
   })

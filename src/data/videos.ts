@@ -1,6 +1,6 @@
 // The teaching videos (D-056, D-060): one YouTube video per exercise (none for the everyday ones: rope, running,
 // walking). Nothing is fetched until a name is tapped; then the video plays in YouTube's privacy-enhanced player inside
-// the app, and every one allows embedding (checked 2026-11-23, `playableInEmbed`). Each was chosen and checked on 2026-11-23 by looking at its frames (YouTube's storyboard, a grid of stills
+// the app, and every one allows embedding (checked 2026-11-23, `playableInEmbed`). The kick-up video stands for the bail too (D-061). Each was chosen and checked on 2026-11-23 by looking at its frames (YouTube's storyboard, a grid of stills
 // through the whole video), with its title, channel and length: the frames had to show the plan's movement with the
 // plan's equipment. A health body or physiotherapist came first, then an established coach or professional body.
 // Title and channel are exactly as YouTube's oEmbed returned them (one channel name ends in a space).
@@ -55,16 +55,12 @@ export const videos: Readonly<Record<string, VideoLink>> = {
     'HANDSTAND KICK UP TUTORIAL All the Levels! Wall to Freestanding',
     'Paul Twyman',
   ),
-  bail: yt('P_h4rUJnJTY', 'How to Bail a Handstand', 'Yuri Marmerstein'),
-  'heel-pull': yt('OYehg2ruMN0', 'How to Balance a Handstand: Heel pulls', 'Emmet Louis'),
   'freestanding-handstand': yt(
     'd6_lcWtQDxw',
     'Handstand Progression for Perfect Freestanding Handstands',
     'GMB Fitness (Praxis)',
   ),
   'pike-push-up': yt('XckEEwa1BPI', 'How to do a Pike Push-Up', 'National Academy of Sports Medicine (NASM)'),
-  'wall-handstand-push-up': yt('lkPPVyExFpU', 'The Chest-to-Wall Handstand Push-Up', 'CrossFit'),
-  'bodyweight-squat': yt('jyQgzil5KY8', 'The Right Way to Do a Squat', 'Hospital for Special Surgery'),
   'goblet-squat': yt(
     'nfX7IFK9UNI',
     'How to do a Goblet Squat  | Proper Form & Technique | NASM',
@@ -81,12 +77,6 @@ export const videos: Readonly<Record<string, VideoLink>> = {
     'PhTDzR0TpZs',
     'How to Do a Glute Bridge Exercise: A Guide from Physical Therapists',
     'Hinge Health',
-  ),
-  'step-up': yt('_-E6Cf9vDSg', 'Single leg step up with dumbbells', 'Mountain Ridge Physical Therapy'),
-  'overhead-press': yt(
-    'd3CRIDSCOhw',
-    'Half Kneeling Single Arm DB Shoulder Press (Exercise Library)',
-    'Horton Barbell',
   ),
   'farmer-carry': yt('p5MNNosenJc', 'The Dumbbell Farmers Carry', 'CrossFit'),
   'side-plank': yt(
@@ -121,30 +111,12 @@ export const videos: Readonly<Record<string, VideoLink>> = {
     'How to get your Front Splits | Blocks & Slider edition ',
     'Hip Pilates Method ',
   ),
-  'active-front-leg-lift': yt('AscrGMs4Fzc', 'Seated Straight Leg Raise', 'Ashley Burr Athletic Therapy'),
-  'frog-stretch': yt('6-JQqiI_Plo', 'Frog Stretch', 'Dr. James Chung - Sports Physical Therapist'),
-  'horse-stance': yt(
-    'kXWtk3NLESk',
-    'Middle/Straddle Splits Tutorial with Antranik (Gain Passive & Active Flexibility using Horse Stance)',
-    'Antranik Kizirian',
-  ),
   'straddle-lean': yt('mVisirHzJqk', 'Pancake Straddle Stretch', 'Tom Morrison'),
   'supported-side-split': yt(
     'GSwx0yGxtPk',
     'Begin Your Middle Split Journey! (FOLLOW ALONG) #BIG5FLEX',
     'Tom Merrick',
   ),
-  'side-lying-leg-raise': yt(
-    'xVSwJhJCsgo',
-    'How to do a Side-Lying Leg Raise',
-    'National Academy of Sports Medicine (NASM)',
-  ),
-  'switch-90-90': yt(
-    'qq_Z7sAmVrA',
-    '90/90 Hip Switch (Improve Hip Health & Mobility)',
-    'Simone Sports Performance',
-  ),
-  'puppy-pose': yt('o-H-MB7foaA', 'Puppy Pose', 'FitLife Fitness, Aquatics and Physical Therapy'),
   'deep-squat-hold': yt(
     'IHApHfNA2Ag',
     'How to Do a Deep Squat According to Physical Therapists',

@@ -20,7 +20,6 @@ const COMPOSED: Record<string, string> = {
     'capitalised',
   'Winter sun at southern Canadian latitudes makes none. On cloudless days, skin made no previtamin D3 from November through February at 42° N, and from October through March at 52° N [webb1988]. In the rest of the year the sun does make it. Vitamin D intake is nutrition, which is outside this app; that is a question for a doctor.':
     'capitalised',
-  'For the handstand, a shoulder stretch (puppy pose, hands on a chair)': 'capitalised',
   'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip. So progress is measured in centimetres from the floor, and any steady gain counts.':
     'capitalised',
   'Keep the upper back straight; avoid deep forward bending under load [ros2022]. The plan has no lift that bends forward under load.':
@@ -45,8 +44,7 @@ const COMPOSED: Record<string, string> = {
   'Plyometrics, while fresh: squat jumps, landing softly on both feet': 'the §6.7 bullet without its dose',
   'Indoors on the rope, using the alternate-foot running step and high knees. Outdoors in good weather, run the same intervals, uphill if possible. The easy parts are an easy bounce or a walk.':
     'capitalised',
-  'Wednesday A2; the one-arm press on Friday and hollow holds on Monday support it.':
-    'the parenthesis after "Strength track"',
+  'Wednesday A2; hollow holds on Monday support it.': 'the parenthesis after "Strength track"',
   'Static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as stretching did [afonso2021], which is why the wide goblet squats, bridges and hip thrusts are in the strength days.':
     'capitalised',
 }

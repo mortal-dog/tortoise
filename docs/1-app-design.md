@@ -141,13 +141,11 @@ and the test wizard open full screen above the tabs.
 
 ### 3.4 Progress
 
-- **The Shell:** the year as a honeycomb of hexagons, one per day, coloured by status, two weeks to a row (D-041). Over
-  a year it fills like a tortoise's shell. Tapping a hexagon opens that day.
-- **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; outdoor sessions; minutes per
-  pillar (strength, aerobic, skills, mobility) this week against the plan.
-- **Test trends:** a small line chart for every test of the Tortoise Test (the VO2max estimate for the Rockport walk),
-  with the aim line where the test has one.
-- **Levels over time:** a step chart per ladder.
+Since D-062 Progress holds only the numbers, the milestones with their badges and the At-99 board: the Shell
+honeycomb, the outdoor-sessions count, the photos, the test trends and the level charts went (the owner's ask).
+
+- **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; minutes per pillar
+  (strength, aerobic, skills, mobility) this week against the plan.
 - **Milestones:** "next up" with progress bars, and **badges** (D-058): every milestone is a tortoise-shell hexagon
   medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon and a ribbon. Earned medals shine (a
   glint sweeps across, two sparkles twinkle); locked ones are grey with a lock. A tap or hover tells how to earn one or
@@ -214,9 +212,8 @@ Today ──┬─ Session player (full screen)
         ├─ Test wizard (full screen, on test weekends)
         └─ Day detail (yesterday / any past day)
 Week ───── Day detail, swap days
-Progress ┬ Shell → Day detail
-         ├ Test trends → Test detail, test wizard
-         ├ Milestones
+Progress ┬ Tortoise Test → test wizard
+         ├ Milestones and badges
          └ At-99 board
 Settings ─ Profile / Units / Google Drive sync / About
 ```
@@ -282,7 +279,7 @@ Settings ─ Profile / Units / Google Drive sync / About
 | `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, jumpReachCm, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answer {runMin} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
-| `photos` | a random id; index on date | date, dataUrl (a JPEG of at most 1280 px), note (optional); added by migration 2 (D-044) |
+| `photos` | a random id; index on date | (no screen since D-062; the store and its Drive copy keep any photos taken before) date, dataUrl (a JPEG of at most 1280 px), note (optional); added by migration 2 (D-044) |
 | `meta` | `"meta"` | schemaVersion, createdAt, appVersion |
 
 - Every record carries `updatedAt`. It decides which record is newer when a backup is merged
