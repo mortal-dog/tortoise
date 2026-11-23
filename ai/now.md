@@ -3,13 +3,13 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-23, 18:10 ET)
+## Open work and next steps (as of 2026-11-23, 18:14 ET)
 
 - **Nothing in flight; the handoff sheet is empty.** The owner's evening asks of 2026-11-23 are built and pushed:
-  **`f9bdde3`** (D-056 to D-059), **`ec23c75`** (D-060, videos play in the app) and **`df84136`** (D-061 fewer kinds,
-  D-062 shorter Progress); gates green on `df84136`: 263 Vitest in 29 files, 16 e2e. Pushed on his words ("finally,
-  commit and push and compact by yourself"; "finally commit push and compact"). **Not deployed yet at 18:10 ET:** the
-  23:07 UTC scheduled run had not started (GitHub runs schedules late); it publishes main. A manual deploy run needs
+  **`f9bdde3`** (D-056 to D-059), **`ec23c75`** (D-060, videos play in the app), **`df84136`** (D-061 fewer kinds,
+  D-062 shorter Progress) and **`4dad116`** (D-063 equipment in About, the docs brought up to date, D-064); gates green
+  on `4dad116`: 264 Vitest in 29 files, 16 e2e. **Not deployed yet at 18:14 ET:** the 23:07 UTC scheduled run had not
+  started (GitHub runs schedules late); it publishes main. A manual deploy run needs
   his yes in a picker. After it, check the live site: four tabs, a name plays its video in the app, Progress without
   the Shell.
   - D-060: tapping an exercise's name opens a full-screen sheet with YouTube's privacy-enhanced player
@@ -84,7 +84,7 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 263 Vitest tests in 29 files and 16 e2e tests on `df84136` (local); CI green last on `687985c` (run
+  Last green: 264 Vitest tests in 29 files and 16 e2e tests on `4dad116` (local); CI green last on `687985c` (run
   45214620004).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
@@ -97,10 +97,11 @@
   CI/CD "like the other repos: runs automatically twice a day, manual deploy supported. That saves GitHub Actions quota,
   and we can push any number of times without triggering a run." Details and how to test a workflow change without
   deploying: `ai/memory/ci-pipeline.md`.
-- **Pushes:** compact-ai pushes `ai/` as its job; any other push to main needs a picker first, because whatever is on
-  main is published by the next scheduled run (CLAUDE.md rule 8). A manual run that deploys needs the owner's yes in
-  this session's picker too; a run with `-f deploy=false`, or on a branch, never deploys. Do not chain a commit and a
-  push in one command.
+- **Pushes (D-064, CLAUDE.md rule 9):** every finished job ends with commit, push to `main` and `compact-ai`, unasked,
+  once the full gates are green (the owner: "every time, commit, push and compact; no special instruction from me
+  needed, it is the default routine"; his picker: this repo only). A scheduled run then publishes `main`. A manual run
+  that deploys still needs his yes in a picker; a run with `-f deploy=false`, or on a branch, never deploys. Do not
+  chain a commit and a push in one command.
 - **The personal-term guard needs the untracked `.guard-key`** at the repo root (D-034); CI has it as the secret
   `TORTOISE_GUARD_KEY`. Copy it into an agent's worktree (never print it). Details: `ai/memory/guard-tests.md`.
 - **Public repo** (`mortal-dog/tortoise`, PUBLIC): no personal facts in any committed file, including docs, code,
@@ -113,7 +114,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-063**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-065**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -229,7 +230,8 @@
 
 - **Goals (D-002):** at 99, a straight back and still able to jump and run; on the way, a handstand, the side split and
   the front split. Exercise only (D-001).
-- **Equipment (D-003–D-006, D-056):** one fixed medium/heavy dumbbell pair (7–15 kg) and a jump rope; **no bar at all**
+- **Equipment (D-003–D-006, D-056, D-063):** a yoga mat, a jump rope and one fixed medium/heavy dumbbell pair (7–15 kg),
+  listed in Settings › About from `src/data/equipment.ts`; **no bar at all**
   (the owner: "there is no bar; at home only dumbbells and a jump rope"); every pull is a one-arm dumbbell row.
 - **Outdoors (D-004, D-056):** outdoor running in good weather; indoors (rain, ice) a longer brisk walk around a room,
   Tuesday 45–60 min, Saturday at most 60 min. Stairs were tried and dropped on the owner's picker after "do stairs hurt
@@ -266,7 +268,8 @@
   daylight, runs, display, reminders, storage, raindrops; the habits advice and paluch2022/stamatakis2022 gone from the
   plan), D-054 (owner: Google Drive backup, the French client ID), D-055 (owner: the Drive sync is the only backup,
   the file backup and reminder gone, the card shows only the last sync; renewal by hidden frame or next tap, builder's
-  rulingruling), D-060 (owner: videos play in the app after a tap), D-061 (owner: 48 → 35), D-062 (owner: a shorter
+  rulingruling), D-063 (owner: the equipment in About: a yoga mat, a jump rope, one dumbbell pair), D-064 (owner: commit,
+  push and compact after every job, this repo only), D-060 (owner: videos play in the app after a tap), D-061 (owner: 48 → 35), D-062 (owner: a shorter
   Progress), D-056 (owner: safer, fewer exercises, no bar, no library, videos, the indoor walk; the
   list is a builder's ruling under his delegation; vandyk2019 left the sources), D-057 (owner: the day page, no pause,
   no ring), D-058 (owner: badges; the style a builder's ruling), D-059 (builder: the still tab bar).
@@ -295,7 +298,7 @@
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062.
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064.
 
 ## Background
 
