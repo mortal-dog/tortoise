@@ -1,17 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BackupCard } from '@/components/settings/BackupCard'
-import {
-  Choice,
-  formatBytes,
-  inputClass,
-  numberIn,
-  SavedField,
-  SectionTitle,
-  Switch,
-} from '@/components/settings/fields'
-import { RemindersCard } from '@/components/settings/RemindersCard'
+import { Choice, inputClass, numberIn, SavedField, SectionTitle } from '@/components/settings/fields'
 import { ResetCard } from '@/components/settings/ResetCard'
 import { Button, Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
@@ -25,8 +16,6 @@ import {
   type LocalDate,
   weekday,
 } from '@/lib/dates'
-import { isStoragePersistent, requestPersistentStorage } from '@/lib/db'
-import { setMovingBackdrop, useMovingBackdropSwitch } from '@/lib/effects'
 import type { SettingsRecord } from '@/lib/records'
 import { resetAll, saveSettings, startPlan } from '@/lib/repo'
 import { useSettings, useToday } from '@/lib/use-app'
@@ -49,12 +38,7 @@ function Settings() {
         <PlanSection settings={settings} t={t} />
         <ProfileSection settings={settings} />
         <UnitsSection settings={settings} />
-        <DaylightSection settings={settings} />
-        <RunsSection settings={settings} />
-        <DisplaySection />
-        <RemindersCard settings={settings} today={t} />
         <BackupCard settings={settings} />
-        <StorageSection />
         <AboutSection />
         <ResetCard
           onReset={async () => {
@@ -189,11 +173,9 @@ function ProfileSection({ settings }: { settings: SettingsRecord }) {
 
 function UnitsSection({ settings }: { settings: SettingsRecord }) {
   const u = settings.units
-  const lb = u.mass === 'lb'
-  const kg = settings.dumbbellKg
   return (
     <Card>
-      <SectionTitle>Units and equipment</SectionTitle>
+      <SectionTitle>Units</SectionTitle>
       <Choice
         legend="Weight"
         options={[
@@ -212,159 +194,6 @@ function UnitsSection({ settings }: { settings: SettingsRecord }) {
         value={u.distance}
         onChange={(v) => void saveSettings((s) => ({ units: { ...s.units, distance: v } }))}
       />
-      <SavedField
-        className="mt-3"
-        label="Dumbbell weight, each"
-        suffix={u.mass}
-        value={kg === undefined ? '' : String(round(lb ? kgToLb(kg) : kg, 1))}
-        parse={numberIn(lb ? 1 : 0.5, lb ? 110 : 50, 'The dumbbell weight')}
-        onSave={(v) =>
-          void saveSettings({ dumbbellKg: v === undefined ? undefined : round(lb ? lbToKg(v) : v, 3) })
-        }
-      />
-    </Card>
-  )
-}
-
-function DaylightSection({ settings }: { settings: SettingsRecord }) {
-  const [lat, setLat] = useState('')
-  const [lon, setLon] = useState('')
-  const [error, setError] = useState('')
-  const loc = settings.location
-
-  const saveLocation = (la: number, lo: number) => {
-    if (!(la >= -90 && la <= 90 && lo >= -180 && lo <= 180)) {
-      setError('Latitude runs from −90 to 90, longitude from −180 to 180.')
-      return
-    }
-    setError('')
-    void saveSettings({ location: { lat: Math.round(la * 1e4) / 1e4, lon: Math.round(lo * 1e4) / 1e4 } })
-  }
-
-  return (
-    <Card>
-      <SectionTitle>Daylight</SectionTitle>
-      <p className="mt-1 text-sm">
-        {loc
-          ? `Location ${loc.lat}, ${loc.lon}. It stays on this phone.`
-          : 'Off. Set a location to see sunrise, sunset and the length of the day. It stays on this phone.'}
-      </p>
-      <div className="mt-2 grid grid-cols-2 gap-3">
-        <label className="text-sm">
-          Latitude
-          <input
-            inputMode="decimal"
-            value={lat}
-            onChange={(e) => setLat(e.target.value)}
-            className={inputClass}
-          />
-        </label>
-        <label className="text-sm">
-          Longitude
-          <input
-            inputMode="decimal"
-            value={lon}
-            onChange={(e) => setLon(e.target.value)}
-            className={inputClass}
-          />
-        </label>
-      </div>
-      {error && <p className="mt-2 text-sm text-brick">{error}</p>}
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Button disabled={!lat || !lon} onClick={() => saveLocation(Number(lat), Number(lon))}>
-          Save location
-        </Button>
-        <Button
-          variant="quiet"
-          onClick={() =>
-            navigator.geolocation?.getCurrentPosition(
-              (p) => saveLocation(p.coords.latitude, p.coords.longitude),
-              () => setError('The location was not shared.'),
-              { maximumAge: 0, timeout: 20_000 },
-            )
-          }
-        >
-          Use my location once
-        </Button>
-        {loc && (
-          <Button variant="danger" onClick={() => void saveSettings({ location: undefined })}>
-            Clear
-          </Button>
-        )}
-      </div>
-    </Card>
-  )
-}
-
-function RunsSection({ settings }: { settings: SettingsRecord }) {
-  return (
-    <Card>
-      <SectionTitle>Runs</SectionTitle>
-      <Choice
-        legend="The variant run days start with"
-        options={[
-          { value: 'outdoor', label: 'Outdoor' },
-          { value: 'indoor', label: 'Indoor' },
-          { value: 'ask', label: 'Ask' },
-        ]}
-        value={settings.runDefault}
-        onChange={(v) => void saveSettings({ runDefault: v })}
-      />
-    </Card>
-  )
-}
-
-/** The look (D-048): the moving backdrop is a per-phone switch, kept off by the system's reduced motion. */
-function DisplaySection() {
-  const { on, reduced } = useMovingBackdropSwitch()
-  return (
-    <Card>
-      <SectionTitle>Display</SectionTitle>
-      <Switch label="Moving background" checked={on} onChange={setMovingBackdrop} />
-      <p className="text-sm">
-        Slow drifting light behind every screen, and raindrops on Today, Week and Progress.
-        {reduced && ' Still while the phone asks for reduced motion.'}
-      </p>
-    </Card>
-  )
-}
-
-function StorageSection() {
-  const [persistent, setPersistent] = useState<boolean | null | undefined>(undefined)
-  const [used, setUsed] = useState<number | null>(null)
-  useEffect(() => {
-    let alive = true
-    void isStoragePersistent().then((p) => alive && setPersistent(p))
-    void navigator.storage
-      ?.estimate?.()
-      .then((e) => alive && setUsed(e.usage ?? null))
-      .catch(() => undefined)
-    return () => {
-      alive = false
-    }
-  }, [])
-  return (
-    <Card>
-      <SectionTitle>Storage</SectionTitle>
-      <p className="mt-1 text-sm" data-testid="storage-persistent">
-        {persistent === undefined
-          ? 'Checking…'
-          : persistent === null
-            ? 'This browser cannot say whether it keeps the data under storage pressure.'
-            : persistent
-              ? 'Persistent: the browser keeps the data even when space runs low.'
-              : 'Not persistent yet: the browser may clear the data when space runs low. Back up often.'}
-      </p>
-      {used !== null && <p className="mt-1 text-sm">About {formatBytes(used)} used.</p>}
-      {persistent === false && (
-        <Button
-          variant="quiet"
-          className="mt-3"
-          onClick={() => void requestPersistentStorage().then((p) => setPersistent(p))}
-        >
-          Ask to keep the data
-        </Button>
-      )}
     </Card>
   )
 }

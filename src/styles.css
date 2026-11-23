@@ -35,8 +35,6 @@
   --glow-sky: rgb(234 244 252 / 1);
   --glow-amber: rgb(253 240 220 / 1);
   --glow-light: rgb(255 255 255 / 0.8);
-  --drop-rim: rgb(30 43 30 / 0.22);
-  --drop-shine: rgb(255 255 255 / 0.95);
   color-scheme: light;
 }
 
@@ -64,8 +62,6 @@
     --glow-sky: rgb(23 61 92 / 0.34);
     --glow-amber: rgb(74 53 18 / 0.34);
     --glow-light: rgb(28 74 50 / 0);
-    --drop-rim: rgb(243 236 218 / 0.16);
-    --drop-shine: rgb(243 236 218 / 0.62);
     color-scheme: dark;
   }
 }

@@ -263,6 +263,9 @@ At-99 board, the test trends with aim lines and the level steps. Construction ch
 
 ### Phase 7 — Settings, backup and reminders (M)
 
+*Since D-053 the reminders, the daylight location and the habits are gone from the app; this phase's record below
+is kept as it was built.*
+
 **Goal:** the app can be trusted with decades of data.
 
 - Settings, every section ([design §3.7](1-app-design.md#37-settings)).
@@ -332,11 +335,8 @@ a picker.
 | Screen | Wake lock in the installed app, held whenever the app is open |
 | Background | Timers catch up after locking the phone mid-interval |
 | Backup | Export through the share sheet to Files; import back |
-| Reminders | The calendar file imports and rings, through "Add to Calendar" (the share sheet) or "Open the calendar file"; note which works from the home-screen app |
-| Daylight | "Use my location once" asks for permission and fills the coordinates |
-| Storage | Persistent storage reported |
 | Layout | Safe areas, dark mode, larger text |
-| Glass | With the moving backdrop on (D-048): scrolling and the player stay smooth, the raindrops show on Today, Week and Progress, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
+| Glass | With the moving backdrop (D-048): scrolling and the player stay smooth, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 
 **Other platforms** (D-047), on whatever devices are at hand:
 
@@ -378,9 +378,8 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 
 | Risk | Mitigation |
 |---|---|
-| Losing the data on the phone (app deleted, storage cleared) | Persistent storage; the 30-day backup reminder; one-tap export |
+| Losing the data on the phone (app deleted, storage cleared) | Persistent storage, asked for when the plan starts; the 30-day backup reminder; one-tap export |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
-| The calendar file does not import from a home-screen app | Phase 7 tries the share sheet and opening the file on the phone; the reminder times are also shown as text |
 | Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0: WebKit does serve it, so the offline test runs on WebKit (D-036). The phone check of Phase 8 still covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |
 | The data drifting from the plan | Phase 1 content tests; the rule that docs and data change in one commit |

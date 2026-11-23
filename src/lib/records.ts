@@ -5,7 +5,6 @@ import { Weekday } from '@/data/schema'
 
 const LocalDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 const Instant = z.string().min(10)
-const Clock = z.string().regex(/^\d{2}:\d{2}$/)
 
 export const SettingsRecord = z.object({
   key: z.literal('settings'),
@@ -22,12 +21,6 @@ export const SettingsRecord = z.object({
   units: z
     .object({ mass: z.enum(['kg', 'lb']), distance: z.enum(['km', 'mi']) })
     .default({ mass: 'kg', distance: 'km' }),
-  dumbbellKg: z.number().positive().optional(),
-  location: z.object({ lat: z.number(), lon: z.number(), label: z.string().optional() }).optional(),
-  runDefault: z.enum(['outdoor', 'indoor', 'ask']).default('outdoor'),
-  reminders: z
-    .object({ morning: Clock.optional(), main: z.partialRecord(Weekday, Clock).default({}) })
-    .default({ main: {} }),
   backup: z
     .object({ lastAt: Instant.optional(), everyDays: z.number().int().positive() })
     .default({ everyDays: 30 }),
@@ -62,13 +55,6 @@ export const DayRecord = z.object({
   split: z
     .object({ doneAt: Instant, kind: z.enum(['front', 'side', 'both', 'long']) })
     .nullable()
-    .optional(),
-  habits: z
-    .object({
-      steps: z.number().int().nonnegative().optional(),
-      snacks: z.number().int().min(0).max(3).optional(),
-      outdoorMin: z.number().int().nonnegative().optional(),
-    })
     .optional(),
   /** The "Make it a Shell day" tap: it only folds the open cards. */
   folded: z.boolean().optional(),

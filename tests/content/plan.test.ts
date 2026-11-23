@@ -61,7 +61,6 @@ describe('the plan', () => {
     expect(duplicates(plan.sessions.map((s) => s.id))).toEqual([])
     expect(duplicates(plan.tests.map((t) => t.id))).toEqual([])
     expect(duplicates(plan.milestones.map((m) => m.id))).toEqual([])
-    expect(duplicates(plan.habits.map((h) => h.id))).toEqual([])
     expect(duplicates(plan.rationale.map((r) => r.id))).toEqual([])
   })
 
@@ -217,8 +216,6 @@ describe('the evidence rule (D-018)', () => {
   })
 
   it('catches a digit without a source (the rule itself)', () => {
-    const before = plan.habits[0]
-    expect(before?.sources).toEqual(['paluch2022'])
     expect(covered({ target: '8,000', sources: [] })).toBe(false)
     expect(covered({ target: '8,000', ourRule: true })).toBe(true)
   })

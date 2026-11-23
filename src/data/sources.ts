@@ -166,22 +166,6 @@ export const sources: SourceInput[] = [
       '108 trials, 23,407 people aged 60+. Exercise cut the rate of falls by 23% overall: balance and functional exercise by 24%, several types combined by 34%, tai chi by 19%. The effect of resistance training alone, dance or walking on falls was uncertain.',
   },
   {
-    id: 'paluch2022',
-    citation:
-      'Paluch et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. Lancet Public Health 2022.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/35247352/',
-    finding:
-      '47,471 adults, median 7.1 years. Risk of death kept falling with more steps up to about 6,000–8,000 a day at 60 or older, and up to about 8,000–10,000 a day under 60.',
-  },
-  {
-    id: 'stamatakis2022',
-    citation:
-      'Stamatakis et al. Association of wearable device-measured vigorous intermittent lifestyle physical activity with mortality. Nat Med 2022.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/36482104/',
-    finding:
-      '25,241 non-exercisers in the UK Biobank (mean age 61.8), 6.9 years. Three short bursts of vigorous everyday activity a day (1–2 min each) went with a 38–40% lower risk of death from any cause and from cancer, and 48–49% lower from heart and vascular disease.',
-  },
-  {
     id: 'webb1988',
     citation:
       'Webb, Kline, Holick. Influence of season and latitude on the cutaneous synthesis of vitamin D3. J Clin Endocrinol Metab 1988.',

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Check, Clock, Play, Sun, Undo2 } from 'lucide-react'
+import { Check, Clock, Play, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { BackupReminder } from '@/components/BackupReminder'
 import { DayRing } from '@/components/DayRing'
@@ -11,7 +11,6 @@ import { dayTimes } from '@/data/week'
 import { adjustDose, dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { addDays, compareDates, daysBetween, formatShort, type LocalDate } from '@/lib/dates'
-import { daylight, deviceUtcOffset, formatClock, formatDuration } from '@/lib/daylight'
 import { useLive } from '@/lib/live'
 import {
   currentLevel,
@@ -98,8 +97,7 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
   const splitDone = !!day?.split?.doneAt
   const done = (morningDone ? 1 : 0) + (mainDone ? 1 : 0)
   const folded = !!day?.folded
-  const variant: Variant =
-    day?.main?.variant ?? variantChoice ?? (settings.runDefault === 'indoor' ? 'indoor' : 'outdoor')
+  const variant: Variant = day?.main?.variant ?? variantChoice ?? 'outdoor'
 
   const yesterday = addDays(t, -1)
   const yesterdayMissed =
@@ -129,7 +127,6 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
             <span aria-hidden>🐢 </span>Tortoise streak <span data-testid="streak">{history.streak}</span>{' '}
             {history.streak === 1 ? 'day' : 'days'}
           </p>
-          <DaylightStrip settings={settings} t={t} />
         </div>
         <DayRing done={done} />
       </header>
@@ -253,8 +250,6 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
         />
       )}
 
-      <HabitsCard day={day} t={t} />
-
       {folded && (!mainDone || (split && !splitDone)) ? (
         <Card>
           <p>Shell day: the open cards are folded.</p>
@@ -299,24 +294,6 @@ function sessionMinutes(session: Session, pd: PlanDay, variant: Variant): { min:
     min: Math.round(session.minutes.min + delta.min),
     max: Math.round(session.minutes.max + delta.max),
   }
-}
-
-function DaylightStrip({ settings, t }: { settings: SettingsRecord; t: LocalDate }) {
-  const loc = settings.location
-  if (!loc) return null
-  const d = daylight(t, loc.lat, loc.lon, deviceUtcOffset(t))
-  const text =
-    d.sunrise === null || d.sunset === null
-      ? d.dayMinutes > 0
-        ? 'The sun does not set today'
-        : 'The sun does not rise today'
-      : `${formatClock(d.sunrise)} – ${formatClock(d.sunset)} · ${formatDuration(d.dayMinutes)} of day`
-  return (
-    <p className="mt-1 flex items-center gap-1.5 text-sm text-sky" data-testid="daylight">
-      <Sun aria-hidden className="size-4" />
-      {text}
-    </p>
-  )
 }
 
 interface PlanCardProps {
@@ -428,58 +405,6 @@ function VariantSwitch({ value, onChange }: { value: Variant; onChange: (v: Vari
         </button>
       ))}
     </fieldset>
-  )
-}
-
-function HabitsCard({ day, t }: { day: DayRecord | undefined; t: LocalDate }) {
-  const habits = day?.habits ?? {}
-  const save = (patch: NonNullable<DayRecord['habits']>) =>
-    void updateDay(t, (d) => ({ ...d, habits: { ...d.habits, ...patch } }))
-  const num = (s: string) => (s.trim() === '' ? undefined : Math.max(0, Math.round(Number(s))))
-  return (
-    <Card data-testid="card-habits">
-      <h2 className="font-semibold tracking-wide text-primary uppercase">Habits</h2>
-      <div className="mt-2 grid grid-cols-2 gap-3">
-        <label className="text-sm">
-          Steps
-          <input
-            inputMode="numeric"
-            defaultValue={habits.steps ?? ''}
-            key={`steps-${t}-${habits.steps ?? ''}`}
-            onBlur={(e) => save({ steps: num(e.target.value) })}
-            className="mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
-          />
-        </label>
-        <label className="text-sm">
-          Outdoors (min)
-          <input
-            inputMode="numeric"
-            defaultValue={habits.outdoorMin ?? ''}
-            key={`out-${t}-${habits.outdoorMin ?? ''}`}
-            onBlur={(e) => save({ outdoorMin: num(e.target.value) })}
-            className="mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text"
-          />
-        </label>
-      </div>
-      <div className="mt-3 flex items-center gap-2 text-sm">
-        <span>Snacks</span>
-        {[1, 2, 3].map((n) => {
-          const on = (habits.snacks ?? 0) >= n
-          return (
-            <button
-              key={n}
-              type="button"
-              aria-label={`${n} exercise ${n === 1 ? 'snack' : 'snacks'}`}
-              aria-pressed={on}
-              onClick={() => save({ snacks: habits.snacks === n ? n - 1 : n })}
-              className="flex size-11 items-center justify-center"
-            >
-              <span className={cn('size-5 rounded-full border-2 border-shell', on && 'bg-shell')} />
-            </button>
-          )
-        })}
-      </div>
-    </Card>
   )
 }
 

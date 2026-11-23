@@ -87,7 +87,6 @@ describe('texts copied from the plan', () => {
       for (const lv of l.levels) texts.push(lv.name, lv.pass.text)
     }
     for (const e of plan.exercises) if (e.why) texts.push(e.why)
-    for (const h of plan.habits) texts.push(h.target, ...(h.why ? [h.why] : []))
     for (const a of plan.at99) texts.push(a.line)
     for (const st of plan.blockRules.intervalStages) texts.push(st.text)
     for (const r of plan.rationale) texts.push(...parts(r.text))

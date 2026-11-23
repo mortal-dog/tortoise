@@ -21,7 +21,7 @@ only.
   stays on the device; there is no account and no server.
 - Five tabs: **Today** (the day's cards and one-tap logging), **Week**, **Progress** (the Shell honeycomb calendar,
   test trends, milestones, the At-99 board), **Library** (every exercise with its why and sources) and **Settings**
-  (backup, reminders, profile).
+  (backup, profile, units).
 - A full-screen **session player** with timers and sound cues, and a **test wizard** for the Tortoise Test.
 - A forgiving streak: a 15-minute **Shell day** counts, and only two missed days in a row break it.
 

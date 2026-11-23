@@ -14,15 +14,12 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByRole('button', { name: 'Start the plan' }).click()
 
     await page.getByRole('link', { name: 'Settings', exact: true }).click()
-    await page.getByLabel('Latitude').fill('51.4769')
-    await page.getByLabel('Longitude').fill('-0.0005')
-    await page.getByRole('button', { name: 'Save location' }).click()
     await page.screenshot({ path: info.outputPath(`${scheme}-6-settings.png`), fullPage: true })
 
     // Week 1, Thursday: a run-type day with a done morning block.
     await page.clock.setFixedTime(new Date('2026-12-03T09:00:00Z'))
     await page.goto('/')
-    await expect(page.getByTestId('daylight')).toBeVisible()
+    await expect(page.getByTestId('card-morning-when')).toHaveText('After waking')
     await page
       .getByTestId('card-morning')
       .getByRole('button', { name: /Done as planned/ })

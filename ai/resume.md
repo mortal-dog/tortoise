@@ -26,11 +26,17 @@ the plan's advice too (steps, snacks, outdoors, and their now unused sources); t
 fallback under the Drive backup; the Drive sync reuses the French app's Google client ID (the owner adds
 `https://tortoise.doctornova.net` as an authorised JavaScript origin; the Settings screen must say when that is missing).
 
-**Next:** (4a) the deletions, one commit: Habits (Today card, `src/data/habits.ts`, day records' `habits`, milestones and
-counts built on them, plan §4 row and the habits section, unused sources), Settings' dumbbell weight, Daylight (+
-`src/lib/daylight.ts`, Today's strip, location), Runs (`runDefault`), Display (moving-background switch; the motion
-stays), Reminders (+ `src/lib/ics.ts`, `RemindersCard`), Storage card, raindrops (`src/lib/rain.ts`). Old records and
-backups with the removed fields must still import. (4b) the Drive backup, its own commit. Gates before each commit;
-NO push without a picker (CLAUDE.md rule 8).
+(4a) DONE in the commit "feat: a smaller app: no habits, daylight, reminders or raindrops (D-053)" (gates green: 281
+Vitest, 21 e2e).
+
+**Next:** (4b) the Google Drive backup, its own commit and D-054: port the French repo's `src/features/sync/google.ts`
+(GIS token model, scope `drive.appdata` + email, session in localStorage), `drive.ts` (list/read/create/update in
+`appDataFolder`) and `sync.ts` (one file per device, merge by `updatedAt` as the backup import does, D-032) into
+`src/lib/sync/`; reuse the French app's `GOOGLE_CLIENT_ID` (its `src/lib/constants.ts`); CSP: allow
+`https://accounts.google.com` (script, frame, connect) and `https://www.googleapis.com` (connect); auto-sync on open,
+on return after a few minutes, when hidden, and after a session is saved, only with a live token; an expired token
+waits for a tap ("Sync now"). Settings: a Google card above the file fallback (kept by the owner's picker); the Today
+backup reminder only when Drive is not signed in. Owner step: add `https://tortoise.doctornova.net` as an authorised
+JavaScript origin on that client; Settings says so when Google refuses the origin. Then NO push without a picker.
 
 ---

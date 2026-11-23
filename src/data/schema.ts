@@ -287,15 +287,6 @@ export const Milestone = z.object({
 })
 export type Milestone = z.infer<typeof Milestone>
 
-export const Habit = z.object({
-  id: z.string().regex(/^[a-z0-9-]+$/),
-  name: z.string(),
-  target: z.string(),
-  why: z.string().optional(),
-  ...evidence,
-})
-export type Habit = z.infer<typeof Habit>
-
 export const At99Line = z.object({
   ability: z.string(),
   /** The metric shown, or "trend" lines that have no fixed value. */
@@ -352,7 +343,6 @@ export const Plan = z.object({
   blockRules: BlockRules,
   tests: z.array(TestDef),
   milestones: z.array(Milestone),
-  habits: z.array(Habit),
   at99: z.array(At99Line),
   startRules: z.array(StartRule),
   rationale: z.array(Rationale).default([]),

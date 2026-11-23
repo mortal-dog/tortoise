@@ -131,7 +131,6 @@ A heart-rate monitor is optional; the talk test works everywhere.
 | **Morning block** | After waking | 15 min | Straight-back routine, wrist prep, handstand practice, balance |
 | **Main session** | Lunch to mid-afternoon, 3–4 h after the morning block | About 45 min (50–55 on run and interval days, longer on Saturday) | Warm-up, then the day's main work |
 | **Split block** | Right after the main session, in the same sitting | 10 min | Front split, side split, or both in the short form (§6.9) |
-| **Daily habits** | All day | — | Steps, three short vigorous bursts, time outdoors, breaks from sitting |
 
 - **Shell day:** the morning block alone (15 min). It counts toward the streak. The app colours it amber and a full day
   green.
@@ -170,7 +169,6 @@ hours and the ramp-up weeks about 6½.
 | Back extension | Light every morning, loaded on Monday | 3–5 reps held 3–5 s, at least twice a week [ros2022] |
 | Balance | Every day | Balance and functional exercise cut the rate of falls by 24% [sherrington2019] |
 | Stretching | Each split 5 days a week | Static stretching at least 5 days a week [thomas2018] |
-| Steps | 8,000–10,000 a day | Under 60, risk kept falling up to about 8,000–10,000 steps a day [paluch2022] |
 
 ---
 
@@ -332,15 +330,6 @@ measured in centimetres from the floor, and any steady gain counts.
 **Sunday flexibility session (30 min), after the easy walk:** both split blocks in their long form (the seated
 straddle is the pancake); 90/90 hip switches × 10; a deep squat hold 2 × 60 s; and for the handstand, a shoulder
 stretch (puppy pose, hands on a chair) 2 × 45 s.
-
-### 6.10 Daily habits
-
-| Habit | Target | Why |
-|---|---|---|
-| Steps | 8,000–10,000 a day | [paluch2022] |
-| Exercise snacks | 3 bursts a day of 1–2 min vigorous effort: stairs two at a time, a fast uphill walk, a minute of fast rope | Three such bursts a day went with 38–40% lower mortality in non-exercisers [stamatakis2022] |
-| Sitting breaks | Stand and move every 30–60 min at a desk (*our rule*) | The WHO advises less sitting, though no threshold was proven [bull2020] |
-| Daylight | Some time outside every day, at midday when possible (*our rule*) | §12 |
 
 ---
 
@@ -600,7 +589,7 @@ in every third light week. Once a year, the plan itself gets a review: new evide
 
 | Ages | Focus | What changes |
 |---|---|---|
-| **Late 30s to 40** (year 1) | The habit, a safe ramp, learning the skills | Week 0 to the full plan; handstand H1–H4; the long run up to 60–75 min |
+| **Late 30s to 40** (year 1) | The habit, a safe ramp, learning the skills | Week 0 to the full plan; handstand H1–H10; the long run up to 60–75 min |
 | **40–49** | Build the reserve: peak aerobic power, strength, skills | Weekly 4 × 4; pistols and pull-ups; a freestanding handstand; splits progress; add backpack load when the dumbbells get light. Keep measuring height once a year: more than 2 cm below an earlier measurement is a reason for a spine X-ray [oc2023] |
 | **50–59** | Keep the intensity, protect the joints | The same structure, with more recovery if needed. A bone-density check after a fracture or with two risk factors [oc2023] |
 | **60–69** | Protect bone and power | Keep jumps and intervals while the bones allow. Bone density at 65 with one risk factor [oc2023]. After a spine fracture, impact only up to brisk walking [ros2022] |
@@ -702,8 +691,7 @@ The app's long view. Each ability shows its latest result next to its line:
 - **Vitamin D:** winter sun at southern Canadian latitudes makes none. On cloudless days, skin made no previtamin D3 from
   November through February at 42° N, and from October through March at 52° N [webb1988]. In the rest of the year the
   sun does make it. Vitamin D intake is nutrition, which is outside this app; that is a question for a doctor.
-- **Daylight still matters in winter:** running outside, fresh air, real ground. The app records outdoor minutes and shows
-  sunrise, sunset and the length of the day.
+- **Daylight still matters in winter:** running outside, fresh air, real ground.
 - **Summer** (*our rule*): avoid sunburn, and run early or late in the heat.
 
 ---

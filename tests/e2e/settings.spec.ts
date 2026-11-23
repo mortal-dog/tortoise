@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { expect, type Page, test } from '@playwright/test'
 
-// Phase 7: settings, backup and reminders. Greenwich's zone and invented values: neutral example data.
+// Phase 7: settings and backup. Greenwich's zone and invented values: neutral example data.
 test.use({ timezoneId: 'Europe/London', locale: 'en-GB' })
 
 /** Every store of the app's database, read straight from IndexedDB. */
@@ -97,16 +97,11 @@ test('export → wipe → import gives identical data', async ({ page }) => {
     .getByTestId('card-morning')
     .getByRole('button', { name: /Done as planned/ })
     .click()
-  await page.getByLabel('Steps').fill('8000')
-  await page.getByLabel('Steps').blur()
   await seedRecords(page)
 
   await openSettings(page)
-  await page.getByLabel('Dumbbell weight, each (kg)').fill('12')
   await page.getByLabel('Birth year').fill('1970')
   await page.getByLabel('Birth year').blur()
-  await page.getByLabel('Morning block, every day').fill('06:45')
-  await expect(page.getByTestId('reminder-lines')).toContainText('Every day at 06:45: Morning block')
 
   const [download] = await Promise.all([
     page.waitForEvent('download'),
@@ -248,29 +243,9 @@ test('the backup goes through the share sheet when it takes files', async ({ pag
   await expect(page.getByTestId('last-backup')).toContainText('Last backup: Mon 23 Nov 2026.')
 })
 
-test('the reminders become a calendar file, and the backup reminder shows on Today', async ({ page }) => {
+test('the backup reminder shows on Today until a backup is made', async ({ page }) => {
   await noShareSheet(page)
   await startPlan(page)
-  await openSettings(page)
-  await page.getByLabel('Morning block, every day').fill('06:45')
-  await page.getByLabel('Mon: Strength A').fill('12:15')
-  await expect(page.getByTestId('reminder-lines')).toHaveText(
-    /Every day at 06:45: Morning block\s*Mon at 12:15: Strength A/,
-  )
-
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Add to Calendar' }).click(),
-  ])
-  expect(download.suggestedFilename()).toBe('tortoise-reminders.ics')
-  const ics = await readFile(await download.path(), 'utf8')
-  expect(ics.startsWith('BEGIN:VCALENDAR\r\nVERSION:2.0\r\n')).toBe(true)
-  expect(ics.endsWith('END:VCALENDAR\r\n')).toBe(true)
-  expect(ics.replace(/\r\n/g, '')).not.toMatch(/[\r\n]/)
-  expect(ics).toContain('DTSTART:20261123T064500\r\n')
-  expect(ics).toContain('DTSTART:20261123T121500\r\n')
-  expect(ics).toContain('RRULE:FREQ=WEEKLY;BYDAY=MO\r\n')
-  expect(ics.match(/BEGIN:VALARM/g)).toHaveLength(2)
 
   // No backup by Week 0's thirtieth day: the reminder shows on Today, and a backup clears it.
   await page.clock.setFixedTime(new Date('2026-12-23T09:00:00Z'))
@@ -299,12 +274,9 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.screenshot({ path: info.outputPath(`${scheme}-1-today-backup-reminder.png`) })
 
     await openSettings(page)
-    await page.getByLabel('Morning block, every day').fill('06:45')
-    await page.getByLabel('Tue: Easy run').fill('12:15')
     await page.getByLabel('Birth year').fill('20')
     await page.getByLabel('Birth year').blur()
     await page.screenshot({ path: info.outputPath(`${scheme}-2-settings.png`), fullPage: true })
-    await page.locator('#reminders').screenshot({ path: info.outputPath(`${scheme}-2b-reminders.png`) })
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),

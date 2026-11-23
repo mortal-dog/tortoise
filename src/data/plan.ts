@@ -5,7 +5,6 @@
 // markdown emphasis is dropped ("*our rule*" reads "our rule").
 import { at99 } from './at99'
 import { exercises } from './exercises'
-import { habits } from './habits'
 import { ladders } from './ladders'
 import { milestones } from './milestones'
 import { rationale } from './rationale'
@@ -27,7 +26,6 @@ export const planInput: PlanInput = {
   blockRules,
   tests,
   milestones,
-  habits,
   at99,
   startRules,
   rationale,

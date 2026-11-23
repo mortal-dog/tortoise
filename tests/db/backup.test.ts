@@ -41,7 +41,6 @@ async function seed(db: Db): Promise<void> {
       effort: 4,
       note: 'Wet; windy',
     },
-    habits: { steps: 9000, snacks: 2 },
     updatedAt: T1,
   })
   await db.put('logs', {
@@ -146,7 +145,7 @@ describe('backup round trip on fake-indexeddb', () => {
     const result = await importBackup(db, file, 'merge', EXPORT, '0.1.0')
     const after = await readAllStores(db)
     expect(after.days.find((d) => d.date === '2026-11-23')?.split?.kind).toBe('front') // the phone's newer copy
-    expect(after.days.find((d) => d.date === '2026-11-24')?.habits?.steps).toBe(9000) // restored
+    expect(after.days.find((d) => d.date === '2026-11-24')?.main?.effort).toBe(4) // restored
     expect(after.logs.map((l) => l.id).sort()).toEqual(['log-aaaa-0001', 'log-bbbb-0002'])
     expect(after.levels[0]?.level).toBe(3)
     expect(result.written).toBeGreaterThanOrEqual(3) // the restored day, the level, the settings with its backup date

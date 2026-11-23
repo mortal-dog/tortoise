@@ -166,10 +166,5 @@ export async function requestPersistentStorage(): Promise<boolean | null> {
   return navigator.storage.persist()
 }
 
-export async function isStoragePersistent(): Promise<boolean | null> {
-  if (typeof navigator === 'undefined' || !navigator.storage?.persisted) return null
-  return navigator.storage.persisted()
-}
-
 /** A promise for one request inside a transaction passed to Db.transaction. */
 export const request = promised

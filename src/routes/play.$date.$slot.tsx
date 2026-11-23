@@ -44,9 +44,7 @@ function Play() {
           : tmpl.split
       : null
   const session = sessionId ? sessionOf(sessionId) : null
-  const variant: Variant | undefined = session?.hasVariants
-    ? (v ?? (settings?.runDefault === 'indoor' ? 'indoor' : 'outdoor'))
-    : undefined
+  const variant: Variant | undefined = session?.hasVariants ? (v ?? 'outdoor') : undefined
   const ready = !!(settings && levels && pd && overrideBox)
 
   // Built once the data is in, so a change elsewhere never reshuffles a session that is running.

@@ -165,13 +165,6 @@ export const rationale: RationaleInput[] = [
     sources: ['thomas2018'],
     ourRule: true,
   },
-  {
-    id: 'week-steps',
-    topic: 'Steps',
-    section: '5',
-    text: 'This plan: 8,000–10,000 a day. The benchmark: Under 60, risk kept falling up to about 8,000–10,000 steps a day [paluch2022]',
-    sources: ['paluch2022'],
-  },
   // §6.9 Split blocks
   {
     id: 'stretch-hold-still',

@@ -5,7 +5,7 @@ Every number the Tortoise plan takes from evidence names one of these sources by
 
 **How each source was checked.** Every source was read in its raw text, and each "Finding" restates only what that
 text says.
-- **Part A:** 26 PubMed abstracts, fetched through NCBI E-utilities (`efetch`) on 2026-11-21.
+- **Part A:** 24 PubMed abstracts, fetched through NCBI E-utilities (`efetch`) on 2026-11-21.
 - **Part B:** 19 sources from the Straight Back page (<https://money.doctornova.net/posture>), which read each one on
   2026-11-17. All 19 were read again on 2026-11-21:
   - the PubMed abstract for 14 of them;
@@ -63,8 +63,6 @@ text says.
 | Id | Source | Finding |
 |---|---|---|
 | sherrington2019 | Sherrington et al. Exercise for preventing falls in older people living in the community. Cochrane Database Syst Rev 2019. <https://pubmed.ncbi.nlm.nih.gov/30703272/> | 108 trials, 23,407 people aged 60+. Exercise cut the rate of falls by 23% overall: balance and functional exercise by 24%, several types combined by 34%, tai chi by 19%. The effect of resistance training alone, dance or walking on falls was uncertain. |
-| paluch2022 | Paluch et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. Lancet Public Health 2022. <https://pubmed.ncbi.nlm.nih.gov/35247352/> | 47,471 adults, median 7.1 years. Risk of death kept falling with more steps up to about 6,000–8,000 a day at 60 or older, and up to about 8,000–10,000 a day under 60. |
-| stamatakis2022 | Stamatakis et al. Association of wearable device-measured vigorous intermittent lifestyle physical activity with mortality. Nat Med 2022. <https://pubmed.ncbi.nlm.nih.gov/36482104/> | 25,241 non-exercisers in the UK Biobank (mean age 61.8), 6.9 years. Three short bursts of vigorous everyday activity a day (1–2 min each) went with a 38–40% lower risk of death from any cause and from cancer, and 48–49% lower from heart and vascular disease. |
 | webb1988 | Webb, Kline, Holick. Influence of season and latitude on the cutaneous synthesis of vitamin D3. J Clin Endocrinol Metab 1988. <https://pubmed.ncbi.nlm.nih.gov/2839537/> | On cloudless days, sunlight made no previtamin D3 in skin from November through February in Boston (42.2° N), and from October through March in Edmonton (52° N). Further south (34° N, 18° N) winter sun still made it. |
 
 ### Flexibility
