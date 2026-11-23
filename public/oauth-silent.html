@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'" />
+    <meta name="robots" content="noindex" />
+    <title>Tortoise sign-in</title>
+    <!--
+      Where Google lands after a silent token renew (src/lib/sync/google.ts, D-055). It runs inside a hidden frame of
+      the app, hands the answer Google put in its address to the app, and does nothing else: no app code, no styles,
+      no network. The service worker serves this file as it is, never the app in its place (src/sw/sw.ts).
+    -->
+    <script src="/oauth-silent.js"></script>
+  </head>
+  <body>
+    <p>You can close this page.</p>
+  </body>
+</html>

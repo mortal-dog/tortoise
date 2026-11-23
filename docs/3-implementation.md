@@ -21,7 +21,7 @@ TypeScript 7 were already out on that day) and writes the pinned versions into D
 | Build | Vite 8 | Fast; static output for GitHub Pages |
 | Styling | Tailwind CSS 4, theme tokens as CSS variables; a small first-party `cn()` to join class names | Tokens from the design ([§12](1-app-design.md#12-visual-design)); no grey |
 | Routing | TanStack Router, file-based and typed | The owner's existing stack; typed routes and search params |
-| Validation | zod 4 | Plan data at start-up and in tests; backup files on import |
+| Validation | zod 4 | Plan data at start-up and in tests; Google Drive copies on restore |
 | Storage | IndexedDB through a small first-party wrapper | Auditable, about 100 lines; no Dexie |
 | Offline | A first-party service worker; a small Vite plugin writes the precache list at build | Auditable; no Workbox (D-017) |
 | Charts | Hand-made SVG | A few small charts; no chart library (D-019) |
@@ -263,8 +263,9 @@ At-99 board, the test trends with aim lines and the level steps. Construction ch
 
 ### Phase 7 — Settings, backup and reminders (M)
 
-*Since D-053 the reminders, the daylight location and the habits are gone from the app; this phase's record below
-is kept as it was built.*
+*Since D-053 the reminders, the daylight location and the habits are gone from the app, and since D-055 the backup
+file, its import and the reminder: the Google Drive sync is the only backup. This phase's record below is kept as it
+was built.*
 
 **Goal:** the app can be trusted with decades of data.
 
@@ -334,8 +335,7 @@ a picker.
 | Sound | Cues with the ring/silent switch on and off; a spoken cue |
 | Screen | Wake lock in the installed app, held whenever the app is open |
 | Background | Timers catch up after locking the phone mid-interval |
-| Backup | Export through the share sheet to Files; import back |
-| Google Drive | Sign in from the installed app (Google's window opens and returns); a change backs up within a minute; after an hour Sync now renews the sign-in; on a second device or after Delete all data, signing in restores everything (D-054) |
+| Google Drive | Sign in from the installed app (Google's window opens and returns); a change syncs within a minute and the card's last sync time moves; after an hour, opening the app and tapping anything renews the sign-in with no other step (a window may flash and close by itself), and the next change syncs; on a second device or after Delete all data, signing in restores everything (D-054, D-055) |
 | Layout | Safe areas, dark mode, larger text |
 | Glass | With the moving backdrop (D-048): scrolling and the player stay smooth, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 
@@ -370,8 +370,8 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 | Content | Vitest + zod | The plan data's rules ([design §7](1-app-design.md#7-plan-content-model-static-shipped-with-the-app)) |
 | Database | Vitest + fake-indexeddb | Stores, transactions, migrations with fixtures |
 | Component | Vitest + Testing Library | Cards, player steps, wizard steps, settings forms |
-| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, test wizard, backup round trip, offline mode |
-| Real phone | Phase 8 checklist | What emulation cannot show: sound, wake lock, install, share sheet, Calendar |
+| End-to-end | Playwright, WebKit, iPhone profile | Daily loop, player with a fake clock, test wizard, reset, the silent sign-in page under the service worker, offline mode |
+| Real phone | Phase 8 checklist | What emulation cannot show: sound, wake lock, install, Google's sign-in |
 
 ---
 
@@ -379,7 +379,7 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 
 | Risk | Mitigation |
 |---|---|
-| Losing the data on the phone (app deleted, storage cleared) | The Google Drive backup, by itself after each change (D-054); persistent storage, asked for when the plan starts; the 30-day backup reminder; one-tap export |
+| Losing the data on the phone (app deleted, storage cleared) | The Google Drive sync, by itself after each change, its sign-in renewed without a tap or on the next tap (D-054, D-055); persistent storage, asked for when the plan starts |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
 | Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0: WebKit does serve it, so the offline test runs on WebKit (D-036). The phone check of Phase 8 still covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |

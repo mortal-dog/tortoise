@@ -1,5 +1,5 @@
 // Progress photos (implementation Phase 9): taken or picked on the phone, shrunk to a JPEG of at most 1280 px on the
-// long side, and kept only in this phone's database and its backups. Nothing leaves the phone.
+// long side, and kept only in this phone's database and its Google Drive copy.
 import type { LocalDate } from './dates'
 import { notifyChange } from './live'
 import { newId, nowIso, type PhotoRecord } from './records'

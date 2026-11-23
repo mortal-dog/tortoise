@@ -10,9 +10,11 @@ test('the app loads with its manifest, icons and security policy', async ({ page
   await expect(page.getByRole('heading', { name: 'Tortoise' })).toBeVisible()
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content')
   expect(csp).toContain("default-src 'self'")
-  // Google only for the Drive backup (D-054), and nothing else from outside.
+  // Google only for the Drive sync (D-054), and nothing else from outside; frames from Google and from the app's
+  // own silent sign-in page (D-055).
   expect(csp).toContain("connect-src 'self' https://www.googleapis.com https://accounts.google.com")
   expect(csp).toContain("script-src 'self' https://accounts.google.com")
+  expect(csp).toContain("frame-src 'self' https://accounts.google.com")
   const manifest = await (await page.request.get('/manifest.webmanifest')).json()
   expect(manifest.display).toBe('standalone')
   // The installed-app check (desktop Chrome needs the app's id) and a launch that focuses a running window (D-047).
@@ -53,4 +55,32 @@ test('the app works with the network off once the service worker is installed', 
   await page.goto('/week')
   await expect(page.locator('#root')).not.toBeEmpty()
   await context.setOffline(false)
+})
+
+test('the silent sign-in page is itself under the service worker, and answers the app that frames it', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(m.text())
+  })
+  await page.goto('/')
+  await page.evaluate(() => navigator.serviceWorker.ready)
+  await page.reload()
+  await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true)
+  // The worker answers every other page with the app; this one must reach the frame as it is (D-055).
+  const params = await page.evaluate(
+    () =>
+      new Promise<unknown>((resolve) => {
+        window.addEventListener('message', (e) => {
+          if (e.origin === location.origin && e.data?.source === 'tortoise/oauth-silent')
+            resolve(e.data.params)
+        })
+        const frame = document.createElement('iframe')
+        frame.src = '/oauth-silent.html#access_token=example-token&state=example-state'
+        document.body.append(frame)
+      }),
+  )
+  expect(params).toEqual({ access_token: 'example-token', state: 'example-state' })
+  expect(errors).toEqual([])
 })

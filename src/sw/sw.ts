@@ -37,7 +37,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE)
-      if (request.mode === 'navigate') {
+      // Google's silent sign-in lands on this page in a hidden frame (D-055): it must be itself, never the app.
+      if (request.mode === 'navigate' && url.pathname !== '/oauth-silent.html') {
         // Every route is the same single-page app.
         const shell = (await cache.match('/index.html')) ?? (await cache.match('/'))
         if (shell) return shell

@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { useState } from 'react'
-import { BackupCard } from '@/components/settings/BackupCard'
 import { DriveCard } from '@/components/settings/DriveCard'
 import { Choice, inputClass, numberIn, SavedField, SectionTitle } from '@/components/settings/fields'
 import { ResetCard } from '@/components/settings/ResetCard'
@@ -41,7 +40,6 @@ function Settings() {
         <ProfileSection settings={settings} />
         <UnitsSection settings={settings} />
         <DriveCard />
-        <BackupCard settings={settings} />
         <AboutSection />
         <ResetCard
           onReset={async () => {
@@ -220,8 +218,7 @@ function AboutSection() {
       <h3 className="mt-3 text-sm font-semibold">Privacy</h3>
       <p className="mt-1 text-sm">
         The data stays on this phone: no server and no tracking. Only after you sign in with Google does the
-        app talk to Google, to keep its backup in your own Drive (D-054). A backup file goes only where you
-        send it.
+        app talk to Google, to sync with a hidden folder of your own Drive (D-054).
       </p>
       <h3 className="mt-3 text-sm font-semibold">Sources</h3>
       <p className="mt-1 text-sm">

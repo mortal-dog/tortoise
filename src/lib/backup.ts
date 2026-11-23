@@ -1,7 +1,7 @@
-// Backup and restore (design §10): one versioned JSON file holding every store; import validates it with zod, shows
-// a preview, then merges (for each key the later updatedAt wins, D-032) or replaces, in one transaction.
+// The backup format (design §10): one versioned JSON document holding every store. It is what each device writes to
+// Google Drive (D-054); restoring validates it with zod, then merges it (for each key the later updatedAt wins, D-032)
+// in one transaction. The backup file, its import screen and the reminder went with D-055.
 import { z } from 'zod'
-import { addDays, compareDates, daysBetween, type LocalDate, localDateOf } from './dates'
 import { type Db, request, SCHEMA_VERSION } from './db'
 import {
   DayRecord,
@@ -79,7 +79,7 @@ export const BackupFile = z.object({
 })
 export type BackupFile = z.infer<typeof BackupFile>
 
-/** A file refused on import; the message is shown to the user as it is. */
+/** A backup refused on restore; the message says why. */
 export class BackupError extends Error {
   override name = 'BackupError'
 }
@@ -143,40 +143,6 @@ export function parseBackup(text: string): BackupFile {
   return { ...file, stores, schemaVersion: SCHEMA_VERSION }
 }
 
-export interface BackupPreview {
-  exportedAt: string
-  appVersion: string
-  counts: { [S in Exclude<StoreName, 'meta'>]: number }
-  /** The earliest and latest date among days, logs and tests; null when there are none. */
-  range: { from: LocalDate; to: LocalDate } | null
-}
-
-export function previewBackup(file: BackupFile): BackupPreview {
-  const s = file.stores
-  const dates = [
-    ...s.days.map((d) => d.date),
-    ...s.logs.map((l) => l.date),
-    ...s.tests.map((t) => t.date),
-  ].sort(compareDates)
-  const from = dates[0]
-  const to = dates.at(-1)
-  return {
-    exportedAt: file.exportedAt,
-    appVersion: file.appVersion,
-    counts: {
-      settings: s.settings.length,
-      days: s.days.length,
-      logs: s.logs.length,
-      levels: s.levels.length,
-      tests: s.tests.length,
-      overrides: s.overrides.length,
-      milestones: s.milestones.length,
-      photos: s.photos.length,
-    },
-    range: from && to ? { from, to } : null,
-  }
-}
-
 /** True when the incoming record is newer than the stored one (D-032); a tie keeps the stored record. */
 export function isNewer(incoming: { updatedAt: string }, stored: { updatedAt: string } | undefined): boolean {
   if (!stored) return true
@@ -194,46 +160,6 @@ export async function readAllStores(db: Db): Promise<BackupFile['stores']> {
   })
 }
 
-export function backupFileName(exportedAt: Date): string {
-  return `tortoise-backup-${localDateOf(exportedAt)}.json`
-}
-
-export interface PreparedBackup {
-  file: BackupFile
-  text: string
-  name: string
-  /** The settings record as it is in the file, with the backup date set; saved once the file has gone out. */
-  settings: SettingsRecord | undefined
-}
-
-/**
- * Builds the backup file. The settings record inside already carries this backup's date, so that once markBackedUp()
- * saves the same record, the phone and the file hold identical data.
- */
-export async function prepareBackup(db: Db, now: Date, appVersion: string): Promise<PreparedBackup> {
-  const stores = await readAllStores(db)
-  const at = now.toISOString()
-  const current = stores.settings[0]
-  const settings = current
-    ? { ...current, backup: { ...current.backup, lastAt: at }, updatedAt: at }
-    : undefined
-  const file: BackupFile = {
-    format: BACKUP_FORMAT,
-    version: BACKUP_VERSION,
-    exportedAt: at,
-    appVersion,
-    schemaVersion: SCHEMA_VERSION,
-    stores: { ...stores, settings: settings ? [settings] : [] },
-  }
-  return { file, text: JSON.stringify(file), name: backupFileName(now), settings }
-}
-
-export async function markBackedUp(db: Db, prepared: PreparedBackup): Promise<void> {
-  if (prepared.settings) await db.put('settings', prepared.settings)
-}
-
-export type ImportMode = 'merge' | 'replace'
-
 export interface ImportResult {
   written: number
   kept: number
@@ -242,17 +168,10 @@ export interface ImportResult {
 type AnyRecord = Stores[StoreName]
 
 /**
- * Writes a validated backup in one transaction: Replace clears every store first; Merge keeps, for each key, the
- * record with the later updatedAt. The meta record always describes this database and app: Replace takes the file's
- * creation date, Merge the earlier of the two.
+ * Merges a validated backup in one transaction: for each key the record with the later updatedAt is kept (D-032). The
+ * meta record keeps describing this database and app, with the earlier of the two creation dates.
  */
-export async function importBackup(
-  db: Db,
-  file: BackupFile,
-  mode: ImportMode,
-  now: Date,
-  appVersion: string,
-): Promise<ImportResult> {
+export async function importBackup(db: Db, file: BackupFile, now: Date): Promise<ImportResult> {
   const names = STORE_NAMES.filter((n) => n !== 'meta')
   return db.transaction([...STORE_NAMES], 'readwrite', async (tx) => {
     let written = 0
@@ -264,12 +183,6 @@ export async function importBackup(
     names.forEach((name) => {
       const store = tx.objectStore(name)
       const incoming = file.stores[name] as AnyRecord[]
-      if (mode === 'replace') {
-        store.clear()
-        for (const r of incoming) store.put(r)
-        written += incoming.length
-        return
-      }
       const keyOf = KEY_OF[name] as (r: AnyRecord) => string
       const stored = new Map((existing[STORE_NAMES.indexOf(name)] ?? []).map((r) => [keyOf(r), r]))
       for (const r of incoming) {
@@ -280,16 +193,12 @@ export async function importBackup(
       }
     })
     const fileMeta = file.stores.meta[0]
-    const meta = tx.objectStore('meta')
-    if (mode === 'replace' && fileMeta) {
-      meta.put({ ...fileMeta, schemaVersion: SCHEMA_VERSION, appVersion })
-    } else if (
-      mode === 'merge' &&
-      fileMeta &&
-      localMeta &&
-      Date.parse(fileMeta.createdAt) < Date.parse(localMeta.createdAt)
-    ) {
-      meta.put({ ...localMeta, createdAt: fileMeta.createdAt, updatedAt: now.toISOString() })
+    if (fileMeta && localMeta && Date.parse(fileMeta.createdAt) < Date.parse(localMeta.createdAt)) {
+      tx.objectStore('meta').put({
+        ...localMeta,
+        createdAt: fileMeta.createdAt,
+        updatedAt: now.toISOString(),
+      })
     }
     return { written, kept }
   })
@@ -308,22 +217,4 @@ export async function wipeAll(db: Db, now: Date, appVersion: string): Promise<vo
       updatedAt: at,
     })
   })
-}
-
-export interface BackupDue {
-  due: boolean
-  /** Days since the last backup; null when there has been none. */
-  daysSince: number | null
-}
-
-/**
- * The backup reminder (design §10): due when the last backup is `everyDays` or more days old; with no backup yet,
- * counted from the Monday Week 0 began. Never due before the plan has started.
- */
-export function backupDue(settings: SettingsRecord, todayDate: LocalDate): BackupDue {
-  const last = settings.backup.lastAt ? localDateOf(new Date(settings.backup.lastAt)) : null
-  const daysSince = last ? daysBetween(last, todayDate) : null
-  if (!settings.startDate) return { due: false, daysSince }
-  const from = last ?? addDays(settings.startDate, -7)
-  return { due: daysBetween(from, todayDate) >= settings.backup.everyDays, daysSince }
 }

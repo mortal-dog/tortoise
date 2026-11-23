@@ -1,12 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
-import { BackupCard } from '@/components/settings/BackupCard'
-import { formatBytes } from '@/components/settings/fields'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { DriveCard } from '@/components/settings/DriveCard'
 import { ResetCard } from '@/components/settings/ResetCard'
-import { SettingsRecord } from '@/lib/records'
+import { resetSyncForTests } from '@/lib/sync/sync'
 
-const settings = SettingsRecord.parse({ key: 'settings', updatedAt: '2026-12-01T12:00:00Z' })
+beforeEach(() => {
+  localStorage.clear()
+  resetSyncForTests()
+})
 
 describe('the reset confirmation', () => {
   it('deletes only after DELETE is typed exactly', async () => {
@@ -36,25 +38,24 @@ describe('the reset confirmation', () => {
   })
 })
 
-describe('the backup card', () => {
-  it('refuses a malformed file with a clear message', async () => {
-    const user = userEvent.setup()
-    render(<BackupCard settings={settings} />)
-    expect(screen.getByTestId('last-backup')).toHaveTextContent('No backup yet.')
-    const bad = new File(['{"format":"tortoise-backup","version":1,"stores":{}}'], 'bad.json', {
-      type: 'application/json',
-    })
-    await user.upload(screen.getByLabelText('Backup file to import'), bad)
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(/This backup is damaged/))
-    expect(screen.queryByTestId('import-preview')).not.toBeInTheDocument()
+describe('the Google Drive sync card', () => {
+  it('signed out, shows only the sign-in button', () => {
+    render(<DriveCard />)
+    expect(screen.getByRole('heading', { name: 'Google Drive sync' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign in with Google' })).toBeInTheDocument()
+    expect(screen.queryByTestId('last-sync')).not.toBeInTheDocument()
+    expect(screen.queryByText(/restore|backup file|merge|origin/i)).not.toBeInTheDocument()
   })
-})
 
-describe('sizes', () => {
-  it('never read 0 for a size above zero', () => {
-    expect(formatBytes(0)).toBe('0 KB')
-    expect(formatBytes(1)).toBe('1 KB')
-    expect(formatBytes(412 * 1024)).toBe('412 KB')
-    expect(formatBytes(3.5 * 1024 * 1024)).toBe('3.5 MB')
+  it('signed in, shows the last sync date and time and nothing else to read', () => {
+    // Invented values; the tests run in Greenwich's zone.
+    localStorage.setItem('tortoise.google', JSON.stringify({ email: 'someone@example.com' }))
+    localStorage.setItem('tortoise.drive', JSON.stringify({ lastSync: Date.parse('2026-12-01T09:05:00Z') }))
+    resetSyncForTests()
+    const { container } = render(<DriveCard />)
+    expect(screen.getByTestId('last-sync')).toHaveTextContent('Last sync: Tue 1 Dec 2026, 09:05')
+    expect(screen.getByRole('button', { name: 'Sync now' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
+    expect(container.querySelectorAll('p')).toHaveLength(1)
   })
 })

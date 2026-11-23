@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check, Clock, Play, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import { BackupReminder } from '@/components/BackupReminder'
 import { DayRing } from '@/components/DayRing'
 import { FirstRun } from '@/components/FirstRun'
 import { Banner, Button, Card } from '@/components/ui'
@@ -24,7 +23,7 @@ import {
   testsForDay,
 } from '@/lib/plan-view'
 import { type LadderLog, type Suggestion, suggest } from '@/lib/progression'
-import { type DayRecord, type LevelRecord, nowIso, type SettingsRecord, type Variant } from '@/lib/records'
+import { type DayRecord, type LevelRecord, nowIso, type Variant } from '@/lib/records'
 import { getAllLogs, getLevels, getOverride, type Slot, setLevel, updateDay } from '@/lib/repo'
 import { type History, planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
@@ -40,7 +39,7 @@ function Today() {
   if (!settings.startDate) return <FirstRun />
   if (!history) return <main className="p-4" aria-busy="true" />
   if (compareDates(t, history.week0) < 0) return <BeforeWeek0 week0={history.week0} t={t} />
-  return <TodayPlan settings={settings} startDate={settings.startDate} history={history} t={t} />
+  return <TodayPlan startDate={settings.startDate} history={history} t={t} />
 }
 
 function weekLabel(pd: PlanDay): string {
@@ -72,13 +71,12 @@ function BeforeWeek0({ week0, t }: { week0: LocalDate; t: LocalDate }) {
 }
 
 interface TodayProps {
-  settings: SettingsRecord
   startDate: LocalDate
   history: History
   t: LocalDate
 }
 
-function TodayPlan({ settings, startDate, history, t }: TodayProps) {
+function TodayPlan({ startDate, history, t }: TodayProps) {
   const pd = planDayOf(startDate, t)
   const override = useLive(() => getOverride(pd.monday), [pd.monday])
   const levels = useLive(getLevels, []) ?? new Map<string, LevelRecord>()
@@ -182,8 +180,6 @@ function TodayPlan({ settings, startDate, history, t }: TodayProps) {
           </div>
         </Banner>
       )}
-
-      <BackupReminder settings={settings} t={t} />
 
       <PlanCard
         testId="card-morning"

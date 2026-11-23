@@ -103,13 +103,6 @@ export function numberIn(min: number, max: number, what: string, integer = false
   }
 }
 
-/** A size in bytes for people: never "0" for a size above zero (KB below a MB). */
-export function formatBytes(bytes: number): string {
-  if (bytes <= 0) return '0 KB'
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 /** An on/off switch; the label names what it turns on. */
 export function Switch({
   label,

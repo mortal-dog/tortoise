@@ -10,7 +10,7 @@ export function notifyChange(): void {
   for (const l of listeners) l()
 }
 
-/** Calls `listener` after every write; returns the unsubscribe. The Drive backup uses it (D-054). */
+/** Calls `listener` after every write; returns the unsubscribe. The Drive sync uses it (D-054). */
 export function onChange(listener: () => void): () => void {
   listeners.add(listener)
   return () => {

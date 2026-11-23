@@ -6,14 +6,15 @@ import { join, relative, sep } from 'node:path'
 import type { Plugin } from 'vite'
 
 /**
- * The policy of design §11: the app's own origin, and Google's sign-in and Drive hosts for the backup (D-054). The app
- * loads Google's script only when the user taps to sign in, and calls Drive only while signed in.
+ * The policy of design §11: the app's own origin, and Google's sign-in and Drive hosts for the sync (D-054). The app
+ * loads Google's script only once the user has signed in, and calls Drive only while signed in. The silent renew's
+ * hidden frame starts at Google and lands on the app's own `oauth-silent.html` (D-055), hence `'self'` in frame-src.
  */
 export const CSP = [
   "default-src 'self'",
   "script-src 'self' https://accounts.google.com",
   "connect-src 'self' https://www.googleapis.com https://accounts.google.com",
-  'frame-src https://accounts.google.com',
+  "frame-src 'self' https://accounts.google.com",
   "img-src 'self' data: blob:",
   "object-src 'none'",
   "base-uri 'self'",

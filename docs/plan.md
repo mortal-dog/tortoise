@@ -18,10 +18,11 @@ only.
 ### 1. [App design](1-app-design.md)
 
 - A private, offline app at <https://tortoise.doctornova.net>, iPhone first, on every platform (D-047). The data
-  stays on the device, with a backup in the user's own Google Drive once they sign in (D-054); there is no server.
+  stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself (D-054, D-055); there is no
+  server.
 - Five tabs: **Today** (the day's cards and one-tap logging), **Week**, **Progress** (the Shell honeycomb calendar,
   test trends, milestones, the At-99 board), **Library** (every exercise with its why and sources) and **Settings**
-  (backup, profile, units).
+  (profile, units, the Google Drive sync).
 - A full-screen **session player** with timers and sound cues, and a **test wizard** for the Tortoise Test.
 - A forgiving streak: a 15-minute **Shell day** counts, and only two missed days in a row break it.
 

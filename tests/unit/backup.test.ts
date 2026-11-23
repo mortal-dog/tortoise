@@ -4,11 +4,8 @@ import {
   BACKUP_VERSION,
   BackupError,
   type BackupFile,
-  backupDue,
-  backupFileName,
   isNewer,
   parseBackup,
-  previewBackup,
 } from '@/lib/backup'
 import { SCHEMA_VERSION } from '@/lib/db'
 import { SettingsRecord } from '@/lib/records'
@@ -121,31 +118,6 @@ describe('reading a backup file', () => {
   })
 })
 
-describe('the import preview', () => {
-  it('counts the records and finds the date range over days, logs and tests', () => {
-    const p = previewBackup(sample())
-    expect(p.counts).toEqual({
-      settings: 1,
-      days: 2,
-      logs: 1,
-      levels: 1,
-      tests: 1,
-      overrides: 0,
-      milestones: 1,
-      photos: 1,
-    })
-    expect(p.range).toEqual({ from: '2026-11-23', to: '2026-12-02' })
-    expect(p.exportedAt).toBe(AT)
-  })
-  it('has no range for an empty backup', () => {
-    const file = sample()
-    file.stores.days = []
-    file.stores.logs = []
-    file.stores.tests = []
-    expect(previewBackup(file).range).toBeNull()
-  })
-})
-
 describe('the merge rule (D-032)', () => {
   it('takes the incoming record only when it is strictly newer', () => {
     expect(isNewer({ updatedAt: '2026-12-02T00:00:00Z' }, { updatedAt: '2026-12-01T23:59:59.999Z' })).toBe(
@@ -156,37 +128,6 @@ describe('the merge rule (D-032)', () => {
     )
     expect(isNewer({ updatedAt: '2026-11-30T00:00:00Z' }, { updatedAt: '2026-12-01T00:00:00Z' })).toBe(false)
     expect(isNewer({ updatedAt: '2026-11-30T00:00:00Z' }, undefined)).toBe(true)
-  })
-})
-
-describe('the backup file name and the reminder', () => {
-  it('names the file by the local date', () => {
-    expect(backupFileName(new Date('2026-12-01T23:30:00Z'))).toBe('tortoise-backup-2026-12-01.json')
-    // London is an hour ahead in summer.
-    expect(backupFileName(new Date('2026-07-01T23:30:00Z'))).toBe('tortoise-backup-2026-07-02.json')
-  })
-
-  const settings = (patch: Partial<SettingsRecord>) =>
-    SettingsRecord.parse({ key: 'settings', updatedAt: AT, ...patch })
-
-  it('is never due before the plan starts', () => {
-    expect(backupDue(settings({}), '2027-06-01').due).toBe(false)
-  })
-  it('counts from Week 0 when there is no backup yet', () => {
-    // Week 1 starts 30 November, so Week 0 began on 23 November.
-    const s = settings({ startDate: '2026-11-30' })
-    expect(backupDue(s, '2026-12-22')).toEqual({ due: false, daysSince: null })
-    expect(backupDue(s, '2026-12-23')).toEqual({ due: true, daysSince: null })
-  })
-  it('is due once the last backup is as old as the interval', () => {
-    const s = settings({ startDate: '2026-11-30', backup: { lastAt: '2026-12-01T10:00:00Z', everyDays: 30 } })
-    expect(backupDue(s, '2026-12-30')).toEqual({ due: false, daysSince: 29 })
-    expect(backupDue(s, '2026-12-31')).toEqual({ due: true, daysSince: 30 })
-    const weekly = settings({
-      startDate: '2026-11-30',
-      backup: { lastAt: '2026-12-01T10:00:00Z', everyDays: 7 },
-    })
-    expect(backupDue(weekly, '2026-12-08').due).toBe(true)
   })
 })
 

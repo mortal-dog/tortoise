@@ -7,7 +7,7 @@ import { useLive } from '@/lib/live'
 import { addPhoto, deletePhoto, getPhotos, shrinkPhoto } from '@/lib/photos'
 import type { PhotoRecord } from '@/lib/records'
 
-/** Progress photos (Phase 9): kept only on this phone and in its backups. */
+/** Progress photos (Phase 9): kept only on this phone and in its Google Drive copy. */
 export function Photos({ today }: { today: LocalDate }) {
   const photos = useLive(getPhotos, [])
   const [open, setOpen] = useState<PhotoRecord | null>(null)
@@ -18,7 +18,7 @@ export function Photos({ today }: { today: LocalDate }) {
     <Card>
       <p className="text-sm">
         A photo now and then shows the posture change that numbers miss. They stay on this phone and in its
-        backups.
+        Google Drive copy.
       </p>
       <label className="mt-3 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-primary px-4 text-sm font-semibold text-primary">
         <Camera aria-hidden className="size-4" />
@@ -101,7 +101,7 @@ export function Photos({ today }: { today: LocalDate }) {
               variant="danger"
               className="mt-3"
               onClick={async () => {
-                if (!window.confirm('Delete this photo? It cannot be undone, except from a backup.')) return
+                if (!window.confirm('Delete this photo? It cannot be undone.')) return
                 await deletePhoto(open.id)
                 setOpen(null)
               }}

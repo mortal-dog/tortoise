@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDriveSync } from '@/lib/sync/sync'
 import { Button, Card } from '../ui'
 import { inputClass, SectionTitle } from './fields'
 
@@ -9,6 +10,7 @@ export function ResetCard({ onReset }: { onReset: () => Promise<void> }) {
   const [open, setOpen] = useState(false)
   const [typed, setTyped] = useState('')
   const [busy, setBusy] = useState(false)
+  const signedIn = useDriveSync().status !== 'signed-out'
   return (
     <Card tone="brick">
       <SectionTitle>Reset</SectionTitle>
@@ -24,8 +26,10 @@ export function ResetCard({ onReset }: { onReset: () => Promise<void> }) {
       ) : (
         <>
           <p className="mt-1 text-sm font-semibold text-brick">
-            This deletes every day, log, level, test, milestone and setting on this phone. It cannot be
-            undone; only a backup file brings them back.
+            This deletes every day, log, level, test, milestone and setting on this phone.{' '}
+            {signedIn
+              ? 'It also signs out of Google here; the Google Drive copy stays, and signing in again brings it back.'
+              : 'It cannot be undone.'}
           </p>
           <label className="mt-2 block text-sm">
             Type {CONFIRM_WORD} to confirm

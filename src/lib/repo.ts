@@ -1,15 +1,6 @@
 // Reading and writing the app's records. Every write stamps updatedAt (D-032) and tells the UI to refresh.
 import type { Weekday } from '@/data/schema'
-import {
-  type BackupFile,
-  type ImportMode,
-  type ImportResult,
-  importBackup,
-  markBackedUp,
-  type PreparedBackup,
-  prepareBackup,
-  wipeAll,
-} from './backup'
+import { type BackupFile, type ImportResult, importBackup, wipeAll } from './backup'
 import type { Swap } from './calendar'
 import { addDays, type LocalDate } from './dates'
 import { type Db, openDb, request, requestPersistentStorage, SCHEMA_VERSION } from './db'
@@ -69,7 +60,7 @@ export type SettingsPatch = Partial<Omit<SettingsRecord, 'key' | 'updatedAt'>>
 
 /**
  * Saves a patch to the settings record. The read and the write share one transaction, so two saves started at once
- * cannot both begin from the same old record. A patch to a nested field (reminders, profile, units, backup) is given
+ * cannot both begin from the same old record. A patch to a nested field (profile, units) is given
  * as a function of the stored record: a screen that has not re-rendered since the last save would otherwise write its
  * old copy back and undo that save (two time fields typed in a row).
  */
@@ -209,18 +200,9 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
   notifyChange()
 }
 
-export async function prepareBackupFile(now: Date = new Date()): Promise<PreparedBackup> {
-  return prepareBackup(await getDb(), now, appVersion())
-}
-
-/** Records the backup date once the file has gone out (shared or downloaded). */
-export async function backupSaved(prepared: PreparedBackup): Promise<void> {
-  await markBackedUp(await getDb(), prepared)
-  notifyChange()
-}
-
-export async function importBackupFile(file: BackupFile, mode: ImportMode): Promise<ImportResult> {
-  const result = await importBackup(await getDb(), file, mode, new Date(), appVersion())
+/** Merges a Google Drive copy into this phone (D-032): for each record the newer one is kept. */
+export async function mergeBackup(file: BackupFile): Promise<ImportResult> {
+  const result = await importBackup(await getDb(), file, new Date())
   notifyChange()
   return result
 }

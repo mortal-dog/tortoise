@@ -1,4 +1,4 @@
-// The stored records (design §6). zod schemas, so backups can be validated on import (Phase 7) and the database
+// The stored records (design §6). zod schemas, so a Google Drive copy can be validated on restore and the database
 // layer stays typed. Every record carries updatedAt, which decides the newer record when a backup is merged (D-032).
 import { z } from 'zod'
 import { Weekday } from '@/data/schema'
@@ -21,9 +21,6 @@ export const SettingsRecord = z.object({
   units: z
     .object({ mass: z.enum(['kg', 'lb']), distance: z.enum(['km', 'mi']) })
     .default({ mass: 'kg', distance: 'km' }),
-  backup: z
-    .object({ lastAt: Instant.optional(), everyDays: z.number().int().positive() })
-    .default({ everyDays: 30 }),
   updatedAt: Instant,
 })
 export type SettingsRecord = z.infer<typeof SettingsRecord>
@@ -135,7 +132,7 @@ export type OverrideRecord = z.infer<typeof OverrideRecord>
 export const MilestoneRecord = z.object({ id: z.string(), earnedAt: LocalDate, updatedAt: Instant })
 export type MilestoneRecord = z.infer<typeof MilestoneRecord>
 
-/** A progress photo (Phase 9), kept only on this phone and in its backups: a JPEG as a data URL. */
+/** A progress photo (Phase 9), kept only on this phone and in its Google Drive copy: a JPEG as a data URL. */
 export const PhotoRecord = z.object({
   id: z.string().min(8),
   date: LocalDate,

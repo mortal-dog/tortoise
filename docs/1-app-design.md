@@ -8,18 +8,19 @@ only: nutrition, sleep and medicine are out of scope.
 
 | | |
 |---|---|
-| Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). A backup file moves the data between them |
+| Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). The Google Drive sync moves the data between them (D-055) |
 | Address | <https://tortoise.doctornova.net> |
-| Data | Only on the phone (IndexedDB), with export and import of a backup file |
-| Network | None needed after the first load; app updates use it, and the Google Drive backup once the user signs in (D-054). No server, no analytics, and no other third-party request |
+| Data | On the phone (IndexedDB), with a copy in the user's own Google Drive once they sign in (D-054, D-055) |
+| Network | None needed after the first load; app updates use it, and the Google Drive sync once the user signs in (D-054). No server, no analytics, and no other third-party request |
 | Language | English |
 
 ---
 
 ## 1. Principles
 
-1. **The phone keeps the data.** Every log stays on the device; nothing is sent anywhere. Backups go only where the user
-   saves them. (The owner prefers auditable first-party code for private data; this design needs no third party at all.)
+1. **The phone keeps the data.** Every log stays on the device; the only copy elsewhere is the one the user asks for by
+   signing in, in a hidden folder of their own Google Drive (D-054). (The owner prefers auditable first-party code for
+   private data; this design needs no third party besides that.)
 2. **Offline first.** After the first load the app works with no network: in the basement, in airplane mode, on a trail.
 3. **One tap per thing.** "Done as planned" is the default; editing reps or weights is optional. A normal day takes under
    ten taps to log.
@@ -46,7 +47,7 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 |---|---|---|
 | Install | Safari → Share → Add to Home Screen; it then opens full screen as its own app. Safari offers no install button and cannot tell a page that the app is installed | The first run's install card gives written directions in Safari ([§3.8](#38-first-run)); `display: standalone` |
 | Offline | A service worker caches the app | Precache everything at install; no runtime requests |
-| Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data. The home-screen app keeps its own data, apart from Safari's (verify) | Ask for persistent storage; a backup reminder every 30 days; export and import; the first run asks to install before starting ([§3.8](#38-first-run)) |
+| Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data. The home-screen app keeps its own data, apart from Safari's (verify) | Ask for persistent storage; the Google Drive sync ([§10](#10-backup-and-restore)); the first run asks to install before starting ([§3.8](#38-first-run)) |
 | The address is the data | Data belongs to the exact origin `https://tortoise.doctornova.net`; another address starts empty | The address was chosen once and never changes (decision D-010) |
 | Sound | Web Audio starts only after a tap; the ring/silent switch may mute it (verify) | Unlock audio on the session's Start tap; every cue is also shown on screen |
 | Speech | Safari's speech synthesis uses the phone's own voices and needs no network (verify in the home-screen app) | Spoken cues are optional; tones and text always carry the cue |
@@ -55,7 +56,6 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 | Background | iOS suspends a web app in the background; timers stop firing | Timers run from timestamps and catch up on return; cues need the screen on |
 | Updates | An installed web app gets a new version only when its service worker updates | An update banner; Settings shows the app and plan versions |
 | Health data | A web app cannot read Apple Health | Steps and run distance are typed in (optional) |
-| Files | The Web Share API can share a file to Files or iCloud Drive | Backup export through the share sheet |
 
 ---
 
@@ -181,8 +181,7 @@ and the test wizard open full screen above the tabs.
 | Plan | Start date (the Monday of Week 1); "Restart from Week 0" on a chosen Monday (keeps history) |
 | Profile (on this phone only) | Birth year, sex, weight and height: all optional, used only for HRmax, Rockport and the broad-jump aim |
 | Units | kg or lb; km or mi. One card |
-| Google Drive backup | Sign in with Google; the status and the last backup time; Sync now, Restore from Google Drive, Sign out ([§10](#10-backup-and-restore), D-054) |
-| Backup file | Export, import, the last backup date, and the reminder interval (30 days by default; 7, 14, 60 or 90 to choose) |
+| Google Drive sync | The last sync's date and time, and nothing else to read; Sign in with Google, or Sync now and Sign out ([§10](#10-backup-and-restore), D-054, D-055) |
 | About | App version, plan version, the number of sources with a link to their list in the repo (opens outside the app), privacy statement, the runtime libraries' licences |
 | Reset | Delete all data (type DELETE to confirm) |
 
@@ -205,8 +204,8 @@ and the test wizard open full screen above the tabs.
 - **Until Week 0 begins:** Today shows the days left. The Library is open, and the morning block can be tried; days
   before Week 0 have no status and no streak.
 - The profile is optional. The Rockport test asks for age, sex and weight when it needs them.
-- A link leads to Settings → Backup, to restore a backup instead of starting afresh (a new phone, or the move from the
-  Safari tab to the home-screen app).
+- A link leads to Settings → Google Drive sync: signing in there restores the Drive copy instead of starting afresh (a
+  new phone, or the move from the Safari tab to the home-screen app).
 
 ---
 
@@ -223,7 +222,7 @@ Progress ┬ Shell → Day detail
          ├ Milestones
          └ At-99 board
 Library ── Exercise page → Source detail
-Settings ─ Backup / Profile / About
+Settings ─ Profile / Units / Google Drive sync / About
 ```
 
 ---
@@ -285,7 +284,7 @@ Settings ─ Backup / Profile / About
 
 | Store | Key | Fields |
 |---|---|---|
-| `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}; backup {lastAt, everyDays}. Records from before D-053 also held dumbbellKg, location, runDefault and reminders; they are dropped when read |
+| `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}. Records from before D-053 also held dumbbellKg, location, runDefault and reminders, and from before D-055 backup {lastAt, everyDays}; they are dropped when read |
 | `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned")}; split {doneAt, kind (front, side, both or long)}; folded (the "Make it a Shell day" tap) |
 | `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
 | `levels` | ladderId | level, since, history [{level, date}] |
@@ -351,48 +350,44 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
 
 ## 10. Backup and restore
 
-**The Google Drive backup (D-054)**, after the French app's sync:
+**The Google Drive sync (D-054, D-055)**, after the French app's sync, is the only backup: the backup file, its import
+and the Today reminder went with D-055.
 - **Sign-in:** Google Identity Services' token model in the browser, no server; the scope `drive.appdata` (a hidden
-  folder only this app sees) and the e-mail address. A token lasts an hour; there is no refresh token, so after the
-  hour the next sync needs a tap ("Sync now"), which reopens Google's window; with consent given it closes by itself.
-- **One file per device:** `device-<id>.json` in the hidden folder, in the same format as the backup file below. A
-  device writes only its own file, so two devices never overwrite each other.
-- **By itself:** while the sign-in lasts, and only when something changed since the last upload: 20 s after the last
-  change, when the app goes to the background, and when it opens or comes back after 3 minutes.
-- **Restore:** signing in on a device for the first time, and "Restore from Google Drive", merge every device file into
-  the phone first (the newer `updatedAt` wins, as in an import). A plain sync only uploads, so a deleted photo does not
-  come back.
+  folder only this app sees) and the e-mail address. A token lasts an hour and there is no refresh token.
+- **Renewal, with no tap (D-055):** an hour-old sign-in is renewed in a hidden frame (`prompt=none`), which lands on the
+  app's own `oauth-silent.html` and posts Google's answer back (the `state` is checked); the service worker serves that
+  page as itself, never as the app. Where the browser refuses the frame (Safari blocks Google's cookies in it), the
+  user's next tap anywhere in the app renews it: a tap may open Google's window, which closes by itself once consent
+  was given. The sync card's own buttons are not that tap.
+- **One file per device:** `device-<id>.json` in the hidden folder: a whole backup in one versioned JSON format (a
+  format tag and version, the export time, the app and schema versions, every store). A device writes only its own
+  file, so two devices never overwrite each other.
+- **By itself:** when something changed since the last upload: 20 s after the last change, when the app goes to the
+  background or comes back, when the connection returns, and every 5 minutes while on screen. An opening with nothing
+  to upload still renews a dead sign-in, so the visit's changes find a live one. No network is a wait, not an error.
+- **Restore:** signing in on a device for the first time (a new phone, or this one after "Delete all data") merges
+  every device file into the phone first: the newer `updatedAt` wins (D-032). A file that is damaged or from a newer
+  app is skipped whole. A plain sync only uploads, so a deleted photo does not come back.
 - **Safety:** a phone with no plan and no days never uploads; "Delete all data" forgets the sign-in on the phone and
   leaves the Drive copy.
-- **The owner's one step:** the Web client (the French app's, his picker) must list `https://tortoise.doctornova.net` as
-  an authorised JavaScript origin; until then Google's window says "origin_mismatch". The card says so.
-
-**The backup file**, kept as a fallback (the owner's picker):
-
-- **Export:** one JSON file, `tortoise-backup-YYYY-MM-DD.json`, holding a format tag and version, the export time, the app
-  version, and every store. It goes out through the share sheet (Files, iCloud Drive, AirDrop to the Mac), with a plain
-  download as the fallback.
-- **Import:** pick a file → schema validation → migrate from older versions → a preview (record counts and date range) →
-  **Merge** (for each key the record with the later `updatedAt` wins) or **Replace** → written in one transaction.
-- **Validation:** a file that is not JSON, not a Tortoise backup, damaged (the message names the store, record and
-  field) or from a newer version of the app is refused with its own message, and nothing is written. The file also
-  carries the database schema version, so a future migration can upgrade an old file's records.
-- **The backup date** is written into the file's own settings record, and the phone saves the same record once the
-  file has gone out, so the phone and the file hold identical data (D-042).
-- **Reminder:** a banner on Today when the last backup, the file or the Drive copy, is 30 days old or more (the interval is set in Settings); before
-  the first backup it counts from the Week 0 Monday. "Not today" hides it until the app is opened again.
-- A backup file is personal data. It goes wherever the user sends it, never into the repo.
+- **The card** shows only the last sync's date and time (the owner: "you can just show last sync date time"), an error
+  when there is one, and its buttons.
+- **The owner's steps:** the Web client (the French app's, his picker) must list `https://tortoise.doctornova.net` as
+  an authorised JavaScript origin, and `https://tortoise.doctornova.net/oauth-silent.html` as an authorised redirect
+  URI. Without the first, Google's window says "origin_mismatch"; without the second, every renewal waits for a tap.
 
 ---
 
 ## 11. Privacy and security
 
-- A Content Security Policy allows the app's own origin, and Google's sign-in and Drive hosts for the backup (D-054):
+- A Content Security Policy allows the app's own origin, and Google's sign-in and Drive hosts for the sync (D-054):
   `default-src 'self'`; `script-src 'self' https://accounts.google.com`;
-  `connect-src 'self' https://www.googleapis.com https://accounts.google.com`; `frame-src https://accounts.google.com`;
-  `img-src 'self' data: blob:`. Google's script loads only when the user taps to sign in. No other third-party
-  scripts, fonts, analytics or cookies.
-- The Drive backup uses the `drive.appdata` scope: one hidden folder that only this app can see, nothing else in the
+  `connect-src 'self' https://www.googleapis.com https://accounts.google.com`;
+  `frame-src 'self' https://accounts.google.com` (the silent renewal's frame ends on the app's own page, D-055);
+  `img-src 'self' data: blob:`. Google's script loads only once the user has signed in. No other third-party
+  scripts, fonts, analytics or cookies. `oauth-silent.html` carries its own policy: `default-src 'none'; script-src
+  'self'`.
+- The Drive sync uses the `drive.appdata` scope: one hidden folder that only this app can see, nothing else in the
   user's Drive. The sign-in token stays in this browser's storage for its hour.
 - External links (videos, sources) open in the browser, outside the app.
 - The repo holds no personal facts; a test scans committed text for banned personal terms. The list itself is
@@ -462,5 +457,5 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
 | Later, optional | Condition |
 |---|---|
 | Weather hint for outdoor days | Only from an official source that browsers can call (Environment and Climate Change Canada), with a city-level location the user sets; off by default (D-020) |
-| Progress photos (posture, splits) | Stored on the phone only; can be left out of backups |
+| Progress photos (posture, splits) | Stored on the phone and in its Google Drive copy only |
 | Spoken coaching for whole sessions | If the cues prove useful |

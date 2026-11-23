@@ -18,7 +18,7 @@ declare module '@tanstack/react-router' {
 // Before the first render: the browser may offer its install prompt before React mounts (D-047).
 listenForInstallPrompt()
 if (import.meta.env.PROD) registerServiceWorker()
-// The Google Drive backup uploads by itself while its sign-in lasts (D-054); it makes no request before sign-in.
+// The Google Drive sync runs by itself (D-054, D-055); it makes no request before the user signs in.
 startAutoSync()
 
 const root = document.getElementById('root')
