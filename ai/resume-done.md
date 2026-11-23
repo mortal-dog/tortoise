@@ -1,6 +1,31 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## 2026-11-23: Drive sync only: renew the Google session by itself, remove the file backup and its reminder — started 2026-11-23 11:03 ET, done 2026-11-23 11:25 ET
+
+**Why:** the owner, 2026-11-23: "make sure google drive sync is automatic, and remove other way to store backup and
+retrieve and just show sync".
+
+Later asks the same turn: "remove all other wordings. you can just show last sync date time" and "delete backup file
+feature from settings".
+
+**Done**
+- [x] ♻️ read ai/now.md, ai/memory/drive-backup.md, the global note on browser-only OAuth renew
+- [x] ♻️ built in the working tree (uncommitted): google.ts silent renew, sync.ts next-tap renew + triggers,
+      public/oauth-silent.{html,js}, sw.ts exemption, CSP frame-src 'self', DriveCard shows only "Last sync", BackupCard /
+      BackupReminder / share.ts deleted, importBackup merge-only, settings `backup` field gone; tests; docs + D-055
+- [x] ♻️ gates green 2026-11-23: check, 287 Vitest in 32 files, build, 20 e2e
+- [x] ⚠️ committed as "feat: the Google Drive sync is the only backup, and renews its sign-in by itself (D-055)" —
+      check `git log` before committing again
+
+- [x] ⛔ pushed 687985c to main on the owner's picker "Push and deploy now" — do not push again
+- [x] ⛔ manual deploy run 45214620004 started — check `gh run view 45214620004` before starting another
+
+- [x] ♻️ run 45214620004 green (deploy included); the live CSP has `frame-src 'self' https://accounts.google.com` and
+      /oauth-silent.html and /oauth-silent.js answer 200
+
+**Don't forget:** a new redirect URI (silent renew page) is the owner's step in the Google Cloud console.
+
 ## 2026-11-23: beginner handstand ladder, the day's timing, and no pocket lock (owner's asks) — started 2026-11-23 10:08 ET, done 2026-11-23 10:40 ET
 
 **What:** three owner asks, all decided (pickers 2026-11-23): (1) the handstand skill track H1 (feet on the wall in an L)
