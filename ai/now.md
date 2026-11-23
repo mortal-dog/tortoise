@@ -3,9 +3,26 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-23, 11:46 ET)
+## Open work and next steps (as of 2026-11-23, 17:55 ET)
 
-- **Nothing in flight; the handoff sheet is empty.** The owner's asks of 2026-11-23 are built, pushed and live: a
+- **Nothing in flight; the handoff sheet is empty.** The owner's evening asks of 2026-11-23 are built and pushed as
+  **`f9bdde3`** (D-056 to D-059, gates green: 267 Vitest in 30 files, 17 e2e) on his own words ("finally, commit and
+  push and compact by yourself"). **Not deployed yet:** the next scheduled CI run (13:07 / 23:07 UTC) publishes main;
+  a manual deploy run needs his yes in a picker. After it, check the live site shows four tabs (no Library).
+  - D-056: safer and fewer exercises (80 → 48, well-known names), no bar, no library or exercise text, one YouTube
+    video per exercise (none for Jump rope, Run–walk, Easy run, Walk), the indoor run is a 45–60 min brisk walk.
+  - D-057: the Week's day page lists each part's exercises for any day, past days marked done or not; no editing, no
+    "Sick or injured", no Paused status, no "Yesterday has nothing logged" banner, no "2/2" ring on Today.
+  - D-058: badges on Progress; D-059: the still tab bar.
+- **Video doubts the owner may want to look at** (the helper's notes, each video was still checked by its frames):
+  push-up (WeShape, vertical, no feet-on-chair stage), split-squat (no Bulgarian), glute-bridge (no single-leg or hip
+  thrust), step-up (a low box, adds a knee raise), wall-handstand-push-up (full reps, no negatives), pike-hold and
+  pike-push-up (no feet-on-chair), front split on blocks (a Pilates slider, ends in a full split), Jump rope had only
+  basic-bounce videos (now no video by his rule), long ones: horse stance 11 min (from 4:00), middle split 20 min
+  (10:50–12:20), easy run removed. A 78-s chair middle-split video exists (`dPtCfZFauzI`, amateur channel).
+- **A trade-off of D-057, told to the owner:** a past day can no longer be marked done afterwards; only the player and
+  Today's "Done as planned" log.
+- Earlier the same day: a
   beginner's handstand ladder (D-051), the day's timing (D-052), no pocket lock (D-050), the settings sweep (D-053),
   the Google Drive backup (D-054) and **the Drive sync as the only backup, renewing its own sign-in (D-055)**. Live
   build `687985c`, deployed by manual run 45214620004 (green) on the owner's picker "Push and deploy now"; the live
@@ -32,17 +49,14 @@
   does Google's popup open and come back in home-screen mode; a change syncs within a minute and "Last sync" moves;
   after an hour, opening the app and tapping anything renews the sign-in with no other step, a window may flash and
   close; restore on a second device or after Delete all data; D-054, D-055), layout, and
-  **Glass** (smooth scrolling and player with the drifting backdrop, no warm phone, Reduce Transparency gives solid
+  **the new screens** (badges shine and a tap tells how to earn one; a day page's video links open YouTube from the
+  installed app; the tab bar stays still when tabs are tapped; D-057 to D-059), and **Glass** (smooth scrolling and player with the drifting backdrop, no warm phone, Reduce Transparency gives solid
   panels; D-049). Then **other platforms** (D-047): Android Chrome, desktop Chrome or Edge. **When the owner reports
   results, write them into `docs/3-implementation.md` under Phase 8** (its done criterion) and fix what fails. The
   calendar-file, location and storage rows went with D-053, the backup-file row with D-055.
-- **Owner questions left open (optional, no picker asked yet):** the 44 "why" lines and the four walking rows of
-  Appendix A (D-043); the two new handstand drills (plank on the hands, pike hold) have no teaching link yet
-  (`noLinkFound` in `src/data/videos.ts`).
 - **A known limit of the sync, not asked about:** a plain sync only uploads this device's file; another device's
   changes come in only when this device signs in (first sign-in restore). Told the owner 2026-11-23.
-- **Plan gaps still encoded by their closest reading (D-038):** A0 jumps show the squat jump (ladder level 1), not the
-  table's broad jump; Thursday plyometrics counted as about 3 min; no data home yet for the ramp-week effort notes, the
+- **Plan gaps still encoded by their closest reading (D-038):** Thursday's squat jumps counted as about 3 min; no data home yet for the ramp-week effort notes, the
   rest between Day-2 tests, §9 stages to 99, §13 pain rules and §14 adaptations.
 - **The domain steps are done** (D-035): Pages with source "GitHub Actions", custom domain `tortoise.doctornova.net`,
   GoDaddy CNAME `tortoise` → `mortal-dog.github.io`, TXT `_github-pages-challenge-mortal-dog` (must stay), HTTPS
@@ -53,7 +67,8 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 287 Vitest tests in 32 files and 20 e2e tests on `687985c`; CI green on `687985c` (run 45214620004).
+  Last green: 267 Vitest tests in 30 files and 17 e2e tests on `f9bdde3` (local); CI green last on `687985c` (run
+  45214620004).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
 - **CI/CD (D-039, D-046, D-049):** one workflow `.github/workflows/ci.yml`, run twice a day (13:07 and 23:07 UTC) and
@@ -81,7 +96,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-056**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-060**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -142,25 +157,37 @@
   missing or refused. No pocket lock. The owner: the lock and "Hold to unlock" felt pointless; "once the app is open the
   screen stays on, the OS cannot lock it".
 - **Today:** cards with **Start** (the player) and "Done as planned", each with its time of day (D-052); on test days
-  **Start** opens the test wizard; banners; the day ring. No habits card, no daylight strip (D-053), no backup reminder
-  (D-055). Run days start at Outdoor.
+  **Start** opens the test wizard; banners. No day ring and no "Yesterday has nothing logged" banner (D-057), no habits
+  card, no daylight strip (D-053), no backup reminder (D-055). Run days start at Outdoor.
+- **Day page** (`/day/<date>`, D-057): the same list for any day: morning block, main session (or the day's tests),
+  split block, each step with its level name, dose and its exercise linking to YouTube (`ExerciseLink`); a future run
+  day also lists "Indoors (rain or ice)". Past days (and today once a part is done) mark each step ✓ or ✗ and say
+  "Nothing was done this day." when so. `plan-view.ts` `dayItems()`: a part record with `steps` counts only those
+  (the player's finished, not skipped, steps; `Player.tsx` `skipped`), one without (Done as planned) counts all.
+  Read only: no fields, no switches, no "Sick or injured"; no `paused` in records or statuses.
 - **Player** (`/play/<date>/<morning|main|split>`, D-040): units from `src/lib/player.ts` `buildUnits()` (pairs
   alternate and rest after each pair; level holds vs reps by the pass target; run–walk and rope levels as intervals;
-  the interval stage by block; Week 0, ramp and light changes; Friday's push-up `levelOffset: 1`); timers from
+  the interval stage by block; Week 0, ramp and light changes; Friday's push-up `levelOffset: 1`); each exercise's name
+  opens its video, no cue or "How" text (D-056); timers from
   timestamps (`position()`); tones unlocked on Start (`src/lib/sound.ts`), spoken cues and spoken coaching (switch kept
-  in localStorage); feedback (in the morning block only after its ladder steps); the summary saves logs and
-  the card in one transaction (`repo.ts` `savePlayedSession`).
-- **Library** (D-043): `library.index.tsx` (search, area and video filters kept in the address),
-  `library.$exerciseId.tsx` (how, cue, mistake, why with source chips, ladder with "Set" by hand, last 10 logs, video
-  link with its check date), `library.sources.$sourceId.tsx`. Every exercise has a `why` (the schema requires it); 48
-  of 80 have a video link (`src/data/videos.ts`, oEmbed titles, checked 2026-11-22; the order kept by the owner,
-  D-045).
+  in localStorage; it says the step and target, no cue); feedback (in the morning block only after its ladder steps);
+  the summary saves logs, the finished step ids and the card in one transaction (`repo.ts` `savePlayedSession`).
+- **Exercises and videos** (D-056): no Library page and no exercise text; an exercise is `{id, name, area, unit,
+  video?}` (`src/data/exercises.ts`, 48, well-known names); `videos.ts` holds 44 YouTube videos, each chosen by its
+  storyboard frames, title, channel and length (checked 2026-11-23); `NO_VIDEO` = rope-basics, run-walk, easy-run, walk
+  ("everyone knows them"); the bail has no step of its own (H10 holds it) and keeps its video as the safety skill.
+  Plan Appendix A is the name → video table, generated from the data and checked by `tests/content/plan.test.ts`.
+  A level can no longer be set by hand (that lived in the library); the level suggestions move it.
 - **Tortoise Test** (`/test/<Day 1 date>?day=1|2`, D-041): cards save on their own; "Finish" first saves every card
   with unsaved changes (a race the e2e test caught under load), marks the day done, sets Week 0's starting levels
   (`test-results.ts` `startingLevels()`), awards milestones. Stopwatches, the 15-s pulse count, sit-to-rise steppers,
-  Rockport with the 30–69 age flag, yearly height (48 weeks), the three start questions.
-- **Progress** (D-041): numbers and minutes per pillar this week; the Shell (two weeks a row); milestones (next up,
-  earned; checked on open); photos (D-044: `photos` store, migration 2, JPEG ≤ 1280 px as data URLs, in the Drive copy); At
+  Rockport with the 30–69 age flag, yearly height (48 weeks), the one start question (easy-run minutes). Day 1 is the
+  Rockport walk alone; Day 2 adds jump and reach (`jumpReachCm`) before the push-ups; no broad jump, no dead hang.
+- **Progress** (D-041): numbers and minutes per pillar this week; the Shell (two weeks a row); milestones: next up,
+  and **badges** (D-058: `src/lib/badges.ts`, `src/components/progress/BadgeMedal.tsx`; one per milestone, 37; a
+  shell-hexagon SVG medal, metal by step along a metric: bronze, gold, jade, sapphire, Hatchling bronze, a lone one
+  gold; earned = stored or `reached()` now; glint and sparkles in `styles.css`, still under reduced motion; locked grey
+  with a lock, the owner's ask; a tap shows "To earn it: …" or the earned date; milestones still awarded on open); photos (D-044: `photos` store, migration 2, JPEG ≤ 1280 px as data URLs, in the Drive copy); At
   99; test trends with aim lines (`aimLine` in `src/data/tests.ts`); level step charts; empty charts listed in one line.
 - **Settings** (D-042, D-053, D-054, D-055): Plan, Profile, Units (kg/lb, km/mi), **Google Drive sync** (only "Last
   sync: <date>, <time>"), About, Reset (type DELETE; it also forgets the Google sign-in; its text says the Drive copy
@@ -182,24 +209,31 @@
 
 - **Goals (D-002):** at 99, a straight back and still able to jump and run; on the way, a handstand, the side split and
   the front split. Exercise only (D-001).
-- **Equipment (D-003–D-006):** one fixed medium/heavy dumbbell pair (7–15 kg); a jump rope; playground bars on outdoor
-  days; the owner declined the recommended pull-up bar.
-- **Outdoors (D-004):** outdoor running in good weather, the rope indoors. The owner: "natural sun is important, so we
-  can encourage outdoor running on a good weather".
+- **Equipment (D-003–D-006, D-056):** one fixed medium/heavy dumbbell pair (7–15 kg) and a jump rope; **no bar at all**
+  (the owner: "there is no bar; at home only dumbbells and a jump rope"); every pull is a one-arm dumbbell row.
+- **Outdoors (D-004, D-056):** outdoor running in good weather; indoors (rain, ice) a longer brisk walk around a room,
+  Tuesday 45–60 min, Saturday at most 60 min. Stairs were tried and dropped on the owner's picker after "do stairs hurt
+  the knees?" (descending loads the knees most). The owner: "natural sun is important, so we can encourage outdoor
+  running on a good weather".
+- **Exercise rules (D-056):** an exercise whose usual mistake injures is replaced, judged by injury risk, not
+  complexity (the owner: "simple moves are not necessarily safe, complex ones not necessarily dangerous"); well-known
+  names only (the owner: "use only well-known exercises with their own names, easy to judge"); everyday movements get
+  no video; the handstand drills (freestanding included) and the split drills stay as they are, by his pickers.
 - **Shape of the days (D-007–D-009):** a 15-min morning block plus a main session of about 45 min (50–55 on run and
-  interval days); Saturday long outdoor + playground; Sunday light. **About 7½ h in a full week**, about 8 with the
+  interval days); Saturday long outdoor + rows and farmer holds at home; Sunday light. **About 7½ h in a full week**, about 8 with the
   longest Saturday run; Week 0 about 5½ h, the ramp-up weeks about 6½ (set under the owner's delegation: "you arrange
   the daily intensity" and "I have time"). It is 7½, not the 7 h of the first summary.
 - **App (D-010–D-014, D-047):** the iPhone first and every platform since D-047; the address
   `https://tortoise.doctornova.net`, fixed forever; data on the phone with a Google Drive copy once signed in (D-054);
   the Drive sync the only backup since D-055; no reminders since D-053; a Shell day counts, and the streak breaks only
   on two missed days in a row.
-- **Day status and streak (D-029):** either part alone makes a Shell day; a day with something done is never Paused;
-  one missed day is bridged without counting; paused days are skipped; on a test day the test part stands in for the
-  main session.
+- **Day status and streak (D-029, D-057):** either part alone makes a Shell day; one missed day is bridged without
+  counting; there is no pause (the owner: "the app does not care whether you are sick, injured or busy; only whether
+  today's exercise is done, how much, and how far from the goal"); on a test day the test part stands in for the main
+  session.
 - **Other rulings:** backups merge by `updatedAt`, logs have random ids (D-032); statuses differ by shape as well as
   colour, light-theme shell `#9A6212` and sky `#2A72AB` (D-033); 4-week blocks, the test in Week 0 and every 12 weeks
-  (D-015); Week 0 at half volume, all levels 1, three start questions (D-030); plan repairs (D-031).
+  (D-015); Week 0 at half volume, all levels 1, one start question since D-056 (D-030); plan repairs (D-031).
 - **Stack (D-016):** TypeScript 7.0.2, React 19.3.1, Vite 8.3.8, Tailwind CSS 4.3.5, TanStack Router 1.170.46 (plugin
   1.169.0), zod 4.6.7, lucide-react 1.77.0, Biome 2.6.8, Vitest 5.1.1, Playwright 1.65.1, jsdom 31.0.1,
   fake-indexeddb 6.2.8, Node 24, pnpm 11.20.0. First-party service worker (D-017); hand-made SVG charts (D-019).
@@ -212,7 +246,9 @@
   daylight, runs, display, reminders, storage, raindrops; the habits advice and paluch2022/stamatakis2022 gone from the
   plan), D-054 (owner: Google Drive backup, the French client ID), D-055 (owner: the Drive sync is the only backup,
   the file backup and reminder gone, the card shows only the last sync; renewal by hidden frame or next tap, builder's
-  ruling).
+  rulingruling), D-056 (owner: safer, fewer exercises, no bar, no library, videos, the indoor walk; the
+  list is a builder's ruling under his delegation; vandyk2019 left the sources), D-057 (owner: the day page, no pause,
+  no ring), D-058 (owner: badges; the style a builder's ruling), D-059 (builder: the still tab bar).
 
 ## Where things are
 
@@ -220,23 +256,25 @@
   `tests.ts` with `aimLine`, `rules.ts`, `start-rules.ts`, `milestones.ts`, `at99.ts`, `rationale.ts`).
 - `src/lib/` `dates`, `calendar`, `status`, `progression`, `calc`, `milestones`, `pillars`, `records`,
   `db` (migrations 1–2), `repo`, `live`, `plan-view`, `use-app`, `player`, `sound`, `wake-lock`, `use-now`,
-  `test-results`, `test-repo`, `photos`, `library`, `backup` (the format and the merge only), `install`, `effects`,
+  `test-results`, `test-repo`, `photos`, `badges`, `backup` (the format and the merge only), `install`, `effects`,
   `sync/` (google, drive, sync). Removed by D-053: `daylight`, `ics`, `rain`, `src/data/habits.ts`, `RemindersCard`;
-  by D-055: `share`, `BackupCard`, `BackupReminder`, `formatBytes`.
+  by D-055: `share`, `BackupCard`, `BackupReminder`, `formatBytes`; by D-056/D-057: `library`, the library routes,
+  `DayRing`.
 - `src/routes/` `index.tsx` (Today), `week.tsx`, `day.$date.tsx`, `play.$date.$slot.tsx`, `test.$date.tsx`,
-  `progress.tsx`, `library.index.tsx`, `library.$exerciseId.tsx`, `library.sources.$sourceId.tsx`, `settings.tsx`,
-  `debug.week.tsx`; `src/components/` `player/`, `test/`, `progress/`, `settings/`, `Backdrop.tsx`, `FirstRun.tsx`,
-  `InstallCard.tsx`; `src/sw/sw.ts` (every navigation gets the app shell except `/oauth-silent.html`); `public/`
+  `progress.tsx`, `settings.tsx`, `debug.week.tsx`; `src/components/` `player/`, `test/`, `progress/` (with
+  `BadgeMedal.tsx`), `settings/`, `Backdrop.tsx`, `FirstRun.tsx`, `InstallCard.tsx`, `ExerciseLink.tsx`, `TabBar.tsx`
+  (four tabs; D-059: `.tab-bar` own layer, one font weight, no tap scale; `html` `scrollbar-gutter: stable`); `src/sw/sw.ts` (every navigation gets the app shell except `/oauth-silent.html`); `public/`
   (icons, manifest, `oauth-silent.html` + `.js`).
 - `tests/` `unit`, `content`, `db` (`settings.test.ts`: two saves at once), `component`, `guard`, `fixtures`, `e2e`
-  (`smoke`, `daily-loop`, `screens`, `player`, `test-wizard`, `settings`, `library`, `photos`, `look`; screenshots land
+  (`smoke`, `daily-loop`, `screens`, `player`, `test-wizard`, `settings`, `photos`, `look`; `unit/badges.test.ts` checks
+  every badge earned at its threshold and not a step before; screenshots land
   in `test-results/`).
 - `scripts/` `make-icons.mjs`, `guard-hash.mjs`, `guard-key.mjs`, `vite-pwa-plugin.ts`.
 - Commits of 2026-11-22: `35f88ff` CI/CD, `d8e112c` Phase 4, `97cd9a1` Phase 6, `c332503` Phase 7, `7f3b5be` Phase 5,
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055.
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059.
 
 ## Background
 
