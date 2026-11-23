@@ -9,12 +9,14 @@ import type { Plugin } from 'vite'
  * The policy of design §11: the app's own origin, and Google's sign-in and Drive hosts for the sync (D-054). The app
  * loads Google's script only once the user has signed in, and calls Drive only while signed in. The silent renew's
  * hidden frame starts at Google and lands on the app's own `oauth-silent.html` (D-055), hence `'self'` in frame-src.
+ * YouTube's privacy-enhanced player may be framed for the exercise videos, loaded only when the person taps a name
+ * (D-060).
  */
 export const CSP = [
   "default-src 'self'",
   "script-src 'self' https://accounts.google.com",
   "connect-src 'self' https://www.googleapis.com https://accounts.google.com",
-  "frame-src 'self' https://accounts.google.com",
+  "frame-src 'self' https://accounts.google.com https://www.youtube-nocookie.com",
   "img-src 'self' data: blob:",
   "object-src 'none'",
   "base-uri 'self'",

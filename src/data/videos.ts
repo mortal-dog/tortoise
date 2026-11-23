@@ -1,5 +1,6 @@
-// The teaching videos (D-026, D-056): one YouTube video per exercise (none for the everyday ones: rope, running, walking), a link and never an embed, and nothing is fetched
-// at runtime. Each was chosen and checked on 2026-11-23 by looking at its frames (YouTube's storyboard, a grid of stills
+// The teaching videos (D-056, D-060): one YouTube video per exercise (none for the everyday ones: rope, running,
+// walking). Nothing is fetched until a name is tapped; then the video plays in YouTube's privacy-enhanced player inside
+// the app, and every one allows embedding (checked 2026-11-23, `playableInEmbed`). Each was chosen and checked on 2026-11-23 by looking at its frames (YouTube's storyboard, a grid of stills
 // through the whole video), with its title, channel and length: the frames had to show the plan's movement with the
 // plan's equipment. A health body or physiotherapist came first, then an established coach or professional body.
 // Title and channel are exactly as YouTube's oEmbed returned them (one channel name ends in a space).

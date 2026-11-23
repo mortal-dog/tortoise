@@ -695,7 +695,7 @@ The app's long view. Each ability shows its latest result next to its line:
 ## Appendix A. Exercises and their videos
 
 Every exercise the sessions (§6) and the ladders (§7) name, by its well-known name, with one teaching video each
-(D-056). The app shows the name, and the name opens the video; there are no written descriptions. A harder or easier
+(D-056). The app shows the name, and a tap plays the video inside the app (D-060); there are no written descriptions. A harder or easier
 variant is a level of its base exercise. Jump rope, running and walking have no video: everyone knows them. Each
 video was chosen by looking at its frames (YouTube's storyboard, stills through the whole video) with its title,
 channel and length: the frames had to show the movement as the plan does it, with the plan's equipment. A health body

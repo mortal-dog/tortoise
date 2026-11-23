@@ -108,9 +108,25 @@ test('a day page lists the exercises, marks a past day done or not, and swaps wa
   await expect(page.getByTestId('day-part').nth(1)).toContainText('Strength A')
   await expect(page.getByTestId('day-item').getByLabel('not done').first()).toBeVisible()
   await expect(page.getByTestId('day-item').getByLabel('done', { exact: true })).toHaveCount(0)
-  await expect(
-    page.getByRole('link', { name: 'Goblet squat (one dumbbell held at the chest)' }),
-  ).toHaveAttribute('href', /^https:\/\/www\.youtube\.com\/watch\?v=/)
+  // A tap on a name plays its video inside the app; nothing from YouTube loads before the tap (D-060).
+  const youtube: string[] = []
+  page.on('request', (r) => {
+    if (/youtube/.test(r.url())) youtube.push(r.url())
+  })
+  await page.route(/youtube/, (route) => route.abort())
+  expect(youtube).toEqual([])
+  await page.getByRole('button', { name: 'Goblet squat (one dumbbell held at the chest)' }).click()
+  const sheet = page.getByTestId('video-sheet')
+  await expect(sheet.locator('iframe')).toHaveAttribute(
+    'src',
+    /^https:\/\/www\.youtube-nocookie\.com\/embed\/[\w-]{11}\?playsinline=1&rel=0$/,
+  )
+  await expect(sheet.getByRole('link', { name: 'Open in YouTube' })).toHaveAttribute(
+    'href',
+    /^https:\/\/www\.youtube\.com\/watch\?v=/,
+  )
+  await sheet.getByRole('button', { name: 'Close the video' }).click()
+  await expect(sheet).toHaveCount(0)
   await expect(page.getByLabel('Minutes')).toHaveCount(0)
   await expect(page.getByText('Sick or injured')).toHaveCount(0)
   // A day to come: the exercises with no marks, and the indoor walk on a run day.

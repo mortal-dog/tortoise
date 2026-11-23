@@ -30,7 +30,7 @@ export const Source = z.object({
 export type Source = z.infer<typeof Source>
 
 /**
- * A teaching video, a link and never an embed (D-026, D-056): a YouTube watch link, recorded with the title and channel
+ * A teaching video (D-056, D-060): a YouTube watch link, played in the app's embedded player after a tap, recorded with the title and channel
  * exactly as YouTube's oEmbed returned them. `checked` is the day its frames were looked at and its oEmbed answered.
  */
 export const VideoLink = z.object({

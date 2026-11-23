@@ -11,7 +11,7 @@ only: nutrition, sleep and medicine are out of scope.
 | Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). The Google Drive sync moves the data between them (D-055) |
 | Address | <https://tortoise.doctornova.net> |
 | Data | On the phone (IndexedDB), with a copy in the user's own Google Drive once they sign in (D-054, D-055) |
-| Network | None needed after the first load; app updates use it, and the Google Drive sync once the user signs in (D-054). No server, no analytics, and no other third-party request |
+| Network | None needed after the first load; app updates use it, and the Google Drive sync once the user signs in (D-054); an exercise video, only when its name is tapped (D-060). No server, no analytics, and no other third-party request |
 | Language | English |
 
 ---
@@ -134,7 +134,9 @@ and the test wizard open full screen above the tabs.
 - **Tapping any day** opens its page (D-057): each part (morning block, main session, split block) with its exercises,
   their level and dose, and each exercise's name opening its YouTube video. A day to come shows what to do; on a run
   day it also lists the indoor version (a longer brisk walk). A day that has passed, and today once a part is done,
-  marks each exercise done or not done, and a past day with nothing done says so. The player records which steps were
+  marks each exercise done or not done, and a past day with nothing done says so. Tapping an exercise's name plays
+  its video in a full-screen sheet inside the app, in YouTube's privacy-enhanced player, loaded only on that tap
+  (D-060). The player records which steps were
   finished; a "Done as planned" tap counts the whole part. The page is for reading: nothing is edited there.
 
 ### 3.4 Progress
@@ -372,7 +374,8 @@ and the Today reminder went with D-055.
 - A Content Security Policy allows the app's own origin, and Google's sign-in and Drive hosts for the sync (D-054):
   `default-src 'self'`; `script-src 'self' https://accounts.google.com`;
   `connect-src 'self' https://www.googleapis.com https://accounts.google.com`;
-  `frame-src 'self' https://accounts.google.com` (the silent renewal's frame ends on the app's own page, D-055);
+  `frame-src 'self' https://accounts.google.com https://www.youtube-nocookie.com` (the silent renewal's frame ends on
+  the app's own page, D-055; YouTube's privacy-enhanced player, framed only after a tap on an exercise's name, D-060);
   `img-src 'self' data: blob:`. Google's script loads only once the user has signed in. No other third-party
   scripts, fonts, analytics or cookies. `oauth-silent.html` carries its own policy: `default-src 'none'; script-src
   'self'`.

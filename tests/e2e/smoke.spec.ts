@@ -14,7 +14,7 @@ test('the app loads with its manifest, icons and security policy', async ({ page
   // own silent sign-in page (D-055).
   expect(csp).toContain("connect-src 'self' https://www.googleapis.com https://accounts.google.com")
   expect(csp).toContain("script-src 'self' https://accounts.google.com")
-  expect(csp).toContain("frame-src 'self' https://accounts.google.com")
+  expect(csp).toContain("frame-src 'self' https://accounts.google.com https://www.youtube-nocookie.com")
   const manifest = await (await page.request.get('/manifest.webmanifest')).json()
   expect(manifest.display).toBe('standalone')
   // The installed-app check (desktop Chrome needs the app's id) and a launch that focuses a running window (D-047).

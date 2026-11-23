@@ -42,10 +42,11 @@ phone checks, is next. See `docs/3-implementation.md`.
 6. **Docs and data change together** (from Phase 1). A plan change updates `docs/2-exercise-plan.md`, the plan data and,
    for a number, `docs/sources.md`, in one commit.
 7. **UI rules:**
-   - no grey for text, labels or icons, only for disabled controls;
+   - no grey for text, labels or icons, only for disabled controls and locked badges (D-058);
    - iPhone first; offline;
    - no third-party requests at runtime, except Google's sign-in and Drive, only after the user signs in for the
-     Drive backup (D-054);
+     Drive backup (D-054), and YouTube's privacy-enhanced player (`youtube-nocookie.com`), only after the user taps an
+     exercise's name (D-060);
    - English UI.
 8. **Publishing:** CI/CD (`.github/workflows/ci.yml`) runs twice a day and by hand, never on a push (D-039). Once Phase 8
    sets up GitHub Pages, it publishes whatever is on `main`, so a push to `main` needs a picker first.
