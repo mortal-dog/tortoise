@@ -3,8 +3,16 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-23, 18:14 ET)
+## Open work and next steps (as of 2026-11-23, 18:21 ET)
 
+- **D-065 (`6f049f2`, pushed, not yet deployed): the app's version comes from git at build time.** The owner asked
+  ("it is always 0.1.0; we need a mechanism to update the version before every commit and push; a git hook, or an AI
+  memory rule?"); builder's ruling: neither. `vite.config.ts` sets `__APP_VERSION__` to package.json's major.minor plus
+  `git rev-list --count HEAD` (0.1.54 on `6671c85`) and `__APP_COMMIT__` to the short hash; Settings › About reads
+  "App 0.1.N (abc1234) · plan 2026-11-21". CI's `check, test, build` job checks out with `fetch-depth: 0` (a shallow
+  clone would count 1); the e2e shards keep the shallow clone (their builds say 0.1.1, they never deploy). Without git
+  the build falls back to package.json's version; a new major or minor is still set by hand there. Nothing to bump
+  before a commit. After the next deploy, About on the live site should show the count of `main`'s head.
 - **Nothing in flight; the handoff sheet is empty.** The owner's evening asks of 2026-11-23 are built and pushed:
   **`f9bdde3`** (D-056 to D-059), **`ec23c75`** (D-060, videos play in the app), **`df84136`** (D-061 fewer kinds,
   D-062 shorter Progress) and **`4dad116`** (D-063 equipment in About, the docs brought up to date, D-064); gates green
@@ -84,7 +92,7 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 264 Vitest tests in 29 files and 16 e2e tests on `4dad116` (local); CI green last on `687985c` (run
+  Last green: 264 Vitest tests in 29 files and 16 e2e tests on `6f049f2` (local); CI green last on `687985c` (run
   45214620004).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
@@ -114,7 +122,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-065**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-066**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -298,7 +306,7 @@
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064.
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git).
 
 ## Background
 

@@ -12,7 +12,9 @@ metadata:
   a scheduled run or the `deploy` input). A skipped job skips its dependants unless their `if` says otherwise, so
   `checks` and `e2e` start with `!cancelled()` and `deploy` names each needed job's result.
 - **The build is deterministic** (the service worker's version is a hash of the files): two builds compared byte for
-  byte, so the e2e shards' own builds are the files that deploy.
+  byte, so the e2e shards' own builds are the files that deploy, except the version string: since D-065 the build
+  counts commits for the app's version, and only the `check, test, build` job (whose `dist/` deploys) checks out with
+  `fetch-depth: 0`; the shards' shallow clones build "0.1.1".
 - **Timings (2026-11-22):** run #3, one job: 2:33 (58 s installing WebKit, 33 s of e2e on 2 workers, 12 s for the other
   gates). Side by side: the gate jobs finished in 62 s on `e64c8ed`; on `3fa4a81`, 1:43 with the deploy off. In each
   e2e job the apt part of the WebKit install took 23 to 58 s (mirror speed); the browser download takes 4 s. With 22
