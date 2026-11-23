@@ -1,6 +1,7 @@
 // The plan data's rules (design §7, docs/3-implementation.md Phase 1): it parses, ids are unique and references
 // resolve, digits name a source or carry "our rule", every source is used, and the minutes per day match the plan.
 import { describe, expect, it } from 'vitest'
+import { NO_VIDEO } from '@/data/exercises'
 import { exerciseById, ladderById, plan, planInput, sessionById } from '@/data/plan'
 import { Plan, type Session, type StartRule, WEEKDAYS } from '@/data/schema'
 import { definedSources, readRepoFile } from '../guard/repo'
@@ -15,6 +16,10 @@ function session(id: string): Session {
   const s = sessionById.get(id)
   if (!s) throw new Error(`no session ${id}`)
   return s
+}
+
+function exerciseByName(name: string) {
+  return plan.exercises.find((e) => e.name === name)
 }
 
 function ladderCodes(id: string): string[] {
@@ -128,13 +133,12 @@ describe('references', () => {
   it('leave no ladder unused and no added exercise unused', () => {
     const usedLadders = new Set(plan.sessions.flatMap((s) => s.steps.map((st) => st.ladderId)))
     expect(plan.ladders.map((l) => l.id).filter((id) => !usedLadders.has(id))).toEqual([])
-    const appendix = new Set(appendixRows().map((r) => r.name))
     const usedExercises = new Set([
       ...plan.sessions.flatMap((s) => s.steps.map((st) => st.exerciseId)),
       ...plan.ladders.flatMap((l) => l.levels.map((lv) => lv.exerciseId)),
     ])
-    const added = plan.exercises.filter((e) => !appendix.has(e.name))
-    expect(added.filter((e) => !usedExercises.has(e.id)).map((e) => e.id)).toEqual([])
+    // The bail is practised inside H10 with the kick-up; it keeps its own video because it is the safety skill.
+    expect(plan.exercises.filter((e) => !usedExercises.has(e.id)).map((e) => e.id)).toEqual(['bail'])
   })
 })
 
@@ -199,7 +203,8 @@ describe('the evidence rule (D-018)', () => {
   it('gives every text with a digit a source or "our rule", on itself or an enclosing object', () => {
     const bad: string[] = []
     for (const { path, obj, inherited } of objects()) {
-      if (inherited || covered(obj)) continue
+      // An exercise is a name and a video (D-056): "90/90 switch" names a position, it claims nothing.
+      if (inherited || covered(obj) || path.startsWith('exercises[')) continue
       for (const [k, v] of Object.entries(obj)) {
         if (!IGNORED.has(k) && typeof v === 'string' && /\d/.test(v)) bad.push(`${path}.${k}: ${v}`)
       }
@@ -252,64 +257,51 @@ describe('minutes', () => {
   })
 })
 
-/** The rows of the plan's Appendix A library tables: name, how, cue, mistake (not the why table). */
-function appendixRows(): { name: string; how: string; cue: string; mistake: string }[] {
+/** The rows of the plan's Appendix A tables: an exercise's name and its video link. */
+function appendixRows(): { name: string; url?: string }[] {
   const text = readRepoFile('docs/2-exercise-plan.md')
   const appendix = text.slice(text.indexOf('## Appendix A'))
-  const rows: { name: string; how: string; cue: string; mistake: string }[] = []
-  let inLibraryTable = false
+  const rows: { name: string; url?: string }[] = []
   for (const line of appendix.split('\n')) {
-    if (line.startsWith('| Exercise |')) {
-      inLibraryTable = line === '| Exercise | How | Key cue | Common mistake |'
-      continue
-    }
-    if (!line.startsWith('| ') || !inLibraryTable) continue
-    const [name = '', how = '', cue = '', mistake = ''] = line
-      .slice(2, -2)
-      .split(' | ')
-      .map((c) => c.trim())
-    rows.push({ name, how, cue, mistake })
+    const m = /^\| ([^|]+?) \| \[[^\]]+\]\((https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11})\) \|$/.exec(line)
+    if (m) rows.push({ name: m[1] as string, url: m[2] as string })
+    const none = /^\| ([^|]+?) \| None: everyone knows it \|$/.exec(line)
+    if (none) rows.push({ name: none[1] as string })
   }
   return rows
 }
 
 describe('against the plan text', () => {
-  it('has an exercise for every row of Appendix A, with its texts verbatim', () => {
+  it('has every exercise in Appendix A with its video, and nothing else (D-056)', () => {
     const rows = appendixRows()
-    expect(rows.length).toBe(80)
-    const byName = new Map(plan.exercises.map((e) => [e.name, e]))
-    for (const r of rows) {
-      const e = byName.get(r.name)
-      expect(e, r.name).toBeDefined()
-      expect({ how: e?.how, cue: e?.cue, mistake: e?.mistake }, r.name).toEqual({
-        how: r.how,
-        cue: r.cue,
-        mistake: r.mistake,
-      })
-    }
+    expect(rows.map((r) => r.name)).toEqual(plan.exercises.map((e) => e.name))
+    for (const r of rows) expect(exerciseByName(r.name)?.video?.url, r.name).toBe(r.url)
+  })
+
+  it('gives every exercise a video except the everyday ones everyone knows (D-056)', () => {
+    expect(plan.exercises.filter((e) => !e.video).map((e) => e.id)).toEqual([...NO_VIDEO])
   })
 
   it('has the ladders of §7 with their levels', () => {
-    expect(ladderCodes('squat')).toEqual(['1', '2', '3', '4', '5', '6', '7'])
-    expect(ladderById.get('squat')?.levels.at(-1)?.name).toMatch(/^Full pistol squat/)
-    expect(ladderCodes('hinge')).toHaveLength(5)
-    expect(ladderCodes('nordic')).toHaveLength(5)
-    expect(ladderCodes('push')).toHaveLength(7)
+    expect(ladderCodes('squat')).toEqual(['1', '2', '3', '4', '5'])
+    expect(ladderById.get('squat')?.levels.at(-1)?.name).toMatch(/^Bulgarian split squat/)
+    expect(ladderCodes('bridge')).toHaveLength(5)
+    expect(ladderCodes('push')).toHaveLength(6)
     expect(ladderCodes('handstand-skill')).toEqual(Array.from({ length: 14 }, (_, i) => `H${i + 1}`))
     expect(ladderCodes('handstand-strength')).toEqual(['S1', 'S2', 'S3', 'S4', 'S5'])
-    expect(ladderCodes('pull')).toEqual(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'])
+    expect(ladderCodes('row')).toEqual(['P1', 'P2', 'P3'])
     expect(ladderCodes('back-extension')).toHaveLength(5)
     expect(ladderById.get('back-extension')?.sources).toContain('katzman2010')
-    expect(ladderCodes('core')).toHaveLength(6)
+    expect(ladderCodes('core')).toHaveLength(3)
     expect(ladderCodes('run')).toEqual(['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'])
-    expect(ladderCodes('rope')).toEqual(['J1', 'J2', 'J3', 'J4', 'J5', 'J6'])
-    expect(ladderCodes('jumps')).toHaveLength(5)
+    expect(ladderById.get('rope')).toBeUndefined()
+    expect(ladderCodes('jumps')).toHaveLength(3)
     expect(ladderCodes('grip')).toEqual(['G1', 'G2', 'G3', 'G4'])
     expect(ladderCodes('balance')).toEqual(['Ba1', 'Ba2', 'Ba3', 'Ba4', 'Ba5', 'Ba6'])
     for (const l of plan.ladders) expect(l.ourRule, l.id).toBe(true)
   })
 
-  it('has the run and rope steps as written', () => {
+  it('has the run steps as written', () => {
     const run = ladderById.get('run')?.levels ?? []
     expect(run[0]?.pass.repeats).toEqual({
       repeats: 8,
@@ -322,8 +314,6 @@ describe('against the plan text', () => {
     expect(run[7]?.pass).toMatchObject({ minutes: 30 })
     expect(run[7]?.pass.repeats).toBeUndefined()
     expect(run[7]?.pass.text).toMatch(/^30 min continuous/)
-    const rope = ladderById.get('rope')?.levels ?? []
-    expect(rope[5]?.pass.text).toContain('at most 10% a week')
   })
 
   it('has the interval stages of §6.7', () => {
@@ -353,32 +343,26 @@ describe('against the plan text', () => {
   })
 
   it('has the sessions of §6 in their shape', () => {
-    expect(session('morning').steps.map((s) => s.label)).toEqual([
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
-      '10',
-    ])
+    expect(session('morning').steps.map((s) => s.label)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8'])
     for (const id of ['strength-a', 'strength-b', 'strength-c']) {
       const parts = session(id).steps.map((s) => s.part)
-      expect(parts.slice(0, 5), id).toEqual(['warmup', 'warmup', 'warmup', 'warmup', 'warmup'])
+      expect(parts.slice(0, 3), id).toEqual(['warmup', 'warmup', 'warmup'])
+      expect(parts[3], id).toBe('main')
       expect(session(id).minutes, id).toEqual({ min: 35, max: 35 })
     }
     expect(
       session('strength-a')
         .steps.map((s) => s.label)
-        .slice(5),
+        .slice(3),
     ).toEqual(['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'])
     expect(session('strength-a').steps.find((s) => s.id === 'a1')?.restS).toBeUndefined()
     expect(session('strength-a').steps.find((s) => s.id === 'a2')?.restS).toBe(75)
     expect(session('easy-run').minutes).toEqual({ min: 38, max: 48 })
-    expect(session('easy-run').steps.find((s) => s.id === 'strides')?.fromBlock).toBe(2)
+    expect(session('easy-run').steps.find((s) => s.id === 'indoor-walk')).toMatchObject({
+      variant: 'indoor',
+      exerciseId: 'walk',
+      minutes: { min: 45, max: 60 },
+    })
     for (const id of ['easy-run', 'intervals', 'long']) expect(session(id).hasVariants, id).toBe(true)
     const light = session('light')
     expect(light.minutes).toEqual({ min: 30, max: 30 })
@@ -396,13 +380,14 @@ describe('against the plan text', () => {
         .filter((t) => t.day === n)
         .sort((a, b) => a.order - b.order)
         .map((t) => t.id)
-    expect(day(1)).toEqual(['rockport', 'broad-jump', 'dead-hang'])
+    expect(day(1)).toEqual(['rockport'])
     expect(day(2)).toEqual([
       'resting-hr',
       'height',
       'wall',
       'sit-to-rise',
       'one-leg',
+      'jump-reach',
       'push-ups',
       'handstand',
       'farmer',
@@ -433,7 +418,6 @@ describe('start rules', () => {
     for (const r of plan.startRules.filter((r) => r.ladderId === ladderId)) {
       const v = inputs[r.input]
       if (v === undefined) continue
-      if (r.onlyIf && (inputs[r.onlyIf.input] ?? -1) < r.onlyIf.min) continue
       const band = r.bands.find((b) => b.min <= v && (b.max === null || v < b.max))
       if (band && codes.indexOf(band.code) > codes.indexOf(best)) best = band.code
     }
@@ -461,15 +445,6 @@ describe('start rules', () => {
       'R8',
       'R8',
     ])
-    expect([0, 0.5, 1, 2.5, 3].map((n) => startCode('rope', { ropeMin: n }))).toEqual([
-      'J1',
-      'J1',
-      'J2',
-      'J2',
-      'J3',
-    ])
-    expect(startCode('pull', { deadHangS: 29.9, negative: 1 })).toBe('P1')
-    expect(startCode('pull', { deadHangS: 30, negative: 0 })).toBe('P2')
-    expect(startCode('pull', { deadHangS: 30, negative: 1 })).toBe('P3')
+    expect(plan.startRules.map((r) => r.ladderId)).toEqual(['push', 'run'])
   })
 })

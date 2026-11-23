@@ -28,13 +28,15 @@ export type SettingsRecord = z.infer<typeof SettingsRecord>
 export const Variant = z.enum(['outdoor', 'indoor'])
 export type Variant = z.infer<typeof Variant>
 
+/**
+ * The step ids the player finished, skipped ones left out (D-057). Missing on a "Done as planned" tap, which counts
+ * every step of the part as done.
+ */
+const Steps = z.array(z.string()).optional()
+
 export const DayRecord = z.object({
   date: LocalDate,
-  paused: z.enum(['sick', 'injured']).nullable().optional(),
-  morning: z
-    .object({ doneAt: Instant, items: z.array(z.string()).optional() })
-    .nullable()
-    .optional(),
+  morning: z.object({ doneAt: Instant, steps: Steps }).nullable().optional(),
   main: z
     .object({
       doneAt: Instant,
@@ -46,11 +48,12 @@ export const DayRecord = z.object({
       note: z.string().optional(),
       /** True for a one-tap "Done as planned". */
       asPlanned: z.boolean().optional(),
+      steps: Steps,
     })
     .nullable()
     .optional(),
   split: z
-    .object({ doneAt: Instant, kind: z.enum(['front', 'side', 'both', 'long']) })
+    .object({ doneAt: Instant, kind: z.enum(['front', 'side', 'both', 'long']), steps: Steps })
     .nullable()
     .optional(),
   /** The "Make it a Shell day" tap: it only folds the open cards. */
@@ -101,8 +104,7 @@ export const TestRecord = z.object({
         weightKg: z.number().positive(),
       })
       .optional(),
-    broadJumpCm: side,
-    hangS: side,
+    jumpReachCm: side,
     farmerS: side,
     heightCm: side,
     wallCm: side,
@@ -114,9 +116,7 @@ export const TestRecord = z.object({
     handstand: z.object({ wallS: side, freeS: side }).optional(),
     restingHr: side,
   }),
-  start: z
-    .object({ runMin: z.number().nonnegative(), ropeMin: z.number().nonnegative(), negative: z.boolean() })
-    .optional(),
+  start: z.object({ runMin: z.number().nonnegative() }).optional(),
   computed: z.object({ vo2max: z.number().optional(), sitRiseScore: z.number().optional() }).default({}),
   updatedAt: Instant,
 })

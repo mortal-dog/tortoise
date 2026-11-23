@@ -54,7 +54,7 @@ function seedRecords(page: Page) {
     })
     tx.objectStore('tests').put({
       date: '2026-11-28',
-      results: { pushups: 14, hangS: 30 },
+      results: { pushups: 14, jumpReachCm: 30 },
       computed: {},
       updatedAt: at,
     })

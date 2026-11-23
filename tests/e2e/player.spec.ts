@@ -70,7 +70,7 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
   await page.getByRole('button', { name: 'Start', exact: true }).click()
 
   // The warm-up: the timed rope, then the drills.
-  await expect(page.getByTestId('unit-title')).toHaveText('Rope basics')
+  await expect(page.getByTestId('unit-title')).toHaveText('Jump rope')
   while (!(await page.getByTestId('unit-title').textContent())?.includes('Jumps')) {
     if (await visible(page, 'Start')) {
       await page.getByRole('button', { name: 'Start', exact: true }).click()
@@ -81,11 +81,11 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
     }
   }
 
-  // A0: 4 × 3 jumps, 60 s rest after each set, then feedback.
-  for (let set = 1; set <= 4; set++) {
-    await expect(page.getByTestId('set-count')).toContainText(`Set ${set} of 4`)
+  // A0: 3 × 5 squat jumps, 60 s rest after each set, then feedback.
+  for (let set = 1; set <= 3; set++) {
+    await expect(page.getByTestId('set-count')).toContainText(`Set ${set} of 3`)
     await page.getByRole('button', { name: 'Set done' }).click()
-    if (set < 4) {
+    if (set < 3) {
       await expect(page.getByTestId('rest')).toBeVisible()
       await page.clock.runFor(61_000) // the rest timer ends by itself
       await expect(page.getByTestId('rest')).toHaveCount(0)
@@ -111,7 +111,6 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
 
   await expect(page.getByTestId('card-main')).toBeVisible()
   await expect(page.getByTestId('card-main').getByLabel('done')).toBeVisible()
-  await expect(page.getByTestId('day-ring')).toHaveText('1/2')
   // The sets went into the logs, where the level-up suggestions read them.
   const logs = await page.evaluate(
     () =>

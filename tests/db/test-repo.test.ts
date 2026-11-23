@@ -22,20 +22,20 @@ beforeEach(async () => {
 
 describe('the Tortoise Test records', () => {
   it('merge each card into the record of its Day 1 date, and compute the scores', async () => {
-    await saveTestResults('2026-11-28', { results: { hangS: 35 } })
+    await saveTestResults('2026-11-28', { results: { jumpReachCm: 35 } })
     await saveTestResults('2026-11-28', { results: { sitRise: { sit: 0, rise: 1 }, pushups: 12 } })
     const t = await getTest('2026-11-28')
-    expect(t?.results).toMatchObject({ hangS: 35, pushups: 12 })
+    expect(t?.results).toMatchObject({ jumpReachCm: 35, pushups: 12 })
     expect(t?.computed.sitRiseScore).toBe(9)
   })
 
   it("set Week 0's starting levels when a day is finished, and mark the day done", async () => {
     await saveTestResults('2026-11-28', {
-      results: { hangS: 35, pushups: 12 },
-      start: { runMin: 15, ropeMin: 2, negative: true },
+      results: { jumpReachCm: 35, pushups: 12 },
+      start: { runMin: 15 },
     })
     const set = await finishTestDay('2026-11-28', 2, { week0: true, today: '2026-11-29' })
-    expect(Object.fromEntries(set)).toEqual({ push: 3, run: 4, rope: 2, pull: 3 })
+    expect(Object.fromEntries(set)).toEqual({ push: 3, run: 4 })
     const levels = await getLevels()
     expect(levels.get('push')?.level).toBe(3)
     expect(levels.get('push')?.history).toEqual([{ level: 3, date: '2026-11-29' }])

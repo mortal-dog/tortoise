@@ -71,7 +71,7 @@ export function sessionSummary(
   day?: PlanDay,
 ): string[] {
   const steps = stepsFor(session, variant, day)
-  const main = steps.filter((s) => s.part === 'main' || s.part === 'playground' || s.part === 'split')
+  const main = steps.filter((s) => s.part === 'main' || s.part === 'split')
   const names = (main.length ? main : steps).map((s) => stepName(s, levels, day))
   return [...new Set(names)]
 }
@@ -104,3 +104,46 @@ export function splitKind(sessionId: string): 'front' | 'side' | 'both' | 'long'
 }
 
 export const TEST_SESSION_ID = { 1: 'test-day-1', 2: 'test-day-2' } as const
+
+/** One exercise of a day's part, as the day page lists it (D-057). */
+export interface DayItem {
+  stepId: string
+  label?: string
+  /** The step's name: the ladder and its level ("Squat L3"), the exercise, or "Intervals". */
+  name: string
+  /** The variant or exercise the video shows, with its link. */
+  exercise: string
+  videoUrl?: string
+  dose: string
+  /** Past days and today: whether the step was done. Undefined for a day still to come. */
+  done?: boolean
+}
+
+/**
+ * The exercises of one part of a day, with what was done (D-057). A part record with `steps` counts only those steps
+ * (the player's finished steps); one without (a "Done as planned" tap) counts every step; no record counts none.
+ */
+export function dayItems(
+  session: Session,
+  variant: Variant,
+  levels: ReadonlyMap<string, LevelRecord>,
+  day: PlanDay | undefined,
+  record: { doneAt: string; steps?: string[] } | null | undefined,
+  marked: boolean,
+): DayItem[] {
+  return stepsFor(session, variant, day).map((step) => {
+    const ladder = step.ladderId ? laddersById.get(step.ladderId) : undefined
+    const level = ladder ? stepLevel(step, ladder, levels, day) : undefined
+    const ex = exercisesById.get(level?.exerciseId ?? step.exerciseId ?? '')
+    const done = !record ? false : record.steps ? record.steps.includes(step.id) : true
+    return {
+      stepId: step.id,
+      ...(step.label ? { label: step.label } : {}),
+      name: stepName(step, levels, day),
+      exercise: level?.name ?? ex?.name ?? 'Intervals',
+      ...(ex?.video ? { videoUrl: ex.video.url } : {}),
+      dose: step.dose,
+      ...(marked ? { done } : {}),
+    }
+  })
+}

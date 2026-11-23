@@ -12,7 +12,7 @@ describe('the debug week screen', () => {
     }
     expect(screen.getAllByRole('heading', { name: /^Morning block/ })).toHaveLength(7)
     expect(screen.getByRole('heading', { name: /^Strength A · 35 min/ })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /^Long outdoor · 65–110 min/ })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^Long outdoor · 60–105 min/ })).toBeInTheDocument()
     expect(screen.getAllByRole('heading', { name: /^Both splits, short form/ })).toHaveLength(2)
     expect(screen.getByText('Split block: in the session.')).toBeInTheDocument()
   })

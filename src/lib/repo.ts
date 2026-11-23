@@ -163,6 +163,8 @@ export interface PlayedSession {
   effort?: number
   note?: string
   distanceKm?: number
+  /** The step ids finished in the player; skipped steps are left out (D-057). */
+  steps: string[]
   logs: Array<Omit<LogRecord, 'id' | 'updatedAt' | 'date' | 'sessionId'>>
 }
 
@@ -181,8 +183,8 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
       updatedAt: at,
     }
     const next: DayRecord = { ...current, date: p.date, updatedAt: at }
-    if (p.slot === 'morning') next.morning = { doneAt: at }
-    else if (p.slot === 'split') next.split = { doneAt: at, kind: p.splitKind ?? 'both' }
+    if (p.slot === 'morning') next.morning = { doneAt: at, steps: p.steps }
+    else if (p.slot === 'split') next.split = { doneAt: at, kind: p.splitKind ?? 'both', steps: p.steps }
     else {
       next.main = {
         doneAt: at,
@@ -192,8 +194,9 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
         ...(p.effort ? { effort: p.effort } : {}),
         ...(p.note ? { note: p.note } : {}),
         ...(p.distanceKm ? { distanceKm: p.distanceKm } : {}),
+        steps: p.steps,
       }
-      if (p.splitKind) next.split = { doneAt: at, kind: p.splitKind }
+      if (p.splitKind) next.split = { doneAt: at, kind: p.splitKind, steps: p.steps }
     }
     days.put(next)
   })

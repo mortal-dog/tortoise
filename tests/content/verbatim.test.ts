@@ -18,52 +18,36 @@ const COMPOSED: Record<string, string> = {
     'capitalised',
   'With total work matched, the interval groups raised VO2max more than steady running did; the 4 × 4 gave +7.2% in 8 weeks [helgerud2007]. Low aerobic fitness carried as much risk of death as smoking, diabetes or coronary disease, or more [mandsager2018]. Older adults doing intervals twice a week for five years showed a trend to lower mortality, not a proven effect [stensvold2020].':
     'capitalised',
-  'Shins and ankles for running and jumping': 'capitalised; row D of Strength C split at its semicolon',
-  'Static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as stretching did [afonso2021], which is why the Cossack squats, Romanian deadlifts, Nordics and Copenhagen planks are in the strength days.':
-    'capitalised',
   'Winter sun at southern Canadian latitudes makes none. On cloudless days, skin made no previtamin D3 from November through February at 42° N, and from October through March at 52° N [webb1988]. In the rest of the year the sun does make it. Vitamin D intake is nutrition, which is outside this app; that is a question for a doctor.':
     'capitalised',
-  'Your rope step (§7.9)': 'capitalised',
-  "The day's pull-up step (scapular pulls, jumping negatives, negatives, then pull-ups)": 'capitalised',
   'For the handstand, a shoulder stretch (puppy pose, hands on a chair)': 'capitalised',
   'In the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle. What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to years, not weeks. Hip bones differ in shape, and a flat side split is not possible for every hip. So progress is measured in centimetres from the floor, and any steady gain counts.':
     'capitalised',
-  'Keep the upper back straight and hinge at the hips; avoid deep forward bending under load [ros2022].':
+  'Keep the upper back straight; avoid deep forward bending under load [ros2022]. The plan has no lift that bends forward under load.':
     'capitalised',
   'After a spine fracture, impact only up to brisk walking [ros2022].': 'capitalised',
   'Long easy run (or run–walk, or a hike) in daylight. It starts at 30–45 min in Block 1 and grows by at most 10% a week (our rule), to 60–75 min in year 1 and up to 90 min later.':
     'drops ", after 5 min of brisk walking": the walk is its own step',
-  'With straight legs once the bent-knee ones are easy.': 'capitalised',
   // Doses the plan gives in running text, not in a table cell.
   '30–45 min in Block 1, growing by at most 10% a week': 'from §6.8 running text',
-  "Tuesday's indoor session (§6.6): your rope step (§7.9)": 'joins §6.8 and §6.6',
-  'Stair walking or marching in place to fill the 30 min': 'capitalised from §6.6',
   'An easy walk': 'capitalised from §5',
   // Notes that join two places of the plan.
-  'Indoor fallback (ice, storm, dangerous footing). Past the rope ladder: 8 × (3 min easy rope, 1 min marching in place), about 32 min.':
-    'joins two sentences of §6.6',
-  'Indoor fallback (ice, storm, dangerous footing). The long run waits for the next safe Saturday (our rule).':
-    'joins two sentences of §6.8',
-  'Playground, 15 min after the run (§7.5). No bars, or icy bars: at home, 3 × 10 one-arm dumbbell rows per side and 2 × 60 s farmer holds.':
-    'joins two bullets of §6.8',
-  'Plyometrics, while fresh: pogo hops, then skater hops': 'shortens a §6.7 bullet',
-  'The home pulling work': 'names the §6.8 fallback',
   'Long form: every hold of both blocks done twice. Half-kneeling hip-flexor stretch, pelvis tucked':
     'joins the long form rule to the first hold',
   'Seated straddle, leaning forward from the hips with a flat back (the seated straddle is the pancake)':
     'joins §6.9 running text',
   // Notes of ladder tables that join the lines under a table.
-  'Dead hang, a separate goal: 30 → 60 → 90 → 120 s (our rule). Hanging knee raise (after the pulls): 2 × 8, then with straight legs.':
-    'joins the two bullets under §7.5',
-  "Hanging raises need a bar, so they belong to Saturday's playground (§7.5), not to this home ladder. Side plank: 2 × 20 s, building to 45 s, then lift the top leg. Copenhagen plank: knee on a chair (short lever), 2 × 30 s; then foot on the chair (long lever), 2 × 30 s.":
-    'joins the three bullets under §7.7',
-  'Jumps are done fresh, at the numbers shown. A level is passed when every landing in a session is held still. Pogo hops (Thursday): 2 × 20 quick contacts, springing from the ankles.':
-    'joins the two bullets under §7.10',
-  'The same rule as for running: at least a week on each step, and up only when the step felt easy and nothing hurt the next morning. Skills, in order: basic bounce, alternate-foot step, high knees, side swing, criss-cross, double-unders.':
-    'joins the two paragraphs of §7.9',
-  'Wednesday A2; the overhead press on Friday, hollow holds on Monday and hangs on Saturday support it.':
+  // D-056: notes the data writes for the new indoor walk, plyometrics and handstand track.
+  'Indoor version (rain, ice, storm, dangerous footing): walk briskly in circles around a room, longer than the run because walking is easier (our rule).':
+    'the §6.6 bullet without its dose',
+  'Indoor version (rain, ice, storm, dangerous footing): walk briskly in circles around a room. At most 60 min; the long run waits for the next safe Saturday (our rule).':
+    'the §6.8 bullet without its dose and its order',
+  'Plyometrics, while fresh: squat jumps, landing softly on both feet': 'the §6.7 bullet without its dose',
+  'Indoors on the rope, using the alternate-foot running step and high knees. Outdoors in good weather, run the same intervals, uphill if possible. The easy parts are an easy bounce or a walk.':
+    'capitalised',
+  'Wednesday A2; the one-arm press on Friday and hollow holds on Monday support it.':
     'the parenthesis after "Strength track"',
-  'Indoors on the rope, using the alternate-foot running step and high knees, and later double-unders. Outdoors in good weather, run the same intervals, uphill if possible. The easy parts are an easy bounce, marching in place or a walk.':
+  'Static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as stretching did [afonso2021], which is why the wide goblet squats, bridges and hip thrusts are in the strength days.':
     'capitalised',
 }
 
@@ -86,7 +70,6 @@ describe('texts copied from the plan', () => {
       if (l.note) texts.push(l.note)
       for (const lv of l.levels) texts.push(lv.name, lv.pass.text)
     }
-    for (const e of plan.exercises) if (e.why) texts.push(e.why)
     for (const a of plan.at99) texts.push(a.line)
     for (const st of plan.blockRules.intervalStages) texts.push(st.text)
     for (const r of plan.rationale) texts.push(...parts(r.text))

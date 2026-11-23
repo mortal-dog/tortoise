@@ -14,7 +14,6 @@ const FILL: Record<DayStatus, string> = {
   full: 'fill-primary stroke-primary',
   shell: 'fill-shell stroke-shell',
   missed: 'fill-surface stroke-brick',
-  paused: 'fill-sky stroke-sky',
   ahead: 'fill-surface stroke-line',
   none: 'fill-surface stroke-line',
 }

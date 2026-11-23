@@ -30,18 +30,9 @@ describe('starting levels from Week 0 (plan §8)', () => {
     expect(levels({ pushups: 30 })).toEqual({ push: '5' })
   })
 
-  it('sets run, rope and pull from the start answers and the hang', () => {
-    expect(levels({ runMin: 15, ropeMin: 2, deadHangS: 20, negative: false })).toEqual({
-      run: 'R4',
-      rope: 'J2',
-      pull: 'P1',
-    })
-  })
-
-  it('counts the negative only with a 30-s hang, and the highest level wins', () => {
-    expect(levels({ deadHangS: 25, negative: true })).toEqual({ pull: 'P1' })
-    expect(levels({ deadHangS: 30, negative: true })).toEqual({ pull: 'P3' })
-    expect(levels({ deadHangS: 30, negative: false })).toEqual({ pull: 'P2' })
+  it('sets the run from the start answer', () => {
+    expect(levels({ runMin: 15 })).toEqual({ run: 'R4' })
+    expect(levels({ runMin: 30, pushups: 12 })).toEqual({ run: 'R8', push: '3' })
   })
 
   it('sets nothing for an input that was not given', () => {
@@ -103,25 +94,10 @@ describe('trend series', () => {
       ).toBe(true)
   })
 
-  it('draw the aim from the test data, and the broad jump at the height', () => {
-    expect(
-      aimValue(
-        plan.tests.find((t) => t.id === 'dead-hang'),
-        175,
-      ),
-    ).toBe(120)
-    expect(
-      aimValue(
-        plan.tests.find((t) => t.id === 'broad-jump'),
-        175,
-      ),
-    ).toBe(175)
-    expect(
-      aimValue(
-        plan.tests.find((t) => t.id === 'farmer'),
-        175,
-      ),
-    ).toBeUndefined()
+  it('draw the aim from the test data', () => {
+    expect(aimValue(plan.tests.find((t) => t.id === 'deep-squat'))).toBe(120)
+    expect(aimValue(plan.tests.find((t) => t.id === 'farmer'))).toBeUndefined()
+    expect(aimValue(plan.tests.find((t) => t.id === 'jump-reach'))).toBeUndefined()
   })
 })
 

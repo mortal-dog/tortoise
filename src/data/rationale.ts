@@ -84,7 +84,7 @@ export const rationale: RationaleInput[] = [
     id: 'small-steps',
     topic: 'Small steps',
     section: '2',
-    text: 'The run–walk and rope ladders move one step at a time, with at least a week on each step. Beyond the ladders, running and rope time grow by at most 10% a week (our rule). Novice runners who raised their weekly distance by more than 30% over two weeks seemed more prone to distance-related injuries, though the difference was not statistically significant [nielsen2014].',
+    text: 'The run–walk ladder moves one step at a time, with at least a week on each step. Beyond the ladder, running time grows by at most 10% a week (our rule). Novice runners who raised their weekly distance by more than 30% over two weeks seemed more prone to distance-related injuries, though the difference was not statistically significant [nielsen2014].',
     sources: ['nielsen2014'],
     ourRule: true,
   },
@@ -178,7 +178,7 @@ export const rationale: RationaleInput[] = [
     id: 'stretch-why',
     topic: 'Why the split blocks',
     section: '6.9',
-    text: 'Static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as stretching did [afonso2021], which is why the Cossack squats, Romanian deadlifts, Nordics and Copenhagen planks are in the strength days.',
+    text: 'Static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as stretching did [afonso2021], which is why the wide goblet squats, bridges and hip thrusts are in the strength days.',
     sources: ['thomas2018', 'afonso2021'],
   },
   {
@@ -201,7 +201,7 @@ export const rationale: RationaleInput[] = [
     id: 'safety-lifting',
     topic: 'Lifting',
     section: '13',
-    text: 'Keep the upper back straight and hinge at the hips; avoid deep forward bending under load [ros2022].',
+    text: 'Keep the upper back straight; avoid deep forward bending under load [ros2022]. The plan has no lift that bends forward under load.',
     sources: ['ros2022'],
   },
   {

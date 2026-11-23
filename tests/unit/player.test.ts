@@ -138,9 +138,11 @@ describe('the step engine', () => {
     expect(week0.segments?.filter((s) => s.kind === 'work')).toHaveLength(4)
   })
 
-  it('uses the rope ladder indoors', () => {
+  it('walks indoors instead of running (D-056)', () => {
     const list = units('easy-run', '2026-12-29', {}, 'indoor')
-    expect(list.some((u) => u.exercises.some((e) => e.ladderId === 'rope'))).toBe(true)
+    expect(
+      list.some((u) => u.exercises.some((e) => e.stepId === 'indoor-walk' && e.exerciseId === 'walk')),
+    ).toBe(true)
     expect(list.some((u) => u.exercises.some((e) => e.ladderId === 'run'))).toBe(false)
   })
 
@@ -152,11 +154,12 @@ describe('the step engine', () => {
     expect(first?.segments?.map((s) => s.side).filter(Boolean)).toEqual(['left', 'right'])
   })
 
-  it('times a hang to the maximum with a stopwatch', () => {
-    const hang = byStep(units('long', '2027-01-02'), 'dead-hang')
-    expect(hang.kind).toBe('hold')
-    expect(hang.holdS).toBeUndefined()
-    expect(hang.target).toBe('3 × max')
+  it('gives every exercise its video link, except the everyday ones (D-056)', () => {
+    const list = units('strength-a', '2026-12-28')
+    for (const u of list)
+      for (const e of u.exercises)
+        if (e.exerciseId === 'rope-basics') expect(e.videoUrl, e.stepId).toBeUndefined()
+        else expect(e.videoUrl, e.stepId).toMatch(/^https:\/\/www\.youtube\.com\/watch\?v=/)
   })
 
   it('gives every session of the plan units with a target', () => {
@@ -221,7 +224,7 @@ describe('timelines', () => {
 })
 
 describe('spoken coaching', () => {
-  it('says the step, its target in words and the key cue', async () => {
+  it('says the step and its target in words', async () => {
     const { coachingText } = await import('@/lib/player')
     const list = units('strength-a', '2026-12-28', { squat: 3, push: 3 })
     const text = coachingText(byStep(list, 'a1'))

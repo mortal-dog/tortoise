@@ -5,7 +5,6 @@ const LABEL: Record<DayStatus, string> = {
   full: 'Full day',
   shell: 'Shell day',
   missed: 'Missed',
-  paused: 'Paused',
   ahead: 'Ahead',
   none: 'Before Week 0',
 }
@@ -14,7 +13,7 @@ export function statusLabel(s: DayStatus): string {
   return LABEL[s]
 }
 
-/** Each status has its own shape as well as its colour (D-033): filled, half filled, outline, dashed, faint. */
+/** Each status has its own shape as well as its colour (D-033): filled, half filled, outline, faint. */
 export function StatusMark({
   status,
   size = 18,
@@ -47,9 +46,6 @@ export function StatusMark({
       )}
       {status === 'missed' && (
         <circle cx={c} cy={c} r={r} fill="none" stroke="var(--brick)" strokeWidth="2" />
-      )}
-      {status === 'paused' && (
-        <circle cx={c} cy={c} r={r} fill="none" stroke="var(--sky)" strokeWidth="2" strokeDasharray="3 2.5" />
       )}
       {status === 'ahead' && (
         <circle cx={c} cy={c} r={r} fill="var(--line)" stroke="var(--line)" strokeWidth="2" />

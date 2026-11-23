@@ -20,22 +20,22 @@ only.
 - A private, offline app at <https://tortoise.doctornova.net>, iPhone first, on every platform (D-047). The data
   stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself (D-054, D-055); there is no
   server.
-- Five tabs: **Today** (the day's cards and one-tap logging), **Week**, **Progress** (the Shell honeycomb calendar,
-  test trends, milestones, the At-99 board), **Library** (every exercise with its why and sources) and **Settings**
-  (profile, units, the Google Drive sync).
+- Four tabs: **Today** (the day's cards and one-tap logging), **Week** (each day's exercises, and what was done),
+  **Progress** (the Shell honeycomb calendar, test trends, badges, the At-99 board) and **Settings** (profile, units,
+  the Google Drive sync). Each exercise's name opens its YouTube video (D-056).
 - A full-screen **session player** with timers and sound cues, and a **test wizard** for the Tortoise Test.
 - A forgiving streak: a 15-minute **Shell day** counts, and only two missed days in a row break it.
 
 ### 2. [Exercise plan](2-exercise-plan.md)
 
-- Equipment: one pair of fixed dumbbells, a jump rope, and playground bars on outdoor days. Nothing to buy.
+- Equipment: one pair of fixed dumbbells and a jump rope; no bar. Nothing to buy.
 - Every day: a 15-minute **morning block** after waking (straight back, wrists, handstand practice, balance), then at
   lunch to mid-afternoon a main session of about 45 minutes with a 10-minute split block straight after it, in one
   sitting.
 
   | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
   |---|---|---|---|---|---|---|
-  | Strength A | Easy run | Strength B | Intervals | Strength C | Long outdoor run + playground | Light: walk + flexibility |
+  | Strength A | Easy run | Strength B | Intervals | Strength C | Long outdoor run + rows at home | Light: walk + flexibility |
 
 - About 7½ hours in a full week. Every fourth week is light. The **Tortoise Test** comes every 12 weeks, and progression
   ladders carry every exercise forward for decades.
@@ -68,7 +68,7 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
 
 | | |
 |---|---|
-| Equipment | One fixed dumbbell pair (7–15 kg each), a jump rope, playground or park bars, a wall, a chair, a sofa, the floor |
+| Equipment | One fixed dumbbell pair (7–15 kg each), a jump rope, a wall, a chair, a sofa, a stair, the floor; no bar (D-056) |
 | Time | About 60–70 min on weekdays (15 in the morning, the rest later), 1.5–2 h on Saturday, about 45 min plus a walk on Sunday; the 15-minute Shell day when needed |
 | Outdoors | Runs outside whenever the weather allows; the rope indoors otherwise |
 | Phone | iPhone first, with the app installed from Safari; Android phones and desktop browsers work too (D-047) |

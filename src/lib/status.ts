@@ -1,11 +1,10 @@
 // Day status and the tortoise streak (design §5.2, D-014, D-029).
 import { addDays, compareDates, type LocalDate } from './dates'
 
-export type DayStatus = 'full' | 'shell' | 'missed' | 'paused' | 'ahead' | 'none'
+export type DayStatus = 'full' | 'shell' | 'missed' | 'ahead' | 'none'
 
 /** The parts of a day record the status reads. */
 export interface DayFacts {
-  paused?: 'sick' | 'injured' | null
   morning?: { doneAt: string } | null
   /** On a test day the day's part of the Tortoise Test is saved here; on Sunday, the Light session. */
   main?: { doneAt: string } | null
@@ -13,7 +12,6 @@ export interface DayFacts {
 
 /**
  * - Full: morning block and main session both done. Shell: one of the two.
- * - Done beats paused; paused (sick or injured) beats missed.
  * - Ahead: a future day, or today while nothing is done yet.
  * - None: a day before Week 0, which has no status.
  */
@@ -27,7 +25,6 @@ export function dayStatus(
   const done = (facts?.morning?.doneAt ? 1 : 0) + (facts?.main?.doneAt ? 1 : 0)
   if (done === 2) return 'full'
   if (done === 1) return 'shell'
-  if (facts?.paused) return 'paused'
   if (compareDates(date, todayDate) >= 0) return 'ahead'
   return 'missed'
 }
@@ -39,8 +36,7 @@ export function isDone(s: DayStatus): boolean {
 /**
  * The tortoise streak: the done days (Full or Shell) of the current run. Counted back from today, or from yesterday
  * while today has nothing done. One missed day adds nothing but does not end the run; two missed days in a row end it.
- * Paused days are skipped: they add nothing, end nothing, and do not come between two missed days. The run never
- * reaches back before Week 0.
+ * The run never reaches back before Week 0. There is no pause (D-057): the app counts what was done, not why not.
  */
 export function currentStreak(
   statusOf: (date: LocalDate) => DayStatus,

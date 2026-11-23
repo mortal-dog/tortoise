@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Check, Clock, Play, Undo2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import { DayRing } from '@/components/DayRing'
 import { FirstRun } from '@/components/FirstRun'
 import { Banner, Button, Card } from '@/components/ui'
 import { plan } from '@/data/plan'
@@ -93,13 +92,8 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
   const morningDone = !!day?.morning?.doneAt
   const mainDone = !!day?.main?.doneAt
   const splitDone = !!day?.split?.doneAt
-  const done = (morningDone ? 1 : 0) + (mainDone ? 1 : 0)
   const folded = !!day?.folded
   const variant: Variant = day?.main?.variant ?? variantChoice ?? 'outdoor'
-
-  const yesterday = addDays(t, -1)
-  const yesterdayMissed =
-    compareDates(yesterday, history.week0) >= 0 && history.statusOf(yesterday) === 'missed'
 
   const suggestion = levelSuggestion([morning, ...(main ? [main] : [])], levels, logs ?? [], t, pd, dismissed)
 
@@ -126,7 +120,6 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
             {history.streak === 1 ? 'day' : 'days'}
           </p>
         </div>
-        <DayRing done={done} />
       </header>
 
       {pd.kind === 'week0' && !tmpl.testDay && (
@@ -139,27 +132,6 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
         <Banner tone="sky">Test week: the Tortoise Test this weekend.</Banner>
       )}
       {tmpl.testDay && <Banner tone="sky">Test weekend: the Tortoise Test, Day {tmpl.testDay}.</Banner>}
-
-      {yesterdayMissed && (
-        <Banner tone="brick">
-          <p className="font-semibold">Yesterday has nothing logged.</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Link
-              to="/day/$date"
-              params={{ date: yesterday }}
-              className="inline-flex min-h-11 items-center rounded-xl border border-primary px-4 text-sm font-semibold text-primary"
-            >
-              Log yesterday
-            </Link>
-            <Button
-              variant="quiet"
-              onClick={() => void updateDay(yesterday, (d) => ({ ...d, paused: 'sick' }))}
-            >
-              It was a sick day
-            </Button>
-          </div>
-        </Banner>
-      )}
 
       {suggestion && (
         <Banner tone="primary">

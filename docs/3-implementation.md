@@ -220,6 +220,9 @@ are in the Phase 8 checklist.
 
 ### Phase 5 — Library and content (M)
 
+*Since D-056 (2026-11-23) there is no Library page and no exercise text: an exercise is a well-known name and one
+YouTube video, opened from its name. What follows is the record of what Phase 5 built.*
+
 **Goal:** every exercise fully explained.
 
 - Library: list, search and filters; exercise pages with ladder, history and sources; source detail.

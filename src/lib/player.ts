@@ -20,8 +20,8 @@ export interface UnitExercise {
   name: string
   /** "Squat · L3", or the exercise's name. */
   title: string
-  cue: string
-  how: string
+  /** The exercise's teaching video (D-056), opened from its name. */
+  videoUrl?: string
   note?: string
   /** The working range of a reps step: "8–12". */
   reps?: Range
@@ -124,7 +124,7 @@ function unitFor(step: Step, input: BuildInput): Unit {
   const stage =
     day.intervalStage > 0 ? rules.intervalStages.find((s) => s.stage === day.intervalStage) : undefined
   const dose = adjustDose(step, session, day, rules, stage?.set.repeats)
-  const mainWork = step.part === 'main' || step.part === 'playground'
+  const mainWork = step.part === 'main'
   const base = {
     id: step.id,
     part: step.part,
@@ -233,8 +233,7 @@ function exerciseFor(step: Step, level: LadderLevel | undefined): UnitExercise {
     levelCode: level?.code,
     name,
     title: ladder && level ? `${ladder.name} · ${levelLabel(level.code)}` : name,
-    cue: ex?.cue ?? '',
-    how: ex?.how ?? '',
+    videoUrl: ex?.video?.url,
     note: step.note,
     dose: step.dose,
   }
@@ -376,7 +375,7 @@ export function clockText(ms: number): string {
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`
 }
 
-/** What spoken coaching says at the start of a step: the exercise, the target in words, and the key cue. */
+/** What spoken coaching says at the start of a step: the exercise and the target in words. */
 export function coachingText(unit: Unit): string {
   const names = unit.exercises.map((e) => e.title.replace(/ · /g, ', ')).join(', then ')
   const target = unit.target
@@ -385,6 +384,5 @@ export function coachingText(unit: Unit): string {
     .replace(/\bs\b/g, 'seconds')
     .replace(/\bmin\b/g, 'minutes')
     .replace(/ \/ /g, ', and ')
-  const cue = unit.exercises[0]?.cue
-  return `${names}. ${target}.${cue ? ` ${cue}.` : ''}`
+  return `${names}. ${target}.`
 }

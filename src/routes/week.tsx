@@ -190,7 +190,7 @@ function Week() {
 function Legend() {
   return (
     <ul className="mt-6 grid grid-cols-2 gap-2 text-sm" aria-label="Status key">
-      {(['full', 'shell', 'missed', 'paused', 'ahead'] as const).map((s) => (
+      {(['full', 'shell', 'missed', 'ahead'] as const).map((s) => (
         <li key={s} className="flex items-center gap-2">
           <StatusMark status={s} />
           {statusLabel(s)}

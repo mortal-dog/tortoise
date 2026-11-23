@@ -167,7 +167,7 @@ export function adjustDose(
   stageRepeats?: number,
 ): StepDose {
   const out: StepDose = {}
-  const changeable = step.part === 'main' || step.part === 'playground'
+  const changeable = step.part === 'main'
   const halfVolume = day.kind === 'week0' && rules.week0.halfVolumeDays.includes(day.weekday)
   if (step.sets !== undefined) {
     let sets = step.sets

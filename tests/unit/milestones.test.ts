@@ -74,7 +74,7 @@ describe('the milestone engine', () => {
         {
           pushups: 12,
           wallCm: 0,
-          broadJumpCm: 170,
+          jumpReachCm: 40,
           heightCm: 178,
           splits: { frontL: 30, frontR: 35, side: 40 },
         },
@@ -82,7 +82,7 @@ describe('the milestone engine', () => {
       ),
       test(
         '2027-02-20',
-        { pushups: 18, wallCm: 0, broadJumpCm: 180, oneLeg: { closedL: 12, closedR: 8 } },
+        { pushups: 18, wallCm: 0, jumpReachCm: 44, oneLeg: { closedL: 12, closedR: 8 } },
         { vo2max: 44, sitRiseScore: 9 },
       ),
     ]
@@ -110,7 +110,7 @@ describe('the milestone engine', () => {
       sideSplitCm: 40,
       oneLegClosedS: 8,
       sitRise: 9,
-      broadJumpVsHeight: 2,
+      jumpReachCm: 44,
       wallZeroTests: 2,
     })
     expect(metrics.vo2maxGainPct).toBeCloseTo(10, 10)

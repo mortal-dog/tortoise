@@ -4,9 +4,13 @@
 > **On the way:** a freestanding handstand, a front split and a side split.
 
 This is the training plan the Tortoise app runs. It needs only what is already at home: one pair of fixed dumbbells
-(7–15 kg each), a jump rope, and a wall, a chair, a sofa and the floor. On outdoor days, playground or park bars are used
-for hanging and pulling. Nothing has to be bought. Running happens outdoors whenever the weather allows; the rope replaces
-it indoors.
+(7–15 kg each), a jump rope, and a wall, a chair, a sofa, a stair and the floor. There is no bar. Nothing has to be
+bought. Running happens outdoors whenever the weather allows; a longer brisk walk around a room replaces it indoors.
+
+**Safe before clever** (*our rule*, D-056): every exercise is one that is hard to get wrong in a way that hurts. A drill
+whose usual mistake injures (a rounded back under load, a fall, a hard one-leg or sideways landing, a sprint, a sudden
+heavy lowering) was replaced by a safer one that trains the same thing. The handstand and split drills stay as they
+are, by the owner's choice.
 
 It is written for a healthy adult starting in their late 30s. It starts gently, with the Week 0 tests followed by a 3-week
 ramp, and the tests set the starting level of every exercise.
@@ -36,7 +40,7 @@ ramp, and the tests set the starting level of every exercise.
 12. [Outdoors, weather and daylight](#12-outdoors-weather-and-daylight)
 13. [Safety](#13-safety)
 14. [Adapting the plan](#14-adapting-the-plan)
-- [Appendix A. Exercise library](#appendix-a-exercise-library)
+- [Appendix A. Exercises and their videos](#appendix-a-exercises-and-their-videos)
 
 ---
 
@@ -45,12 +49,12 @@ ramp, and the tests set the starting level of every exercise.
 | At 99, and on the way | What it needs | Where it lives in the week |
 |---|---|---|
 | **A straight back** | Strong back extensors, a mobile upper back, strong bones (a crushed spine bone tips the back forward) | Morning block every day; loaded back extension Monday; bone loading from lifts, jumps, rope and running |
-| **Jump** | Leg power, springy tendons, strong bones, confident landings | Jumps Monday; rope in the strength and interval warm-ups; pogo and skater hops Thursday |
-| **Run** | An aerobic base and peak aerobic power; feet, calves and tendons used to running; hamstrings that tolerate speed | Easy run Tuesday, intervals Thursday, long run Saturday; calf, shin and Nordic work |
+| **Jump** | Leg power, springy tendons, strong bones, confident landings | Squat jumps Monday and Thursday; rope in the strength and interval warm-ups |
+| **Run** | An aerobic base and peak aerobic power; feet, calves and tendons used to running | Easy run Tuesday, intervals Thursday, long run Saturday; calf work |
 | **Get up off the floor, carry, climb stairs, not fall** | Leg strength, grip, balance | Strength A–C, carries, daily balance |
-| **Handstand** | Wrists that carry body weight, shoulder strength, full overhead range, a hollow body line, the balance skill | 6 minutes every morning; pike push-ups, overhead press, hollow holds, hangs |
-| **Front split** | Long hamstrings (front leg) and hip flexors (back leg), and strength at that length | Front-split block 5 days a week; Romanian deadlifts and Nordic curls |
-| **Side split** | Long, strong adductors (inner thighs), and hips shaped to allow it | Side-split block 5 days a week; Cossack squats and Copenhagen planks |
+| **Handstand** | Wrists that carry body weight, shoulder strength, full overhead range, a hollow body line, the balance skill | 6 minutes every morning; pike push-ups, the one-arm press, hollow holds |
+| **Front split** | Long hamstrings (front leg) and hip flexors (back leg), and strength at that length | Front-split block 5 days a week; bridges and hip thrusts |
+| **Side split** | Long, strong adductors (inner thighs), and hips shaped to allow it | Side-split block 5 days a week; wide goblet squats |
 
 ### Why a straight back needs strong bones, not only good posture
 
@@ -97,15 +101,15 @@ this is an injury or quitting, not a slow start. So the plan ramps up over 3 wee
    (*our rule*).
 3. **Heavy for you, never maximal alone.** Use a load you can lift 8–12 times with good form, building to 3 sets [ros2022].
    End each set 1–2 reps before form would break (*our rule*). No one-rep-maximum attempts at home.
-4. **Small steps.** The run–walk and rope ladders move one step at a time, with at least a week on each step. Beyond
-   the ladders, running and rope time grow by at most 10% a week (*our rule*). Novice runners who raised their weekly
+4. **Small steps.** The run–walk ladder moves one step at a time, with at least a week on each step. Beyond the ladder,
+   running time grows by at most 10% a week (*our rule*). Novice runners who raised their weekly
    distance by more than 30% over two weeks seemed more prone to distance-related injuries, though the difference was
    not statistically significant [nielsen2014].
 5. **Every fourth week is light** (a deload week): fewer sets, shorter runs, half the intervals. The morning block and the
    splits continue as usual (*our rule*).
 6. **Test every 12 weeks** with the Tortoise Test (§10), and move up by the numbers, not by mood (*our rule*).
-7. **Outdoors when the weather allows.** Runs and the long Saturday session are outside in daylight; the rope is the indoor
-   fallback (§12).
+7. **Outdoors when the weather allows.** Runs and the long Saturday session are outside in daylight; a longer brisk walk
+   indoors is the indoor version (§12).
 8. **Respect the pain rules** (§13). Muscle burn is fine; joint or tendon pain means going back a level.
 
 ---
@@ -148,11 +152,11 @@ A heart-rate monitor is optional; the talk test works everywhere.
 | Day | Morning (15 min) | Main session | Split block | Total |
 |---|---|---|---|---|
 | **Mon** | Morning block | **Strength A:** jumps, squat, push-up, row, back extension, core, calves | Front (10 min) | ~60 min |
-| **Tue** | Morning block | **Easy run** 30–40 min outdoors (indoor rope circuit when needed) | Side (10 min) | ~70 min |
-| **Wed** | Morning block | **Strength B:** hinge, pike push-up, step-up, pullover, Nordic curl, carry | Front (10 min) | ~60 min |
-| **Thu** | Morning block | **Intervals:** pogo and skater hops, then rope intervals (outdoor running in good weather) | Side (10 min) | ~55–65 min |
-| **Fri** | Morning block | **Strength C:** overhead press, Cossack squat, row, push-up, balance, Copenhagen plank | Both, short form (10 min) | ~60 min |
-| **Sat** | Morning block | **Long outdoor:** long easy run 45–90 min, then playground hangs and pull-ups | Both, short form (10 min) | ~1.5–2 h |
+| **Tue** | Morning block | **Easy run** 30–40 min outdoors (a 45–60 min brisk walk indoors when needed) | Side (10 min) | ~70 min |
+| **Wed** | Morning block | **Strength B:** bridge, pike push-up, step-up, row, carry | Front (10 min) | ~60 min |
+| **Thu** | Morning block | **Intervals:** squat jumps, then rope intervals (outdoor running in good weather) | Side (10 min) | ~55–65 min |
+| **Fri** | Morning block | **Strength C:** one-arm press, wide goblet squat, row, push-up, side plank | Both, short form (10 min) | ~60 min |
+| **Sat** | Morning block | **Long outdoor:** long easy run 45–90 min (a brisk walk indoors, at most 60 min), then rows and farmer holds at home | Both, short form (10 min) | ~1.5–2 h |
 | **Sun** | Morning block | **Light:** an easy walk, then the flexibility session (30 min) | In the session | ~45 min + walk |
 
 A full week is about 7½ hours, and about 8 with the longest Saturday run, plus the Sunday walk. Week 0 is about 5½
@@ -180,14 +184,12 @@ hours and the ramp-up weeks about 6½.
 |---|---|---|---|
 | 1 | Cat–camel | 6 slow rounds | Moves each part of the spine before the day starts |
 | 2 | Chin tuck | 8 × 3 s hold | Keeps the head over the shoulders; trains the deep neck muscles |
-| 3 | Upper-back extension over a chair back | 6 × 3 s | Opens the upper back that sitting closes |
-| 4 | Wall angel | 8 slow | Shoulder blades down and back, arms overhead with the ribs down: the handstand shoulder position |
-| 5 | Prone chest lift, arms in a W | 5 × 3–5 s hold | The UK consensus dose for the back extensors [ros2022]. Eight years after a back-extension programme, fewer spine bones had fractured: 1.6% against 4.3% [sinaki2002] |
-| 6 | Half-kneeling hip-flexor stretch | 30 s per side | Undoes sitting; prepares the front split's back leg |
-| 7 | Wrist prep | 90 s | Readies the wrists to carry body weight |
-| 8 | Handstand practice at your level (§7.4) | Your level's holds, with rests: 3–6 min in all | A skill grows with frequency: little, often, and fresh (*our rule*) |
-| 9 | One-leg stance at your level (§7.12) | The level's time per leg (10–60 s) | At 51–75, people who could not stand 10 s on one leg died at a 1.84 times higher rate [araujo2022] |
-| 10 | Heel-to-toe walk | 10 steps forward, 10 back | Balance in motion; balance work at least twice a week [octftf] |
+| 3 | Wall angel | 8 slow | Shoulder blades down and back, arms overhead with the ribs down: the handstand shoulder position |
+| 4 | Prone chest lift, arms in a W | 5 × 3–5 s hold | The UK consensus dose for the back extensors [ros2022]. Eight years after a back-extension programme, fewer spine bones had fractured: 1.6% against 4.3% [sinaki2002] |
+| 5 | Half-kneeling hip-flexor stretch | 30 s per side | Undoes sitting; prepares the front split's back leg |
+| 6 | Wrist prep | 90 s | Readies the wrists to carry body weight |
+| 7 | Handstand practice at your level (§7.4) | Your level's holds, with rests: 3–6 min in all | A skill grows with frequency: little, often, and fresh (*our rule*) |
+| 8 | One-leg stance at your level (§7.12) | The level's time per leg (10–60 s) | At 51–75, people who could not stand 10 s on one leg died at a 1.84 times higher rate [araujo2022] |
 
 ### 6.2 Warm-up — before each strength session, 5 min
 
@@ -196,10 +198,8 @@ Sunday's walk warms up the flexibility session.
 
 | Exercise | Dose | Why |
 |---|---|---|
-| Easy rope (or marching, or jumping jacks) | 2 min | Raises body temperature; a couple of hundred easy impacts covers the "about 50 moderate impacts on most days" [ros2022] |
+| Easy rope (or jumping jacks) | 2 min | Raises body temperature; a couple of hundred easy impacts covers the "about 50 moderate impacts on most days" [ros2022] |
 | World's greatest stretch | 3 per side | Hips, hamstrings and upper back in one movement |
-| Leg swings, front–back and side–side | 10 each per leg | Hips ready for running and the splits |
-| Scapular push-ups | 10 | Shoulder blades and the serratus muscles |
 | Bodyweight squats | 10 | Knees and hips through their full range |
 
 ### 6.3 Strength A — Monday, about 30 min after the warm-up
@@ -209,10 +209,10 @@ and reps; where it has a ladder, your level's own numbers are in §7.
 
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
-| A0 | Jumps (§7.10): broad jump, stick the landing | 4 × 3 | 60 s | Done first, while fresh. Power fades earliest [reid2012]; landings load bone [ros2022] |
-| A1 | Squat (§7.1): goblet squat, then Bulgarian split squat, then pistol | 3 × 8–12 | after A2 | Legs carry everything. Putting the whole body on one leg makes a fixed dumbbell heavy enough |
-| A2 | Push-up (§7.3): incline, then floor, then archer | 3 × 6–15 | 75 s | In active men, those who could do more than 40 push-ups had far fewer heart events over 10 years than those who could do fewer than 10 [yang2019] |
-| B1 | One-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | after B2 | The upper-back pull that holds the shoulders back |
+| A0 | Jumps (§7.10): squat jump, stick the landing | 3 × 5 | 60 s | Done first, while fresh. Power fades earliest [reid2012]; landings load bone [ros2022] |
+| A1 | Squat (§7.1): goblet squat, then split squat, then Bulgarian split squat | 3 × 8–12 | after A2 | Legs carry everything. Putting the whole body on one leg makes a fixed dumbbell heavy enough |
+| A2 | Push-up (§7.3): incline, then floor, then feet on a chair | 3 × 6–15 | 75 s | In active men, those who could do more than 40 push-ups had far fewer heart events over 10 years than those who could do fewer than 10 [yang2019] |
+| B1 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | after B2 | The upper-back pull that holds the shoulders back |
 | B2 | Back extension (§7.6), 3-s hold at the top | 3 × 8 | 60 s | 3 sets of 8, the arms moving from the sides to a W to the ears [katzman2010] |
 | C1 | Core (§7.7): dead bug, then hollow hold | 3 × 8 per side, or 20–40 s | after C2 | Trunk stability; the hollow line is the handstand line |
 | C2 | Single-leg calf raise on a step, 3 s down | 2 × 10–15 per leg | 45 s | Calves and Achilles tendons for rope and running |
@@ -223,12 +223,11 @@ About 30 min after the warm-up, in pairs as on Monday.
 
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
-| A1 | Hinge (§7.2): dumbbell Romanian deadlift, then single-leg | 3 × 8–12 | after A2 | The hip hinge is the safe way to bend and lift for life [ros2022]; it loads the hamstrings at length, which serves the front split |
+| A1 | Bridge (§7.2): glute bridge, then single-leg, then hip thrust | 3 × 8–12 | after A2 | The hips and the back of the legs, lifting with no forward bend of the back under load [ros2022] |
 | A2 | Vertical push (§7.4, strength track): pike push-up, then feet on a chair, then wall handstand push-up negatives | 3 × 5–10 | 75 s | The pressing strength a handstand stands on |
-| B1 | Step-up onto a chair or stair, a dumbbell in each hand | 3 × 8–10 per leg | after B2 | Stairs at 99 |
-| B2 | Dumbbell pullover, lying on the floor | 3 × 10–12 | 60 s | Lats and overhead range without a bar |
-| C1 | Nordic hamstring curl, heels under a sofa (§7.2) | 3 × 3–6 slow lowerings | after C2 | Programmes that included it cut hamstring injuries by up to 51% [vandyk2019]; strong, long hamstrings for running and the front split |
-| C2 | Farmer carry or hold, both dumbbells | 3 × 45–60 s | 60 s | Grip: each 5 kg less grip strength went with a 16% higher death rate [leong2015] |
+| B1 | Step-up onto a stair, a dumbbell in each hand | 3 × 8–10 per leg | after B2 | Stairs at 99 |
+| B2 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | 60 s | The second pulling day |
+| C | Farmer carry or hold, both dumbbells | 3 × 45–60 s | 60 s | Grip: each 5 kg less grip strength went with a 16% higher death rate [leong2015] |
 
 ### 6.5 Strength C — Friday
 
@@ -236,29 +235,27 @@ About 30 min after the warm-up, in pairs as on Monday.
 
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
-| A1 | Standing dumbbell overhead press | 3 × 6–10 | after A2 | Shoulder strength and the locked-out arms a handstand stands on |
-| A2 | Cossack squat, holding one dumbbell at the chest | 3 × 6–8 per side | 75 s | Strength training improved range of motion as much as stretching did [afonso2021]; this one works at the side split's range |
-| B1 | Two-arm bent-over row, later renegade row | 3 × 8–10 (renegade 6–8 per side) | after B2 | The second pulling day |
+| A1 | Half-kneeling one-arm dumbbell press: kneeling keeps the lower back from arching | 3 × 6–10 per side | after A2 | Shoulder strength and the locked-out arms a handstand stands on |
+| A2 | Wide goblet squat (sumo squat): feet wide, toes out, one dumbbell held at the chest | 3 × 8–12 | 75 s | Strength training improved range of motion as much as stretching did [afonso2021]; the wide stance works the inner thighs of the side split |
+| B1 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | after B2 | The third pulling day |
 | B2 | Push-up, one variant harder than Monday's, or slower | 2 × 6–12 | 60 s | The second push day |
-| C1 | Single-leg reach (bodyweight), slow | 2 × 6 per side | after C2 | Balance and hip control; balance and functional exercise cut falls [sherrington2019] |
-| C2 | Copenhagen plank, knee on a chair (§7.7) | 2 × 15–30 s per side | 45 s | Inner-thigh strength for the side split and the groin |
-| D | Side plank, then tibialis raise | 2 × 20–45 s per side; 2 × 15–20 | — | The side of the trunk [octftf]; shins and ankles for running and jumping |
+| C | Side plank | 2 × 20–45 s per side | — | The side of the trunk [octftf] |
 
 ### 6.6 Easy run — Tuesday
 
-- **Session:** 5 min brisk walk, then 30–40 min easy running (talk test), then 3 min of walking. From Block 2, the
-  last minutes of the run hold 4–6 strides of 20 s (fast but relaxed, with an easy jog between them).
+- **Session:** 5 min brisk walk, then 30–40 min easy running (talk test), then 3 min of walking.
 - **Not yet able to run 30 min comfortably:** use the run–walk ladder (§7.8) instead.
 - **Why:** runners had a 30% lower risk of death and about 3 years more life expectancy, and 5–10 slow minutes a day was
   enough [lee2014]. Any running, even once a week, went with 27% lower risk [pedisic2020]. Easy running builds the base
   without the cost of hard running.
-- **Indoor fallback** (ice, storm, dangerous footing): your rope step (§7.9), then stair walking or marching in place
-  to fill the 30 min. Past the rope ladder: 8 × (3 min easy rope, 1 min marching in place), about 32 min.
+- **Indoor version** (rain, ice, storm, dangerous footing): 45–60 min of brisk walking indoors (talk test): walk briskly
+  in circles around a room, longer than the run because walking is easier (*our rule*). Stairs were considered and
+  left out: walking down many flights is where the knees take the most load (D-056).
 
 ### 6.7 Intervals — Thursday
 
 - **Warm-up:** 8 min, made of 4 min easy rope, the warm-up drills (§6.2) and 2 × 20 s of faster rope.
-- **Plyometrics, while fresh:** pogo hops 2 × 20, then skater hops 2 × 6 per side.
+- **Plyometrics, while fresh:** squat jumps 2 × 5, landing softly on both feet.
 - **The main set, by block (§8):**
 
   | Block | Main set |
@@ -268,9 +265,8 @@ About 30 min after the warm-up, in pairs as on Monday.
   | 3 | 5 × (2 min hard, 2 min easy) |
   | 4 onward | 4 × (4 min hard, 3 min easy): the 4 × 4 of [helgerud2007] |
 
-- **Where:** indoors on the rope, using the alternate-foot running step and high knees, and later double-unders. Outdoors in
-  good weather, run the same intervals, uphill if possible. The easy parts are an easy bounce, marching in place or a
-  walk.
+- **Where:** indoors on the rope, using the alternate-foot running step and high knees. Outdoors in good weather, run the
+  same intervals, uphill if possible. The easy parts are an easy bounce or a walk.
 - **Cool-down:** 3 min easy.
 - **Why:** with total work matched, the interval groups raised VO2max more than steady running did; the 4 × 4 gave
   +7.2% in 8 weeks [helgerud2007]. Low aerobic fitness carried as much risk of death as smoking, diabetes or coronary
@@ -281,11 +277,9 @@ About 30 min after the warm-up, in pairs as on Monday.
 
 - **Long easy run** (or run–walk, or a hike) in daylight, after 5 min of brisk walking. It starts at 30–45 min in
   Block 1 and grows by at most 10% a week (*our rule*), to 60–75 min in year 1 and up to 90 min later.
-- **Playground, 15 min after the run (§7.5):** dead hangs 3 × max; the day's pull-up step (scapular pulls, jumping negatives,
-  negatives, then pull-ups); hanging knee raises 2 × 8, with straight legs once the bent-knee ones are easy.
-- **No bars, or icy bars:** at home, 3 × 10 one-arm dumbbell rows per side and 2 × 60 s farmer holds.
-- **Indoor fallback** (ice, storm, dangerous footing): Tuesday's indoor session (§6.6), then the home pulling work
-  above. The long run waits for the next safe Saturday (*our rule*).
+- **At home, 10 min after the run (or the walk):** 3 × 10 one-arm dumbbell rows per side and 2 × 60 s farmer holds.
+- **Indoor version** (rain, ice, storm, dangerous footing): 45–60 min of brisk walking indoors, as on Tuesday (§6.6), then
+  the rows and farmer holds. At most 60 min; the long run waits for the next safe Saturday (*our rule*).
 - **Split block:** both splits in the short form (§6.9), 10 min, while warm from the run.
 
 ### 6.9 Split blocks — after the main session, 10 min
@@ -319,8 +313,7 @@ side each; then the frog stretch, the seated straddle and the supported side spl
 
 **Why:** static stretching at least 5 days a week was the pattern that improved range of motion. Weekly time and
 frequency mattered, not the length of one session [thomas2018]. Strength training improved range of motion as much as
-stretching did [afonso2021], which is why the Cossack squats, Romanian deadlifts, Nordics and Copenhagen planks are in
-the strength days.
+stretching did [afonso2021], which is why the wide goblet squats, bridges and hip thrusts are in the strength days.
 
 **What to expect:** in the first 3–8 weeks, most of the gain is the nervous system tolerating the stretch, not longer muscle.
 What longer programmes change in the muscle had not been measured [weppler2010]. Expect the splits to take months to
@@ -343,7 +336,7 @@ stretch (puppy pose, hands on a chair) 2 × 45 s.
 - **Endurance:** one ladder step at a time, with at least a week on each; beyond the ladders, at most +10% a week.
 - **Too hard twice in a row:** go one level down.
 - **After two or more weeks off:** go one level down for a week.
-- **Starting higher:** any level can be set by hand, for example by someone who can already do pull-ups.
+- **Starting higher:** the Week 0 test and the start question set the first levels (§8).
 
 ### 7.1 Squat
 
@@ -354,28 +347,21 @@ stretch (puppy pose, hands on a chair) 2 × 45 s.
 | 3 | Split squat, a dumbbell in each hand | 3 × 12 per leg |
 | 4 | Bulgarian split squat (rear foot on a chair), dumbbells | 3 × 12 per leg |
 | 5 | Bulgarian split squat, 3 s down, 1.5 reps | 3 × 10 per leg |
-| 6 | Pistol to a chair (sit and stand on one leg) | 3 × 8 per leg |
-| 7 | Full pistol squat, later holding a dumbbell | 3 × 5 per leg |
 
-When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, so the load can be set to the kilogram.
+When level 5 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, so the load can be set to the kilogram.
 
-### 7.2 Hinge and hamstrings
+### 7.2 Bridge
 
-| Level | Hinge | Pass at |
+| Level | Variant | Pass at |
 |---|---|---|
-| 1 | Glute bridge, then single-leg bridge | 3 × 12 |
-| 2 | Dumbbell Romanian deadlift (both dumbbells) | 3 × 12 |
-| 3 | Kickstand Romanian deadlift (back toes touch down for balance) | 3 × 12 per leg |
-| 4 | Single-leg Romanian deadlift, both dumbbells | 3 × 12 per leg |
-| 5 | Single-leg Romanian deadlift, 3 s down and a pause | 3 × 10 per leg |
+| 1 | Glute bridge | 3 × 12 |
+| 2 | Single-leg glute bridge | 3 × 12 per leg |
+| 3 | Hip thrust: shoulders on the sofa seat, a dumbbell on the hips | 3 × 12 |
+| 4 | Single-leg hip thrust, shoulders on the sofa seat | 3 × 12 per leg |
+| 5 | Single-leg hip thrust, a dumbbell on the hips, a 2-s pause at the top | 3 × 10 per leg |
 
-| Level | Nordic hamstring curl | Pass at |
-|---|---|---|
-| 1 | Lower a third of the way, catch with the hands | 3 × 5 |
-| 2 | Lower halfway | 3 × 5 |
-| 3 | Lower all the way, catch, push back up | 3 × 5 |
-| 4 | All the way, in 5 s | 3 × 6 |
-| 5 | Lower, then pull back up with the hamstrings | 3 × 3 |
+The bridge replaced the Romanian deadlift and the Nordic curl (D-056): they load the hips and hamstrings well, but
+their usual mistakes, a rounded back under load and an uncontrolled fall forward, injure.
 
 ### 7.3 Push
 
@@ -386,8 +372,7 @@ When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, 
 | 3 | Floor push-up | 3 × 12 |
 | 4 | Floor push-up, 3 s down | 3 × 15 |
 | 5 | Feet-on-chair push-up | 3 × 12 |
-| 6 | Archer push-up | 3 × 6 per side |
-| 7 | Pseudo-planche push-up (hands by the waist, shoulders forward of the hands) | 3 × 10 |
+| 6 | Floor push-up with a loaded backpack, starting at 2 kg | 3 × 12; add 1 kg when easy |
 
 ### 7.4 Handstand
 
@@ -410,7 +395,7 @@ When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, 
 | H13 | Freestanding hold | 30 s, then 60 s |
 | H14 | Variations: tuck, straddle, and later a press to handstand (it needs the pancake, so the splits help) | — |
 
-**Strength track** (Wednesday A2; the overhead press on Friday, hollow holds on Monday and hangs on Saturday support it)
+**Strength track** (Wednesday A2; the one-arm press on Friday and hollow holds on Monday support it)
 
 | Level | Drill | Pass at |
 |---|---|---|
@@ -422,20 +407,16 @@ When level 7 gets easy, add a backpack of water bottles: 1 litre is 1 kilogram, 
 
 **How long:** no trial has measured adults learning a handstand. Coaches commonly report many months to a couple of years from zero to a steady freestanding hold, with near-daily practice. That is why it gets a few minutes every morning instead of one long session a week. The first six levels stay on the floor or low on the wall, so a beginner starts where the shoulders and wrists can carry the weight. The time in the morning block is a limit, not a hold: a level asks for 3 holds of 20–60 s with 30 s of rest between them, 3–6 min in all. Move up only when all the holds are done with a straight body and the next morning feels fine. Wrists or shoulders that hurt mean going back a level.
 
-### 7.5 Pull (playground on Saturday, dumbbell rows on weekdays)
+### 7.5 Row
+
+There is no bar, so every pull is a one-arm dumbbell row with one hand and one knee on a chair: the support keeps the
+back flat (D-056).
 
 | Level | Drill | Pass at |
 |---|---|---|
-| P1 | Dead hang and scapular pulls | Hang 3 × 30 s; pulls 2 × 8 |
-| P2 | Jumping negative pull-up: jump to the top, lower in 5 s | 3 × 5 |
-| P3 | Negative from the top, 8 s down | 3 × 5 |
-| P4 | The first pull-up, then singles | 5 × 1 |
-| P5 | Pull-ups | 3 × 5 |
-| P6 | Pull-ups | 3 × 8 |
-| P7 | Pull-ups with a loaded backpack | 3 × 5 |
-
-- **Dead hang**, a separate goal: 30 → 60 → 90 → 120 s (*our rule*).
-- **Hanging knee raise** (after the pulls): 2 × 8, then with straight legs.
+| P1 | One-arm row, hand and knee on a chair | 3 × 12 per side |
+| P2 | One-arm row, 3 s down | 3 × 12 per side |
+| P3 | One-arm row, a 2-s squeeze at the top and 3 s down | 3 × 10 per side |
 
 ### 7.6 Back extension (posture)
 
@@ -457,13 +438,8 @@ the ears in 3 × 8, or a backpack loaded up to 30% of a one-repetition maximum [
 | 1 | Dead bug | 3 × 8 per side |
 | 2 | Hollow hold, knees bent | 3 × 30 s |
 | 3 | Hollow hold, legs straight | 3 × 40 s |
-| 4 | Hollow rocks | 3 × 20 |
-| 5 | Tuck L-sit on the floor, hands beside the hips | 3 × 15 s |
-| 6 | L-sit | 3 × 15 s |
 
-- **Hanging raises** need a bar, so they belong to Saturday's playground (§7.5), not to this home ladder.
 - **Side plank:** 2 × 20 s, building to 45 s, then lift the top leg.
-- **Copenhagen plank:** knee on a chair (short lever), 2 × 30 s; then foot on the chair (long lever), 2 × 30 s.
 
 ### 7.8 Running: the run–walk ladder
 
@@ -482,32 +458,21 @@ Stay at least a week on each step, and move up when the step felt easy and nothi
 
 ### 7.9 Rope
 
-The same rule as for running: at least a week on each step, and up only when the step felt easy and nothing hurt the
-next morning.
-
-| Step | Session |
-|---|---|
-| J1 | 10 × (30 s easy bounce, 30 s rest) |
-| J2 | 8 × (1 min, 30 s rest) |
-| J3 | 5 × (2 min, 30 s rest) |
-| J4 | 3 × (4 min, 1 min rest) |
-| J5 | 10 min continuous, easy |
-| J6 | From 10 min toward 20 min continuous, easy, adding at most 10% a week (an indoor easy-day option) |
-
-Skills, in order: basic bounce, alternate-foot step, high knees, side swing, criss-cross, double-unders.
+The rope warms up the strength and interval days and carries the indoor intervals (§6.7). Skills, in order: basic
+bounce, alternate-foot step, high knees, side swing. No double-unders or criss-cross: a missed double-under whips the
+shins and strains the calves, and a criss-cross trips (D-056).
 
 ### 7.10 Jumps
 
 | Level | Drill | Pass at |
 |---|---|---|
 | 1 | Squat jump, stick the landing | 3 × 5 |
-| 2 | Broad jump, stick the landing | 4 × 3 |
-| 3 | Two broad jumps in a row | 4 × 2 |
-| 4 | Single-leg hop forward, stick the landing | 3 × 3 per leg |
-| 5 | Lateral bounds (skater) for distance | 3 × 5 per side |
+| 2 | Squat jump, stick the landing | 4 × 6 |
+| 3 | Squat jumps in a row, soft and quiet landings | 4 × 5 |
 
-- Jumps are done fresh, at the numbers shown. A level is passed when every landing in a session is held still.
-- **Pogo hops** (Thursday): 2 × 20 quick contacts, springing from the ankles.
+- Jumps are done fresh, at the numbers shown, from both feet and landing on both feet. A level is passed when every
+  landing in a session is soft and controlled.
+- Jumping far, on one leg or sideways is left out (D-056): those landings are where knees and ankles get hurt.
 
 ### 7.11 Grip and carry
 
@@ -548,16 +513,13 @@ then none).
 
 **Starting levels from the test and three start questions**
 
-The test cannot show everything, so three questions are asked with it: how long an easy run is comfortable, how long
-the rope turns without stopping, and whether a negative pull-up can be lowered under control for 5 s.
+The test cannot show everything, so one question is asked with it: how long an easy run is comfortable.
 
 | Family | Rule |
 |---|---|
 | Push | Maximum push-ups (tested) 0–4 → level 1; 5–9 → 2; 10–19 → 3; 20–29 → 4; 30 or more → 5 |
 | Run | 30 min of easy running is comfortable (asked) → R8; 10 min → R4; less → R1 |
-| Rope | 3 min without stopping (asked) → J3; 1 min → J2; less → J1 |
-| Pull | Dead hang (tested) under 30 s → P1; 30 s or more → P2; and a controlled 5-s negative as well (asked) → P3 |
-| Everything else | Level 1, to learn the form; the ladder rules move it up fast, and any level can be set by hand (§7) |
+| Everything else | Level 1, to learn the form; the ladder rules move it up fast (§7) |
 
 ### Block 1 (Weeks 1–4): ramp
 
@@ -570,7 +532,7 @@ the rope turns without stopping, and whether a negative pull-up can be lowered u
 
 ### Block 2 (Weeks 5–8)
 
-Add strides on Tuesday; intervals 6 × (1 min, 1 min); Saturday up by at most 10% a week. Week 8 is light.
+Intervals 6 × (1 min, 1 min); Saturday up by at most 10% a week. Week 8 is light.
 
 ### Block 3 (Weeks 9–12)
 
@@ -590,7 +552,7 @@ in every third light week. Once a year, the plan itself gets a review: new evide
 | Ages | Focus | What changes |
 |---|---|---|
 | **Late 30s to 40** (year 1) | The habit, a safe ramp, learning the skills | Week 0 to the full plan; handstand H1–H10; the long run up to 60–75 min |
-| **40–49** | Build the reserve: peak aerobic power, strength, skills | Weekly 4 × 4; pistols and pull-ups; a freestanding handstand; splits progress; add backpack load when the dumbbells get light. Keep measuring height once a year: more than 2 cm below an earlier measurement is a reason for a spine X-ray [oc2023] |
+| **40–49** | Build the reserve: peak aerobic power, strength, skills | Weekly 4 × 4; the top squat, bridge and push-up levels; a freestanding handstand; splits progress; add backpack load when the dumbbells get light. Keep measuring height once a year: more than 2 cm below an earlier measurement is a reason for a spine X-ray [oc2023] |
 | **50–59** | Keep the intensity, protect the joints | The same structure, with more recovery if needed. A bone-density check after a fracture or with two risk factors [oc2023] |
 | **60–69** | Protect bone and power | Keep jumps and intervals while the bones allow. Bone density at 65 with one risk factor [oc2023]. After a spine fracture, impact only up to brisk walking [ros2022] |
 | **70–84** | Test and treat; balance first | Bone density at 70 for everyone [oc2023]. Keep the intervals [stensvold2020]. Balance daily [sherrington2019]. Practise getting up off the floor every week |
@@ -610,8 +572,6 @@ in every third light week. Once a year, the plan itself gets a review: new evide
 | Test | How | Record | Aim |
 |---|---|---|---|
 | **Rockport walk** | After 5 min of easy walking, walk 1 mile as fast as possible on flat ground. A mile is 1,609 m: four laps of a 400 m track and 9 m more, or a route measured on a map. Take the heart rate at the finish (a monitor, or count 15 s and multiply by 4) | Time, heart rate, body weight | The app estimates VO2max with the Rockport equation [kline1987], valid at ages 30–69. Aim: rising over the years and far above 18 mL/kg/min [paterson1999]. A pulse counted after stopping reads a little low, so compare like with like (*our rule*) |
-| **Broad jump** | Feet hip-width apart behind a line, swing the arms, jump forward and hold the landing; measure to the back of the nearer heel; best of 3 | cm | At least your own height (*our rule*) |
-| **Dead hang** | Playground bar, overhand grip, arms straight | Seconds | 120 s (*our rule*); grip strength predicted survival [leong2015] |
 
 ### Day 2 — indoors (Sunday), in this order
 
@@ -622,13 +582,14 @@ in every third light week. Once a year, the plan itself gets a review: new evide
 | **Wall test** | Heels, buttocks and back against a wall, eyes level; measure the gap between the back of the head and the wall | cm | 0 cm. In women, any gap multiplied the odds of a hidden spine fracture by 4.6 [green2004]; more than 5 cm means seeing a doctor [oc2023]; 6.5 cm or more best marked hyperkyphosis [wiyanad2018] |
 | **Sit-to-rise** | From standing, sit down on the floor and stand up again, using as little support as possible. Each way starts at 5 points; subtract 1 for each support used (hand or knee) | 0–10 | 10. At 51–80, each extra point went with 21% better survival [brito2014] |
 | **One-leg stance** | Each leg, eyes open (stop at 60 s), then eyes closed (stop at 60 s) | Seconds | Eyes closed 30 s or more (*our rule*). 10 s with eyes open is the floor that predicted survival at 51–75 [araujo2022] |
+| **Jump and reach** | After the warm-up (§6.2). Stand side-on to a wall, heels down, and mark the highest point the near hand reaches. Jump from both feet, touch the wall as high as you can and land softly on both feet. Measure from the mark to the touch; best of 3 | cm | Rising, or holding steady in later decades (*our rule*) |
 | **Push-ups** | After the warm-up (§6.2). Strict: chest to fist height, no rest at the top | Maximum reps | More than 40 [yang2019] |
 | **Handstand** | Chest-to-wall hold; best freestanding hold | Seconds | 60 s at the wall, then freestanding |
-| **Farmer hold** | Both dumbbells, standing tall | Seconds | Rising |
+| **Farmer hold** | Both dumbbells, standing tall | Seconds | Rising (*our rule*); grip strength predicted survival [leong2015] |
 | **Deep squat hold** | Heels down, feet hip-width | Seconds, up to 120 | 120 s (*our rule*) |
 | **Splits** | Last, after one round of the split holds (§6.9). Front split (each side) and side split, hands on supports; measure from the crotch to the floor | cm | 0 cm |
 
-Rest about 3 minutes between the push-ups, the handstand and the two holds (*our rule*).
+Rest about 3 minutes between the jumps, the push-ups, the handstand and the two holds (*our rule*).
 
 ---
 
@@ -653,15 +614,12 @@ The tortoise streak counts the days done, full or Shell, with no two missed days
 ### Ability milestones (from logs and tests)
 
 - **Push-ups:** 10, 20, 30, 40, 50.
-- **Pull-ups:** the first, then 5, then 10.
-- **Dead hang:** 60, 90, 120 s.
 - **Handstand:** wall 30 s, wall 60 s, the first freestanding 5 s, then 10, 30 and 60 s.
 - **Front split** (each side): within 20 cm, within 10 cm, flat.
 - **Side split:** within 30 cm, within 15 cm, flat.
 - **Sit-to-rise:** 10 out of 10.
 - **One leg, eyes closed:** 30 s, 60 s.
 - **Running:** the first continuous 5 km and 10 km; a 90-minute long run.
-- **Broad jump:** your own height.
 - **Aerobic power:** VO2max estimate up 10% from Week 0.
 - **Straight back:** the wall test at 0 cm in four tests in a row.
 
@@ -673,11 +631,10 @@ The app's long view. Each ability shows its latest result next to its line:
 |---|---|
 | Stand straight | Wall test 0 cm |
 | Get up off the floor | Sit-to-rise 8 or more, the best-surviving group in [brito2014] |
-| Jump | Broad jump trend |
+| Jump | Jump-and-reach trend |
 | Run | Continuous 5 km |
 | Balance | One leg, eyes closed 30 s |
 | Carry | Farmer hold 60 s |
-| Hang | Dead hang 60 s or more |
 | Aerobic reserve | VO2max estimate trend |
 | Bonus | Handstand and splits |
 
@@ -686,8 +643,8 @@ The app's long view. Each ability shows its latest result next to its line:
 ## 12. Outdoors, weather and daylight
 
 - **Run outdoors whenever the footing is safe.** In winter, put the run at lunch for daylight.
-- **Bad weather** (*our rule*): ice or dangerous footing means the indoor rope version. Cold alone means dressing in layers
-  and going.
+- **Bad weather** (*our rule*): rain, ice or dangerous footing means the indoor version, a longer brisk walk around a room (§6.6, §6.8).
+  Cold alone means dressing in layers and going.
 - **Vitamin D:** winter sun at southern Canadian latitudes makes none. On cloudless days, skin made no previtamin D3 from
   November through February at 42° N, and from October through March at 52° N [webb1988]. In the rest of the year the
   sun does make it. Vitamin D intake is nutrition, which is outside this app; that is a question for a doctor.
@@ -711,9 +668,10 @@ The app's long view. Each ability shows its latest result next to its line:
   - Being upside down raises the pressure in the head and eyes. Skip inversions with glaucoma, a retinal problem or
     uncontrolled high blood pressure, and stop with a headache or a change in vision.
   - Practise over a soft floor with clear space around you.
-  - Learn to bail (H4) before freestanding work.
+  - Learn to bail (H10) before freestanding work.
 - **Splits:** stretch warm muscles only; no bouncing; never into sharp pain.
-- **Lifting:** keep the upper back straight and hinge at the hips; avoid deep forward bending under load [ros2022].
+- **Lifting:** keep the upper back straight; avoid deep forward bending under load [ros2022]. The plan has no lift that
+  bends forward under load.
 - **Impact:** after a spine fracture, impact only up to brisk walking [ros2022].
 - **Illness:** with a fever, rest; come back one level down (*our rule*).
 
@@ -724,7 +682,7 @@ The app's long view. Each ability shows its latest result next to its line:
 | Situation | What to do (*our rule*) |
 |---|---|
 | A busy day | A Shell day: the morning block only |
-| Travel without dumbbells | Squat and hinge ladders use one leg and slow tempo; rows use a filled backpack; run outside; the rope travels |
+| Travel without dumbbells | Squat and bridge ladders use one leg and slow tempo; rows use a filled backpack; run outside; the rope travels |
 | A missed week | Resume at the same levels, starting each range at its bottom |
 | Two or more weeks off | One level down for a week |
 | Swapping days | Keep a day between strength sessions; no intervals the day before the long run |
@@ -734,186 +692,85 @@ The app's long view. Each ability shows its latest result next to its line:
 
 ---
 
-## Appendix A. Exercise library
+## Appendix A. Exercises and their videos
 
-Each entry gives how to do it, the key cue, and the most common mistake; the why is in the session tables (§6) or, for
-the rest, in the [why table](#why-for-the-other-exercises) at the end. The app's library shows the same text. Every
-exercise named in the sessions (§6) and the ladders (§7) has an entry; a harder or easier variant is described in its
-base exercise's entry.
+Every exercise the sessions (§6) and the ladders (§7) name, by its well-known name, with one teaching video each
+(D-056). The app shows the name, and the name opens the video; there are no written descriptions. A harder or easier
+variant is a level of its base exercise. Jump rope, running and walking have no video: everyone knows them. Each
+video was chosen by looking at its frames (YouTube's storyboard, stills through the whole video) with its title,
+channel and length: the frames had to show the movement as the plan does it, with the plan's equipment. A health body
+or physiotherapist came first, then an established coach or professional body. The link text is the video's title and
+channel as YouTube gives them; the list with its check date is in `src/data/videos.ts`.
 
 ### Spine and posture
 
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| Cat–camel | On hands and knees, round the whole back up, then let it sag gently and look forward | Move slowly, one segment at a time | Moving only the neck |
-| Chin tuck | Standing, or lying with the head on the floor: glide the head straight back (a double chin), hold 3 s | Glide back, do not nod | Tipping the chin down |
-| Upper-back extension over a chair | Sit tall, hands behind the head, lean back so the top of the chair back presses below the shoulder blades | Ribs down; bend the upper back | Arching the lower back |
-| Wall angel | Heels, buttocks, upper back and head against a wall; arms in a W against the wall; slide up to a Y and back | Keep every contact point | Ribs flaring, lower back leaving the wall |
-| Prone chest lift | Face down, forehead on a towel, arms in a W; lift the chest and arms a few cm, squeeze the shoulder blades, hold. The ladder (§7.6) moves the arms: by the sides, in a W, by the ears, overhead in a Y, then a loaded backpack | Eyes on the floor | Cranking the neck up |
-| Half-kneeling hip-flexor stretch | One knee down; squeeze the glute of that leg to tuck the pelvis; shift slightly forward | Tuck first, then shift | Arching the lower back |
-| One-leg stance | Stand on one leg, hips level, eyes on a fixed spot. Later levels close the eyes, stand on a folded towel or turn the head | Grip the floor with the foot | Hip dropping to one side |
-| Heel-to-toe walk | Walk a straight line, heel touching toes at each step | Eyes ahead | Looking at the feet |
+| Exercise | Video |
+|---|---|
+| Cat–camel | [Cat & Camel (Royal Free London NHS Foundation Trust)](https://www.youtube.com/watch?v=JJkjIKlimW8) |
+| Chin tuck | [NUH Physiotherapy - Chin Tucks (National University Hospital (NUH) Singapore)](https://www.youtube.com/watch?v=LkLed6m3twY) |
+| Wall angel | [Wall Angels (Harris Health)](https://www.youtube.com/watch?v=VdMRN6iTgR8) |
+| Prone back extension | [How To Do Prone Thoracic Extension - Posture Exercises - Wellen (Wellen)](https://www.youtube.com/watch?v=WJkydq1RVvk) |
+| Half-kneeling hip-flexor stretch | [Back Exercises to Strengthen and Stretch (Half-Kneeling Hip Flexor Stretch) / HSS (Hospital for Special Surgery)](https://www.youtube.com/watch?v=mzPvzMivukw) |
+| Single-leg balance | [Single Leg Stance (balance) (National Stroke Association)](https://www.youtube.com/watch?v=HTVVv4ESgms) |
 
 ### Wrists and handstand
 
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| Wrist prep | Circles 10 each way; on hands and knees rock over the palms 10 times with the fingers forward, then with the fingers back; lift the palms with the fingertips down; finger pulses | Gentle, pain-free range | Skipping it |
-| Plank on the hands | Hands under the shoulders, arms straight, body in one line from head to heels; push the floor away so the shoulder blades spread. On the knees if the line sags | Push the floor away | Sagging in the lower back |
-| Pike hold | Hands shoulder-width apart, hips high, an upside-down V with the head between the arms; push the floor away. Knees may bend. Feet on a chair put more weight on the hands | Push the floor away, ears between the arms | Letting the chest sink toward the floor |
-| Wall plank | Back to the wall, hands on the floor; walk the feet up the wall to your step's height: knee, thigh, then hip height. At hip height the hands are a leg's length from the wall and the body makes an L | Push the floor away | Sagging shoulders |
-| Wall walk | Face down with the feet at the wall; walk the feet up and the hands in; walk out under control | Stop where you can still hold the line | Arched back |
-| Chest-to-wall handstand | Hands 10–20 cm from the wall; body straight, ribs in, glutes tight; push tall through the shoulders | Look at the floor between the hands | Banana back |
-| Kick-up | Lunge stance, hands down, swing the back leg up and push with the front leg | Soft, controlled kicks | Kicking hard into the wall |
-| Bail | When falling forward, turn one hand and step down sideways, a cartwheel exit | Practise it before you need it | Falling flat onto the back |
-| Heel pull | In a back-to-wall handstand with the hands about 20 cm from the wall, press through the fingertips until the heels float off the wall, and hold | The fingers steer the balance | Pushing off the wall with the feet |
-| Freestanding handstand | Kick up in open space with a clear floor around; balance with the fingers and a tight body; bail sideways when it tips over | Hips stacked over the shoulders | Arching the back to catch the balance |
-| Pike push-up | Hips high; the head travels forward of the hands toward the floor; elbows about 45°. Feet on a chair make it harder | A triangle with the floor | Flared elbows |
-| Wall handstand push-up | In a chest-to-wall handstand over a cushion, lower the head to the cushion under control. The negative ends there: walk the feet down the wall. Later, press back up | Elbows in, about 45° | Dropping onto the head |
+| Exercise | Video |
+|---|---|
+| Wrist warm-up | [Daily Wrist Warm Up // Wrist Stretching Routine (Tom Morrison)](https://www.youtube.com/watch?v=TG6LePq5auc) |
+| High plank | [How to do a Straight-Arm Plank  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=MDxfAuBbHHA) |
+| Downward dog | [Handstand Prep - Pike Hold (Lance Goyke)](https://www.youtube.com/watch?v=exlk6d6BhKc) |
+| L-shape handstand | [Handstand Tutorial - L-Shape Exercise Using a Wall (Yoga with Kassandra)](https://www.youtube.com/watch?v=kShJnmKMaVc) |
+| Wall walk | [The Wall Walk (CrossFit)](https://www.youtube.com/watch?v=2TnX8j29tRY) |
+| Chest-to-wall handstand | [3 Ways to get into a Chest-To-Wall Handstand (Yuri Marmerstein)](https://www.youtube.com/watch?v=fj6lKSg5bSM) |
+| Handstand kick-up | [HANDSTAND KICK UP TUTORIAL All the Levels! Wall to Freestanding (Paul Twyman)](https://www.youtube.com/watch?v=Z1BEEzg5L6Q) |
+| Handstand bail | [How to Bail a Handstand (Yuri Marmerstein)](https://www.youtube.com/watch?v=P_h4rUJnJTY) |
+| Back-to-wall handstand | [How to Balance a Handstand: Heel pulls (Emmet Louis)](https://www.youtube.com/watch?v=OYehg2ruMN0) |
+| Freestanding handstand | [Handstand Progression for Perfect Freestanding Handstands (GMB Fitness (Praxis))](https://www.youtube.com/watch?v=d6_lcWtQDxw) |
+| Pike push-up | [How to do a Pike Push-Up (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=XckEEwa1BPI) |
+| Wall handstand push-up | [The Chest-to-Wall Handstand Push-Up (CrossFit)](https://www.youtube.com/watch?v=lkPPVyExFpU) |
 
 ### Strength
 
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| Bodyweight squat | Feet shoulder-width; sit down and back with the arms reaching forward; stand tall | The whole foot stays on the floor | Knees caving in |
-| Goblet squat | One dumbbell held upright at the chest; sit down between the heels, chest up | Knees track over the toes | Heels lifting, knees caving in |
-| Split squat / Bulgarian split squat | A long stance (rear foot on a chair for Bulgarian); lower straight down until the back knee nearly touches | The front knee may pass the toes | Too short a stance |
-| Pistol to a chair / pistol squat | On one leg with the other leg forward, sit slowly to a chair and stand without rocking. The full pistol goes to the bottom with no chair | Slow on the way down | Collapsing onto the chair |
-| Push-up | Hands under the shoulders, body a plank, elbows about 45°; chest to fist height; full lockout. Hands on a table or chair make it easier, feet on a chair harder | Squeeze the glutes | Sagging hips, flared elbows |
-| Scapular push-up | In a plank on straight arms, let the chest sink between the shoulder blades, then push the floor away | Only the shoulder blades move | Bending the elbows |
-| Archer push-up | Hands wide; lower toward one hand while the other arm stays straight; alternate sides | Chest to the working hand | Twisting the hips |
-| Pseudo-planche push-up | Hands by the waist, fingers turned out; lean the shoulders forward of the hands and keep the lean through every rep | Lean first, then bend | Losing the lean on the way up |
-| One-arm row | One hand and knee on a chair, back flat; pull the dumbbell to the hip | Shoulder blade back first | Twisting the torso |
-| Romanian deadlift | Dumbbells in front of the thighs, soft knees; push the hips back with a straight back until the hamstrings stop you; drive the hips forward to stand | Hips back, not down | Rounding the back |
-| Single-leg Romanian deadlift | As above on one leg; the free leg reaches back in line with the body. In the kickstand version its toes stay on the floor for balance | Hips square to the floor | Opening the hip |
-| Step-up | The whole foot on the chair or stair; drive through that heel | No push from the back foot | Bouncing off the floor |
-| Dumbbell pullover | Lying on the floor, knees bent, one dumbbell held over the chest with both hands; lower behind the head with slightly bent elbows to a comfortable stretch, and pull back | Ribs down | Arching the lower back |
-| Nordic hamstring curl | Kneel on a cushion, heels hooked under a sofa; body straight from knees to head; lower forward as slowly as possible, catch with the hands, push back | Hips stay straight | Bending at the hips |
-| Farmer carry or hold | A dumbbell in each hand, tall posture, shoulders down; stand still, or walk with short steps. The suitcase carry holds one dumbbell on one side | Tall, not leaning | Shrugging |
-| Overhead press | Standing, dumbbells at the shoulders, ribs down, glutes tight; press until the arms are by the ears | Head through at the top | Leaning back |
-| Cossack squat | Wide stance; sit to one side with the other leg straight, toes up; dumbbell at the chest | Heel down on the bent leg | Rounding forward |
-| Bent-over row / renegade row | Hinge with a flat back and row both dumbbells; renegade: in a plank on the dumbbells, row one while bracing | Hips still | Rotating the hips |
-| Single-leg reach | Stand on one leg; hinge and reach forward with both hands, the free leg back; return slowly | Slow and balanced | Rushing |
-| Copenhagen plank | A side plank with the top knee (short lever) or foot (long lever) on a chair, the bottom leg off the floor | Hips up | Hips sagging |
-| Side plank | Forearm under the shoulder, body straight, hips up | A straight line from head to feet | Hips piking back |
-| Tibialis raise | Back against a wall, heels about 30 cm out; lift the toes and front of the foot, lower slowly | Full lift | Bending the knees |
-| Calf raise | Ball of one foot on a step edge; rise high, lower for 3 s to below the step | Slow lowering | Bouncing |
-| Dead bug | On the back, arms up, knees at 90°; lower the opposite arm and leg while the lower back stays down | Lower back glued to the floor | Arching |
-| Hollow hold | On the back, lower back pressed down; arms by the ears, legs straight and low (bend the knees to make it easier) | Ribs down | Lower back lifting |
-| Hollow rock | From the hollow hold, rock forward and back like a rocking chair, the shape unchanged | Hold the shape, then rock | Bending at the hips to rock |
-| L-sit | Sit with the hands beside the hips and press down until the hips lift: knees tucked to the chest at first, later legs straight out | Shoulders pressed down | Shrugging and leaning back |
-| Glute bridge | On the back, knees bent; drive the hips up and squeeze the glutes. The single-leg version holds one knee to the chest | Ribs down at the top | Overarching |
+| Exercise | Video |
+|---|---|
+| Bodyweight squat | [The Right Way to Do a Squat (Hospital for Special Surgery)](https://www.youtube.com/watch?v=jyQgzil5KY8) |
+| Goblet squat | [How to do a Goblet Squat  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=nfX7IFK9UNI) |
+| Split squat | [U.S. Marine Corps Fitness - Dumbbell Split Squat (U.S. Forces Fitness)](https://www.youtube.com/watch?v=SX7BtPh_pL0) |
+| Push-up | [How to work up to a full pushup progression (WeShape)](https://www.youtube.com/watch?v=tf3VNkmzHq0) |
+| One-arm dumbbell row | [How to do a Supported Bent-Over Dumbbell Row (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=DmUX88nWClo) |
+| Glute bridge | [How to Do a Glute Bridge Exercise: A Guide from Physical Therapists (Hinge Health)](https://www.youtube.com/watch?v=PhTDzR0TpZs) |
+| Step-up | [Single leg step up with dumbbells (Mountain Ridge Physical Therapy)](https://www.youtube.com/watch?v=_-E6Cf9vDSg) |
+| Half-kneeling dumbbell press | [Half Kneeling Single Arm DB Shoulder Press (Exercise Library) (Horton Barbell)](https://www.youtube.com/watch?v=d3CRIDSCOhw) |
+| Farmer's carry | [The Dumbbell Farmers Carry (CrossFit)](https://www.youtube.com/watch?v=p5MNNosenJc) |
+| Side plank | [Complete Physio – 16: Simple Side Plank with Progressions (Complete Physio)](https://www.youtube.com/watch?v=FwbhtRs8uj4) |
+| Single-leg calf raise | [Single Leg Calf Raise Off Step (John Kahl PT DPT SCS CSCS)](https://www.youtube.com/watch?v=NVMrM-e8eoY) |
+| Dead bug | [How to Do a Dead Bug: A Guide from Physical Therapists (Hinge Health)](https://www.youtube.com/watch?v=GbSC02oU3To) |
+| Hollow body hold | [Hollow Body Hold Progression - Gymnastic Core Stability Exercise (GMB Fitness (Praxis))](https://www.youtube.com/watch?v=LlDNef_Ztsc) |
 
-### Jumps, rope and running
+### Jumps, rope, running and walking
 
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| Broad jump | Feet hip-width; swing the arms, jump forward, land softly on both feet and hold 2 s. Two in a row: land and jump again at once | Knees over the toes on landing | Landing stiff-legged |
-| Squat jump | Quarter squat, jump straight up, land softly | Quiet landing | Knees caving in |
-| Single-leg hop | From one leg, hop forward, land on the same leg and hold 2 s | Knee over the toes on landing | Hopping farther than the landing can hold |
-| Pogo hops | Small, quick hops off the ankles, knees nearly straight | Short ground contact | Sinking into the knees |
-| Skater hops | Leap sideways from one leg to the other; land and balance. Lateral bounds are the same leap for distance | Stick each landing | Falling into the next hop |
-| Rope basics | Elbows near the ribs; turn from the wrists; hop 2–3 cm and land on the balls of the feet | Small and light | Jumping too high |
-| Rope skills | Alternate-foot step: run in place over the rope. High knees: the same with the knees at hip height. Double-under: one higher jump and two turns of the rope | The wrists turn the rope | Big arm circles |
-| Run–walk | Alternate the run and walk parts of your step (§7.8); the walk is brisk | Run slower than feels needed | Running the run parts hard |
-| Easy run | Short, light steps; upright; relaxed shoulders | Slow enough to talk | Starting too fast |
-| Strides | 20 s accelerating to fast but relaxed; walk back | Relaxed speed | Sprinting all-out |
-| Brisk walk | Walk briskly, upright, with the arms swinging | Brisk, not a stroll | Strolling |
-| Easy walk | Walk at an easy pace, upright and relaxed | Easy enough to talk | Hurrying |
-| Marching in place | March on the spot, lifting the knees, the arms swinging | A light, steady rhythm | Stamping |
-| Easy cool-down | An easy bounce, marching in place or a walk | Let the breathing settle | Stopping dead |
-
-### Playground
-
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| Dead hang | Overhand grip, arms straight, shoulders slightly engaged | Long body, still | Shrugging to the ears |
-| Scapular pull | From a hang, pull the shoulder blades down without bending the elbows | Small movement | Bending the arms |
-| Negative pull-up | Start with the chin over the bar (jump or step up); lower as slowly as possible | Control to the bottom | Dropping the last third |
-| Pull-up | From a dead hang with an overhand grip, pull until the chin is over the bar; lower under control | Shoulder blades down first | Kicking or swinging up |
-| Hanging knee raise | From a still hang, lift the knees to the chest; later lift straight legs to hip height | No swing | Swinging |
+| Exercise | Video |
+|---|---|
+| Squat jump | [How to do a Squat Jump  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=tZSYZdtbONc) |
+| Jump rope | None: everyone knows it |
+| Run–walk | None: everyone knows it |
+| Easy run | None: everyone knows it |
+| Walk | None: everyone knows it |
 
 ### Splits and flexibility
 
-| Exercise | How | Key cue | Common mistake |
-|---|---|---|---|
-| World's greatest stretch | From a deep lunge with both hands inside the front foot: drop the inside elbow toward the floor, then turn and reach that arm to the ceiling; then straighten the front leg and fold over it | Slowly through each part | Rushing the turn |
-| Leg swings | Holding a wall, swing one leg forward and back, then across the body and out to the side, a little higher each time | Tall, still trunk | Swinging from the lower back |
-| Half split | From a lunge, shift the hips back over the back knee; front leg straight, toes up, back flat | Hinge from the hips | Rounding the back |
-| Supported front split | From the half split, slide the front heel forward with hands on chairs or books; back leg straight behind | Hips square | Twisting the hips open |
-| Active front-leg lift | Sit tall with the legs straight; lift one heel just off the floor with the thigh | Tall spine | Leaning back |
-| Frog stretch | On hands and knees, knees wide, shins parallel; rock the hips back | Slow rocking | Forcing the depth |
-| Horse stance | Feet wide, toes out; sit until the thighs are level; knees over the toes | Chest up | Knees caving in |
-| Straddle lean / pancake | Sit with the legs wide, knees pointing up; lean forward from the hips with a flat back | Chest forward, not head down | Rounding the back |
-| Supported side split | Slide the feet apart with hands on chairs; hips square; knees pointing up | Small slides | Rolling the knees forward |
-| Side-lying leg raise | Lying on one side, lift the top leg straight, toes forward | Lead with the heel | Rolling back |
-| 90/90 switch | Sitting, both knees bent at 90°; rotate both knees to the other side | Tall spine | Slumping |
-| Puppy pose (shoulders) | Hands on a chair seat or wall, arms straight; hinge and let the chest sink between the arms | Ribs in | Arching the lower back |
-| Deep squat hold | Heels down, chest up, elbows pushing the knees out | Breathe and relax | Heels lifting |
-
-### Why, for the other exercises
-
-The session tables (§6) give the why of every exercise they name in their own row. These are the rest: the ladder
-steps, the playground and split drills, and the walks.
-
-| Exercise | Why |
+| Exercise | Video |
 |---|---|
-| Plank on the hands | The first handstand step: the wrists and shoulders learn to carry weight with both feet on the floor |
-| Pike hold | Teaches the open shoulders and the weight over the hands that a handstand needs, with the feet still on the floor or a chair |
-| Wall plank | The first wall steps: the shoulders learn to carry the body upside down, with the feet on the wall and a little more weight each step |
-| Wall walk | Builds the strength and the straight line of the handstand, step by step, with the wall for support |
-| Chest-to-wall handstand | Teaches the straight, hollow handstand line and builds the shoulders' endurance |
-| Kick-up | The way into every freestanding handstand; soft kicks teach how much push is enough |
-| Bail | A safe way out of a falling handstand is what makes practice in open space safe |
-| Heel pull | Teaches the fingers to steer the balance before the wall is taken away |
-| Freestanding handstand | One of the plan's goals on the way: balance on the hands, with no wall |
-| Wall handstand push-up | The top of the strength track: pressing the whole body weight upside down |
-| Split squat / Bulgarian split squat | One leg does most of the work, so the fixed dumbbells stay heavy enough as the legs grow stronger |
-| Pistol to a chair / pistol squat | The whole body on one leg: leg strength and balance with no heavier weights |
-| Archer push-up | Shifts most of the load onto one arm, so the push-up keeps getting harder without equipment |
-| Pseudo-planche push-up | The forward lean loads the shoulders more, toward the pressing strength of the handstand |
-| Single-leg Romanian deadlift | The hip hinge on one leg: more load from the same dumbbells, with balance and hip control |
-| Hollow hold | Trains the front of the trunk to hold the hollow line, which is the handstand line |
-| Hollow rock | Holds the hollow shape while moving, a harder step for the trunk |
-| L-sit | Trunk and hip strength with the shoulders pressed down, as in the handstand |
-| Glute bridge | Strong glutes for the hip hinge, running and jumping; the first step of the hinge ladder |
-| Squat jump | The first jump step: learning to land softly before jumping far; landings load bone [ros2022] |
-| Single-leg hop | Power and landing control on one leg, the way running lands |
-| Pogo hops | Quick, springy contacts train the ankles and calves for running, rope and jumping |
-| Skater hops | Sideways power and landing control, which running straight ahead does not train |
-| Rope skills | The running step and high knees carry the indoor intervals; new skills keep the rope interesting |
-| Run–walk | The way into running: walk breaks let the legs adapt before the runs grow longer |
-| Strides | Short, relaxed speed keeps the running quick and light without the cost of hard running |
-| Brisk walk | Warms up the legs, heart and breathing before the run |
-| Easy walk | Easy movement on the light day; it warms up the flexibility session |
-| Marching in place | Keeps the easy parts moving when there is no room to walk |
-| Easy cool-down | Lets the heart rate and breathing come down slowly after hard work |
-| Dead hang | Grip and shoulder strength; the first step toward the pull-up |
-| Scapular pull | Teaches the shoulder blades to start every pull |
-| Negative pull-up | Lowering slowly builds the strength for the first full pull-up |
-| Pull-up | The pull that lifts the whole body: back, arms and grip together |
-| Hanging knee raise | Trunk strength while hanging, with the shoulders working too |
-| Half split | Stretches the hamstrings of the front leg, the first part of the front split |
-| Supported front split | The front split itself, with supports that come down as the range grows |
-| Active front-leg lift | Strength at the end of the range, so the range can be controlled, not only reached |
-| Frog stretch | Opens the inner thighs and hips for the side split |
-| Horse stance | Strength in a wide stance, toward the side split |
-| Straddle lean / pancake | Hamstrings and inner thighs; a press to handstand needs this pancake later |
-| Supported side split | The side split itself, with chairs carrying part of the weight |
-| Side-lying leg raise | Strength to lift the leg to the side, the side split's working range |
-| 90/90 switch | Turns the hips in and out, a rotation that sitting rarely uses |
-| Puppy pose (shoulders) | Opens the shoulders overhead for a straight handstand line |
-| Deep squat hold | Ankles, knees and hips through a full squat, a position worth keeping for life |
-
-**Videos.** The library links to teaching videos and pages; it never embeds them, and it fetches nothing at runtime.
-The order of choice:
-1. a health body's own video or page where one shows the movement as the plan does it: the NHS and its trusts, the
-   National Institute on Aging, the Royal Osteoporosis Society, the Hospital for Special Surgery, Aspetar and Harris
-   Health. These include the videos the Straight Back page uses for balance, posture, strength, impact and the hip
-   hinge;
-2. for the handstand and split drills, the most reputable teaching video found, from an established coach;
-3. otherwise a technique video from a professional body, the National Academy of Sports Medicine.
-
-Each YouTube link carries its title and channel exactly as YouTube's oEmbed returns them, and each link records the
-day it was checked (oEmbed or the page answering). Exercises with no fitting video have none; the list is in the
-app's data (`src/data/videos.ts`).
+| World's greatest stretch | [The World's Greatest Stretch (Mobility Exercise) by Squat University (Squat University)](https://www.youtube.com/watch?v=-CiWQ2IvY34) |
+| Half split | [Half Split (Ardha Hanumansana) For Hamstring Stretch with Dr. Jenn of Root To Rise PT (Jenn Gelfand ~ Root To Rise PT)](https://www.youtube.com/watch?v=gTjRgU8M_B0) |
+| Front split (on blocks) | [How to get your Front Splits / Blocks & Slider edition (Hip Pilates Method)](https://www.youtube.com/watch?v=qWN7irIeWSc) |
+| Seated straight-leg raise | [Seated Straight Leg Raise (Ashley Burr Athletic Therapy)](https://www.youtube.com/watch?v=AscrGMs4Fzc) |
+| Frog stretch | [Frog Stretch (Dr. James Chung - Sports Physical Therapist)](https://www.youtube.com/watch?v=6-JQqiI_Plo) |
+| Horse stance | [Middle/Straddle Splits Tutorial with Antranik (Gain Passive & Active Flexibility using Horse Stance) (Antranik Kizirian)](https://www.youtube.com/watch?v=kXWtk3NLESk) |
+| Pancake stretch | [Pancake Straddle Stretch (Tom Morrison)](https://www.youtube.com/watch?v=mVisirHzJqk) |
+| Middle split (on blocks) | [Begin Your Middle Split Journey! (FOLLOW ALONG) #BIG5FLEX (Tom Merrick)](https://www.youtube.com/watch?v=GSwx0yGxtPk) |
+| Side-lying leg raise | [How to do a Side-Lying Leg Raise (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=xVSwJhJCsgo) |
+| 90/90 hip switch | [90/90 Hip Switch (Improve Hip Health & Mobility) (Simone Sports Performance)](https://www.youtube.com/watch?v=qq_Z7sAmVrA) |
+| Puppy pose | [Puppy Pose (FitLife Fitness, Aquatics and Physical Therapy)](https://www.youtube.com/watch?v=o-H-MB7foaA) |
+| Deep squat | [How to Do a Deep Squat According to Physical Therapists (Hinge Health)](https://www.youtube.com/watch?v=IHApHfNA2Ag) |

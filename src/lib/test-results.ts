@@ -65,13 +65,12 @@ export const SERIES: readonly Series[] = [
     value: (t) => t.computed.vo2max,
   },
   {
-    id: 'broad-jump',
-    testId: 'broad-jump',
-    name: 'Broad jump',
+    id: 'jump-reach',
+    testId: 'jump-reach',
+    name: 'Jump and reach',
     unit: 'cm',
-    value: (t) => t.results.broadJumpCm,
+    value: (t) => t.results.jumpReachCm,
   },
-  { id: 'dead-hang', testId: 'dead-hang', name: 'Dead hang', unit: 's', value: (t) => t.results.hangS },
   {
     id: 'resting-hr',
     testId: 'resting-hr',
@@ -151,32 +150,24 @@ export function seriesPoints(series: Series, tests: readonly TestRecord[]): Poin
     })
 }
 
-/** The aim line's value for a test, or undefined (the broad jump's aim is the person's height). */
-export function aimValue(test: TestDef | undefined, heightCm: number | undefined): number | undefined {
-  const line = test?.aimLine
-  if (!line) return undefined
-  if (line.ofHeight) return heightCm
-  return line.value
+/** The aim line's value for a test, or undefined. */
+export function aimValue(test: TestDef | undefined): number | undefined {
+  return test?.aimLine?.value
 }
 
 /** The inputs the start rules read (plan §8). */
 export interface StartInputs {
   pushups?: number
-  deadHangS?: number
   runMin?: number
-  ropeMin?: number
-  negative?: boolean
 }
 
 function inputValue(inputs: StartInputs, key: StartRule['input']): number | undefined {
-  const v = inputs[key]
-  if (typeof v === 'boolean') return v ? 1 : 0
-  return v
+  return inputs[key]
 }
 
 /**
  * The starting level of each ladder that a start rule covers: a band matches when min ≤ v < max (max null: no top);
- * a rule with `onlyIf` counts only when that input also reaches its minimum; the highest matching level wins.
+ * the highest matching level wins.
  */
 export function startingLevels(
   rules: readonly StartRule[],
@@ -187,10 +178,6 @@ export function startingLevels(
   for (const rule of rules) {
     const v = inputValue(inputs, rule.input)
     if (v === undefined) continue
-    if (rule.onlyIf) {
-      const w = inputValue(inputs, rule.onlyIf.input)
-      if (w === undefined || w < rule.onlyIf.min) continue
-    }
     const band = rule.bands.find((b) => v >= b.min && (b.max === null || v < b.max))
     if (!band) continue
     const level = ladders.find((l) => l.id === rule.ladderId)?.levels.find((l) => l.code === band.code)?.level
@@ -204,9 +191,6 @@ export function startingLevels(
 export function startInputsOf(t: TestRecord): StartInputs {
   return {
     pushups: t.results.pushups,
-    deadHangS: t.results.hangS,
     runMin: t.start?.runMin,
-    ropeMin: t.start?.ropeMin,
-    negative: t.start?.negative,
   }
 }

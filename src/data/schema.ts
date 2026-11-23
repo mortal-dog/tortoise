@@ -30,36 +30,28 @@ export const Source = z.object({
 export type Source = z.infer<typeof Source>
 
 /**
- * A teaching link, never an embed (D-026): a YouTube video, recorded with the title and channel exactly as YouTube's
- * oEmbed returned them, or a health body's own page, with its page title and the body as `channel`. `checked` is the
- * day the link was last confirmed to answer (oEmbed 200, or HTTP 200 after redirects).
+ * A teaching video, a link and never an embed (D-026, D-056): a YouTube watch link, recorded with the title and channel
+ * exactly as YouTube's oEmbed returned them. `checked` is the day its frames were looked at and its oEmbed answered.
  */
 export const VideoLink = z.object({
-  url: z.url(),
+  url: z.string().regex(/^https:\/\/www\.youtube\.com\/watch\?v=[\w-]{11}$/),
   title: z.string().min(1),
   channel: z.string().min(1),
   checked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 })
 export type VideoLink = z.infer<typeof VideoLink>
 
-export const Area = z.enum(['spine', 'strength', 'handstand', 'splits', 'cardio', 'playground'])
+export const Area = z.enum(['spine', 'strength', 'handstand', 'splits', 'cardio'])
 export type Area = z.infer<typeof Area>
 
+/** An exercise is a well-known name and a video (D-056); the plan's sessions and ladders say what to do with it. */
 export const Exercise = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string(),
   area: Area,
-  how: z.string(),
-  cue: z.string(),
-  mistake: z.string(),
-  /**
-   * One line of why (design §1, principle 6): from the session tables' "Why" column where there is one, otherwise from
-   * the plan's Appendix A why table. Every exercise has one.
-   */
-  why: z.string().min(1),
   unit: z.enum(['reps', 'seconds', 'minutes']),
+  /** None only for the everyday movements (exercises.ts NO_VIDEO). */
   video: VideoLink.optional(),
-  ...evidence,
 })
 export type Exercise = z.infer<typeof Exercise>
 
@@ -121,7 +113,7 @@ export const Step = z
     id: z.string(),
     /** The slot label of the plan's table: "A0", "A1", "B2", "D"; or a number for the morning block. */
     label: z.string().optional(),
-    part: z.enum(['warmup', 'main', 'cooldown', 'playground', 'split']),
+    part: z.enum(['warmup', 'main', 'cooldown', 'split']),
     ladderId: z.string().optional(),
     exerciseId: z.string().optional(),
     /** The interval session's main set, which follows the block's interval stage (block rules). */
@@ -235,11 +227,10 @@ export const TestDef = z.object({
   calculator: Calculator,
   /** Asked only once a year (height). */
   yearly: z.boolean().optional(),
-  /** The aim as a line on the trend chart: a value from the aim text, or the person's height (the broad jump). */
+  /** The aim as a line on the trend chart: a value from the aim text. */
   aimLine: z
     .object({
-      value: z.number().optional(),
-      ofHeight: z.boolean().optional(),
+      value: z.number(),
       direction: z.enum(['atLeast', 'atMost']),
     })
     .optional(),
@@ -254,8 +245,6 @@ export const Metric = z.enum([
   'outdoorSessions',
   'runKm',
   'pushups',
-  'pullups',
-  'deadHangS',
   'handstandWallS',
   'handstandFreeS',
   'frontSplitCm',
@@ -264,12 +253,11 @@ export const Metric = z.enum([
   'oneLegClosedS',
   'continuousRunKm',
   'longRunMin',
-  'broadJumpVsHeight', // broad jump in cm minus height in cm
   'vo2maxGainPct', // VO2max estimate against Week 0, in per cent
   'wallZeroTests', // wall tests in a row at 0 cm
   'wallCm',
   'farmerS',
-  'broadJumpCm',
+  'jumpReachCm',
   'vo2max',
 ])
 export type Metric = z.infer<typeof Metric>
@@ -302,17 +290,13 @@ export type At99Line = z.infer<typeof At99Line>
 /**
  * A start rule (plan §8): a tested or asked value v sets a ladder's starting level code. A band matches when
  * min ≤ v and (max is null or v < max): half-open, so bands meet without a gap for any value, whole or not. When
- * several rules match one ladder, the highest level wins. The answer `negative` is 1 for yes, 0 for no.
+ * several rules match one ladder, the highest level wins.
  */
 export const StartRule = z.object({
   ladderId: z.string(),
   /** A test id, or one of the start answers. */
-  input: z.enum(['pushups', 'deadHangS', 'runMin', 'ropeMin', 'negative']),
+  input: z.enum(['pushups', 'runMin']),
   bands: z.array(z.object({ min: z.number(), max: z.number().nullable(), code: z.string() })).min(1),
-  /** The rule applies only when another input also reaches a value (pull: a 5-s negative counts only with a 30-s hang). */
-  onlyIf: z
-    .object({ input: z.enum(['pushups', 'deadHangS', 'runMin', 'ropeMin', 'negative']), min: z.number() })
-    .optional(),
   ...evidence,
 })
 export type StartRule = z.infer<typeof StartRule>

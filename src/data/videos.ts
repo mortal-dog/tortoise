@@ -1,57 +1,49 @@
-// Teaching links for the exercise library (implementation Phase 5, D-026, D-043): links only, never embeds, and
-// nothing is fetched at runtime. The order of choice:
-//   1. a health body's own video or page: a national health service or one of its trusts, a national institute,
-//      a national osteoporosis society, or a hospital;
-//   2. for the handstand and split drills, the most reputable teaching video found, from an established coach;
-//   3. otherwise a professional body's technique video (the National Academy of Sports Medicine).
-// A YouTube link carries the title and channel exactly as YouTube's oEmbed returned them; a page carries its <title>
-// and the body that publishes it. `checked` is the day the link answered (oEmbed 200, or HTTP 200 after redirects).
+// The teaching videos (D-026, D-056): one YouTube video per exercise (none for the everyday ones: rope, running, walking), a link and never an embed, and nothing is fetched
+// at runtime. Each was chosen and checked on 2026-11-23 by looking at its frames (YouTube's storyboard, a grid of stills
+// through the whole video), with its title, channel and length: the frames had to show the plan's movement with the
+// plan's equipment. A health body or physiotherapist came first, then an established coach or professional body.
+// Title and channel are exactly as YouTube's oEmbed returned them (one channel name ends in a space).
 import type { VideoLink } from './schema'
 
-const CHECKED = '2026-11-22'
+const CHECKED = '2026-11-23'
 
 function yt(id: string, title: string, channel: string): VideoLink {
   return { url: `https://www.youtube.com/watch?v=${id}`, title, channel, checked: CHECKED }
 }
 
-const ROS = 'Royal Osteoporosis Society'
-const NIA = 'National Institute on Aging'
-const HSS = 'Hospital for Special Surgery'
-const NASM = 'National Academy of Sports Medicine (NASM)'
-// YouTube gives this channel's name with its Arabic spelling too; the repo keeps the Latin name (English only).
-const ASPETAR = 'Aspetar'
-const GMB = 'GMB Fitness (Praxis)'
-
-const strengthStage1 = yt('94OadxOIWgc', 'Muscle strengthening exercise for your bones - Stage 1', ROS)
-const impactStage3 = yt('3crvpTMTZYk', 'Impact exercise for your bones - Stage 3', ROS)
-const walking: VideoLink = {
-  url: 'https://www.nhs.uk/live-well/exercise/walking-for-health/',
-  title: 'Walking for health - NHS',
-  channel: 'NHS',
-  checked: CHECKED,
-}
-
-/** Exercise id → its link. */
+/** Exercise id → its video. */
 export const videos: Readonly<Record<string, VideoLink>> = {
-  // Spine and posture
   'cat-camel': yt('JJkjIKlimW8', 'Cat & Camel', 'Royal Free London NHS Foundation Trust'),
-  'chin-tuck': yt('SuY3grzBoiA', 'Exercises to help with posture', ROS),
+  'chin-tuck': yt(
+    'LkLed6m3twY',
+    'NUH Physiotherapy - Chin Tucks',
+    'National University Hospital (NUH) Singapore',
+  ),
   'wall-angel': yt('VdMRN6iTgR8', 'Wall Angels', 'Harris Health'),
+  'prone-chest-lift': yt(
+    'WJkydq1RVvk',
+    'How To Do Prone Thoracic Extension - Posture Exercises - Wellen',
+    'Wellen',
+  ),
   'hip-flexor-stretch': yt(
     'mzPvzMivukw',
     'Back Exercises to Strengthen and Stretch (Half-Kneeling Hip Flexor Stretch) | HSS',
-    HSS,
+    'Hospital for Special Surgery',
   ),
-  'one-leg-stance': yt('QT5d4tTXW6U', 'Stand on One Foot Balance Exercise for Older Adults', NIA),
-  'heel-to-toe-walk': yt('z_GKdFf3qv4', 'Heel-to-Toe Walk Balance Exercise for Older Adults', NIA),
-  // Wrists and handstand
-  'wrist-prep': yt('20w70zUTZik', 'Wrist Mobility & Strength (No Equipment)', GMB),
+  'one-leg-stance': yt('HTVVv4ESgms', 'Single Leg Stance (balance)', 'National Stroke Association'),
+  'wrist-prep': yt('TG6LePq5auc', 'Daily Wrist Warm Up // Wrist Stretching Routine', 'Tom Morrison'),
+  'hand-plank': yt(
+    'MDxfAuBbHHA',
+    'How to do a Straight-Arm Plank  | Proper Form & Technique | NASM',
+    'National Academy of Sports Medicine (NASM)',
+  ),
+  'pike-hold': yt('exlk6d6BhKc', 'Handstand Prep - Pike Hold', 'Lance Goyke'),
   'wall-plank': yt(
     'kShJnmKMaVc',
     'Handstand Tutorial - L-Shape Exercise Using a Wall',
     'Yoga with Kassandra',
   ),
-  'wall-walk': yt('d6_lcWtQDxw', 'Handstand Progression for Perfect Freestanding Handstands', GMB),
+  'wall-walk': yt('2TnX8j29tRY', 'The Wall Walk', 'CrossFit'),
   'chest-to-wall-handstand': yt(
     'fj6lKSg5bSM',
     '3 Ways to get into a Chest-To-Wall Handstand',
@@ -65,119 +57,96 @@ export const videos: Readonly<Record<string, VideoLink>> = {
   bail: yt('P_h4rUJnJTY', 'How to Bail a Handstand', 'Yuri Marmerstein'),
   'heel-pull': yt('OYehg2ruMN0', 'How to Balance a Handstand: Heel pulls', 'Emmet Louis'),
   'freestanding-handstand': yt(
-    '2-3wv5kLNnw',
-    'The Complete Handstand Guide | From Absolute Beginner',
-    'Tom Merrick',
+    'd6_lcWtQDxw',
+    'Handstand Progression for Perfect Freestanding Handstands',
+    'GMB Fitness (Praxis)',
   ),
-  'pike-push-up': yt('XckEEwa1BPI', 'How to do a Pike Push-Up', NASM),
-  'wall-handstand-push-up': yt(
-    'PDKmh0OJ6Ic',
-    'Handstand Push-Up For Beginners (Increase Your Strength)',
-    'FitnessFAQs',
+  'pike-push-up': yt('XckEEwa1BPI', 'How to do a Pike Push-Up', 'National Academy of Sports Medicine (NASM)'),
+  'wall-handstand-push-up': yt('lkPPVyExFpU', 'The Chest-to-Wall Handstand Push-Up', 'CrossFit'),
+  'bodyweight-squat': yt('jyQgzil5KY8', 'The Right Way to Do a Squat', 'Hospital for Special Surgery'),
+  'goblet-squat': yt(
+    'nfX7IFK9UNI',
+    'How to do a Goblet Squat  | Proper Form & Technique | NASM',
+    'National Academy of Sports Medicine (NASM)',
   ),
-  // Strength
-  'bodyweight-squat': yt('jyQgzil5KY8', 'The Right Way to Do a Squat', HSS),
-  'goblet-squat': yt('nfX7IFK9UNI', 'How to do a Goblet Squat  | Proper Form & Technique | NASM', NASM),
-  'split-squat': yt(
-    'hbw7hdyOpq0',
-    'How to do a Bulgarian Split Squat  | Proper Form & Technique | NASM',
-    NASM,
+  'split-squat': yt('SX7BtPh_pL0', 'U.S. Marine Corps Fitness - Dumbbell Split Squat', 'U.S. Forces Fitness'),
+  'push-up': yt('tf3VNkmzHq0', 'How to work up to a full pushup progression', 'WeShape'),
+  'one-arm-row': yt(
+    'DmUX88nWClo',
+    'How to do a Supported Bent-Over Dumbbell Row',
+    'National Academy of Sports Medicine (NASM)',
   ),
-  'push-up': yt('08pMuPjGpUI', 'Muscle strengthening exercise for your bones - Stage 2', ROS),
-  'one-arm-row': yt('DmUX88nWClo', 'How to do a Supported Bent-Over Dumbbell Row', NASM),
-  'romanian-deadlift': yt('cQqTHQGzC_M', 'Using the hip hinge to bend safely', ROS),
-  'single-leg-romanian-deadlift': yt('6pEL3KxnlEo', 'How to do a Single-Leg Romanian Deadlift', NASM),
-  'step-up': strengthStage1,
-  'nordic-curl': yt('zd_YToC83TA', 'Nordic Hamstring Exercise - How to perform it correctly?', ASPETAR),
-  'overhead-press': yt('MMjBnEBnZKM', 'How to do a Dumbbell Overhead Press', NASM),
-  'bent-over-row': yt('DJfQN6xJL28', 'How to do a Dumbbell Bent Over Row', NASM),
-  'copenhagen-plank': yt('ougbplWKXYM', 'The Copenhagen Adductor Exercise', ASPETAR),
-  'side-plank': yt('E5U7Nv3cd_E', 'Back Exercises to Strengthen and Stretch (Side Plank) | HSS', HSS),
-  'calf-raise': yt('qPd73snQfUs', 'Single-Leg Calf Raise (HSS)', HSS),
-  'dead-bug': yt('bxn9FBrt4-A', 'How to do a Dead Bug | Proper Form & Technique | NASM', NASM),
-  'l-sit': yt('BbAkWxDZKIM', 'L-Sit: Step-by-Step Progressions', GMB),
-  'glute-bridge': strengthStage1,
-  // Jumps, rope and running
-  'squat-jump': yt('tZSYZdtbONc', 'How to do a Squat Jump  | Proper Form & Technique | NASM', NASM),
-  'single-leg-hop': impactStage3,
-  'pogo-hops': yt('GJ4Wjo_LmCk', 'Impact exercise for your bones - Stage 2', ROS),
-  'skater-hops': impactStage3,
-  'run-walk': {
-    url: 'https://www.nhs.uk/better-health/get-active/get-running-with-couch-to-5k/',
-    title: 'Get running with Couch to 5K - Better Health - NHS',
-    channel: 'NHS',
-    checked: CHECKED,
-  },
-  'brisk-walk': walking,
-  walk: walking,
-  // Playground
-  'pull-up': yt('9yVGh3XbJ34', 'How to do a Pull-Up | Proper Form & Technique | NASM', NASM),
-  // Splits and flexibility
+  'glute-bridge': yt(
+    'PhTDzR0TpZs',
+    'How to Do a Glute Bridge Exercise: A Guide from Physical Therapists',
+    'Hinge Health',
+  ),
+  'step-up': yt('_-E6Cf9vDSg', 'Single leg step up with dumbbells', 'Mountain Ridge Physical Therapy'),
+  'overhead-press': yt(
+    'd3CRIDSCOhw',
+    'Half Kneeling Single Arm DB Shoulder Press (Exercise Library)',
+    'Horton Barbell',
+  ),
+  'farmer-carry': yt('p5MNNosenJc', 'The Dumbbell Farmers Carry', 'CrossFit'),
+  'side-plank': yt(
+    'FwbhtRs8uj4',
+    'Complete Physio – 16: Simple Side Plank with Progressions',
+    'Complete Physio',
+  ),
+  'calf-raise': yt('NVMrM-e8eoY', 'Single Leg Calf Raise Off Step', 'John Kahl PT DPT SCS CSCS'),
+  'dead-bug': yt('GbSC02oU3To', 'How to Do a Dead Bug: A Guide from Physical Therapists', 'Hinge Health'),
+  'hollow-hold': yt(
+    'LlDNef_Ztsc',
+    'Hollow Body Hold Progression - Gymnastic Core Stability Exercise',
+    'GMB Fitness (Praxis)',
+  ),
+  'squat-jump': yt(
+    'tZSYZdtbONc',
+    'How to do a Squat Jump  | Proper Form & Technique | NASM',
+    'National Academy of Sports Medicine (NASM)',
+  ),
   'worlds-greatest-stretch': yt(
     '-CiWQ2IvY34',
     "The World's Greatest Stretch (Mobility Exercise) by Squat University",
     'Squat University',
   ),
-  'leg-swings': yt(
-    '-KbrCW3MRbg',
-    'Dynamic Multidirectional Leg Swings Stretch',
-    'Athletico Physical Therapy',
+  'half-split': yt(
+    'gTjRgU8M_B0',
+    'Half Split (Ardha Hanumansana) For Hamstring Stretch with Dr. Jenn of Root To Rise PT',
+    'Jenn Gelfand ~ Root To Rise PT',
   ),
   'supported-front-split': yt(
-    'yobZX63_bEM',
-    'Supported bent-leg partial front splits',
-    'Kit Laughlin (Stretch Therapy)',
+    'qWN7irIeWSc',
+    'How to get your Front Splits | Blocks & Slider edition ',
+    'Hip Pilates Method ',
   ),
+  'active-front-leg-lift': yt('AscrGMs4Fzc', 'Seated Straight Leg Raise', 'Ashley Burr Athletic Therapy'),
+  'frog-stretch': yt('6-JQqiI_Plo', 'Frog Stretch', 'Dr. James Chung - Sports Physical Therapist'),
   'horse-stance': yt(
     'kXWtk3NLESk',
     'Middle/Straddle Splits Tutorial with Antranik (Gain Passive & Active Flexibility using Horse Stance)',
     'Antranik Kizirian',
   ),
-  'straddle-lean': yt('bs63okrxH8E', '15 Minute Pancake Routine (FOLLOW ALONG)', 'Tom Merrick'),
+  'straddle-lean': yt('mVisirHzJqk', 'Pancake Straddle Stretch', 'Tom Morrison'),
   'supported-side-split': yt(
     'GSwx0yGxtPk',
     'Begin Your Middle Split Journey! (FOLLOW ALONG) #BIG5FLEX',
     'Tom Merrick',
   ),
-  'side-lying-leg-raise': yt('xVSwJhJCsgo', 'How to do a Side-Lying Leg Raise', NASM),
+  'side-lying-leg-raise': yt(
+    'xVSwJhJCsgo',
+    'How to do a Side-Lying Leg Raise',
+    'National Academy of Sports Medicine (NASM)',
+  ),
+  'switch-90-90': yt(
+    'qq_Z7sAmVrA',
+    '90/90 Hip Switch (Improve Hip Health & Mobility)',
+    'Simone Sports Performance',
+  ),
+  'puppy-pose': yt('o-H-MB7foaA', 'Puppy Pose', 'FitLife Fitness, Aquatics and Physical Therapy'),
+  'deep-squat-hold': yt(
+    'IHApHfNA2Ag',
+    'How to Do a Deep Squat According to Physical Therapists',
+    'Hinge Health',
+  ),
 }
-
-/**
- * Exercises without a link: no health body's video or page showed the movement as the plan does it, and (for the
- * handstand and split drills) no established coach's video taught it on its own. Listed so a new exercise cannot be
- * left out unseen.
- */
-export const noLinkFound: readonly string[] = [
-  'upper-back-extension',
-  'prone-chest-lift',
-  'hand-plank',
-  'pike-hold',
-  'pistol-squat',
-  'scapular-push-up',
-  'archer-push-up',
-  'pseudo-planche-push-up',
-  'pullover',
-  'farmer-carry',
-  'cossack-squat',
-  'single-leg-reach',
-  'tibialis-raise',
-  'hollow-hold',
-  'hollow-rock',
-  'broad-jump',
-  'rope-basics',
-  'rope-skills',
-  'easy-run',
-  'strides',
-  'dead-hang',
-  'scapular-pull',
-  'negative-pull-up',
-  'hanging-knee-raise',
-  'half-split',
-  'active-front-leg-lift',
-  'frog-stretch',
-  'switch-90-90',
-  'puppy-pose',
-  'deep-squat-hold',
-  'marching-in-place',
-  'easy-cool-down',
-]

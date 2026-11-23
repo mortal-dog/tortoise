@@ -3,6 +3,7 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Volume2, VolumeX, X } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
+import { ExerciseLink } from '@/components/ExerciseLink'
 import { Banner, Button, Card } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import type { LocalDate } from '@/lib/dates'
@@ -19,6 +20,8 @@ interface Done {
   unit: Unit
   result: UnitResult
   feedback: Array<Feedback | undefined>
+  /** Tapped "Skip this": the step does not count as done (D-057). */
+  skipped?: boolean
 }
 
 export interface PlayerProps {
@@ -51,7 +54,7 @@ export function Player(props: PlayerProps) {
   const wake = useContext(WakeLockContext)
   const unit = units[index]
 
-  // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target and key cue.
+  // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target.
   useEffect(() => {
     if (spoken && startedAt !== null && unit && !pending) speak(coachingText(unit))
   }, [spoken, startedAt, unit, pending])
@@ -135,7 +138,10 @@ export function Player(props: PlayerProps) {
 
       {startedAt !== null && !finished && !pending && (
         <div className="mt-4 flex justify-start gap-2">
-          <Button variant="quiet" onClick={() => advance({ unit: unit as Unit, result: [], feedback: [] })}>
+          <Button
+            variant="quiet"
+            onClick={() => advance({ unit: unit as Unit, result: [], feedback: [], skipped: true })}
+          >
             Skip this
           </Button>
         </div>
@@ -185,7 +191,6 @@ function Intro({ units, onStart }: { units: Unit[]; onStart: () => void }) {
 }
 
 function UnitView({ unit, children }: { unit: Unit; children: React.ReactNode }) {
-  const [showHow, setShowHow] = useState(false)
   const first = unit.exercises[0]
   return (
     <div className="space-y-4">
@@ -197,49 +202,21 @@ function UnitView({ unit, children }: { unit: Unit; children: React.ReactNode })
               ? 'Cool-down'
               : unit.part === 'split'
                 ? 'Split'
-                : unit.part === 'playground'
-                  ? 'Playground'
-                  : 'Main'}
+                : 'Main'}
           {first?.label ? ` · ${unit.exercises.map((e) => e.label).join(' + ')}` : ''}
         </p>
         <h2 className="mt-1 font-semibold text-2xl" data-testid="unit-title">
           {unit.exercises.map((e) => e.title).join(' + ')}
         </h2>
-        {unit.exercises.map((e) =>
-          e.name !== e.title ? (
-            <p key={e.stepId} className="text-sm text-primary-strong">
-              {e.name}
-            </p>
-          ) : null,
-        )}
+        {unit.exercises.map((e) => (
+          <p key={e.stepId} className="text-sm">
+            <ExerciseLink name={e.name} url={e.videoUrl} />
+          </p>
+        ))}
         <p className="mt-1 font-semibold text-lg text-primary" data-testid="unit-target">
           {unit.target}
         </p>
-        {unit.exercises.map((e) =>
-          e.cue ? (
-            <p key={`${e.stepId}-cue`} className="mt-1 text-sm">
-              {unit.exercises.length > 1 ? `${e.title}: ` : ''}
-              {e.cue}
-            </p>
-          ) : null,
-        )}
         {first?.note && <p className="mt-1 text-sm text-primary-strong">{first.note}</p>}
-        {unit.exercises.some((e) => e.how) && (
-          <button
-            type="button"
-            onClick={() => setShowHow(!showHow)}
-            className="mt-1 text-sm font-semibold text-primary underline"
-            aria-expanded={showHow}
-          >
-            {showHow ? 'Hide how' : 'How'}
-          </button>
-        )}
-        {showHow &&
-          unit.exercises.map((e) => (
-            <p key={`${e.stepId}-how`} className="mt-1 text-sm">
-              {e.how}
-            </p>
-          ))}
       </div>
       <Card>{children}</Card>
     </div>
@@ -319,6 +296,10 @@ function Summary({
         })
       })
     }
+    // A step counts as done when one of its units was finished, not skipped (a step can span several units).
+    const steps = [
+      ...new Set(done.filter((d) => !d.skipped).flatMap((d) => d.unit.exercises.map((e) => e.stepId))),
+    ]
     const km = Number(distance.replace(',', '.'))
     await savePlayedSession({
       date,
@@ -330,6 +311,7 @@ function Summary({
       ...(effort ? { effort } : {}),
       ...(note.trim() ? { note: note.trim() } : {}),
       ...(asksDistance && km > 0 ? { distanceKm: km } : {}),
+      steps,
       logs,
     })
     onSaved()

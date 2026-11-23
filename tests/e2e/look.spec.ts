@@ -15,7 +15,7 @@ async function startPlan(page: Page) {
 test('the backdrop drifts on every screen, with no raindrops and no switch', async ({ page }) => {
   await startPlan(page)
   await expect(page.getByTestId('backdrop')).not.toHaveAttribute('data-still')
-  for (const tab of ['Week', 'Progress', 'Library', 'Settings']) {
+  for (const tab of ['Week', 'Progress', 'Settings']) {
     await page.getByRole('link', { name: tab, exact: true }).click()
     await expect(page.getByRole('link', { name: tab, exact: true })).toHaveAttribute('aria-current', 'page')
     await expect(page.getByTestId('rain')).toHaveCount(0)

@@ -80,8 +80,6 @@ export async function loadMetrics(today: LocalDate): Promise<Metrics | null> {
   const week0 = addDays(settings.startDate, -7)
   const [days, tests, logs] = await Promise.all([getAllDays(), getTests(), getAllLogs()])
   const statusOf = (d: LocalDate) => dayStatus(days.get(d), d, today, week0)
-  const pull = plan.ladders.find((l) => l.id === 'pull')
-  const firstPullUp = pull?.levels.find((l) => l.code === 'P4')?.level
   return computeMetrics({
     days: [...days.values()],
     tests,
@@ -89,8 +87,6 @@ export async function loadMetrics(today: LocalDate): Promise<Metrics | null> {
     longestStreak: longestStreak(statusOf, today, week0),
     longestDoneRun: longestDoneRun(statusOf, today, week0),
     kindOf,
-    profileHeightCm: settings.profile.heightCm,
-    ...(pull && firstPullUp ? { pull: { ladderId: pull.id, firstPullUpLevel: firstPullUp } } : {}),
   })
 }
 

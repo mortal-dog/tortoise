@@ -134,8 +134,7 @@ function ProfileSection({ settings }: { settings: SettingsRecord }) {
     <Card>
       <SectionTitle>Profile</SectionTitle>
       <p className="mt-1 text-sm">
-        All optional, and kept only on this phone. Used for the heart-rate zones, the Rockport walk and the
-        broad-jump aim.
+        All optional, and kept only on this phone. Used for the heart-rate zones and the Rockport walk.
       </p>
       <div className="mt-2 grid grid-cols-2 gap-3">
         <SavedField

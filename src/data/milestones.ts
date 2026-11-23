@@ -93,12 +93,6 @@ export const milestones: MilestoneInput[] = [
   ability('push-ups-30', '30 push-ups', 'pushups', 30),
   ability('push-ups-40', '40 push-ups', 'pushups', 40),
   ability('push-ups-50', '50 push-ups', 'pushups', 50),
-  ability('pull-up-first', 'The first pull-up', 'pullups', 1),
-  ability('pull-ups-5', '5 pull-ups', 'pullups', 5),
-  ability('pull-ups-10', '10 pull-ups', 'pullups', 10),
-  ability('dead-hang-60', 'Dead hang 60 s', 'deadHangS', 60),
-  ability('dead-hang-90', 'Dead hang 90 s', 'deadHangS', 90),
-  ability('dead-hang-120', 'Dead hang 120 s', 'deadHangS', 120),
   ability('handstand-wall-30', 'Handstand at the wall 30 s', 'handstandWallS', 30),
   ability('handstand-wall-60', 'Handstand at the wall 60 s', 'handstandWallS', 60),
   ability('handstand-free-5', 'The first freestanding handstand, 5 s', 'handstandFreeS', 5),
@@ -117,8 +111,6 @@ export const milestones: MilestoneInput[] = [
   ability('run-5k', 'The first continuous 5 km', 'continuousRunKm', 5),
   ability('run-10k', 'The first continuous 10 km', 'continuousRunKm', 10),
   ability('long-run-90', 'A 90-minute long run', 'longRunMin', 90),
-  // Broad jump in cm minus height in cm: at least 0 means at least your own height.
-  ability('broad-jump-height', 'Broad jump: your own height', 'broadJumpVsHeight', 0),
   ability('vo2max-10', 'Aerobic power: VO2max estimate up 10% from Week 0', 'vo2maxGainPct', 10),
   ability('straight-back', 'Straight back: the wall test at 0 cm in four tests in a row', 'wallZeroTests', 4),
 ]

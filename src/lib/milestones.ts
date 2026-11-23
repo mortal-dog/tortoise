@@ -45,10 +45,6 @@ export interface HistoryInput {
   longestDoneRun: number
   /** The session kind of a session id, from the plan data. */
   kindOf: (sessionId: string) => SessionKind | undefined
-  /** The profile height, when the tests hold none. */
-  profileHeightCm?: number
-  /** The pull ladder's id and the level of its first pull-up (P4). */
-  pull?: { ladderId: string; firstPullUpLevel: number }
 }
 
 function max(values: Array<number | undefined>): number | undefined {
@@ -76,9 +72,6 @@ export function computeMetrics(h: HistoryInput): Metrics {
     return k === 'run' || k === 'long'
   })
   const latest = tests.at(-1)
-  const heights = tests.map((t) => t.results.heightCm).filter((v): v is number => v !== undefined)
-  const height = heights.at(-1) ?? h.profileHeightCm
-
   let wallRun = 0
   let wallBest = 0
   for (const t of tests) {
@@ -90,11 +83,6 @@ export function computeMetrics(h: HistoryInput): Metrics {
   const first = tests.find((t) => t.computed.vo2max !== undefined)?.computed.vo2max
   const bestVo2 = max(tests.map((t) => t.computed.vo2max))
 
-  const pull = h.pull
-  const pullLogs = pull
-    ? h.logs.filter((l) => l.ladderId === pull.ladderId && (l.level ?? 0) >= pull.firstPullUpLevel)
-    : []
-
   return {
     streak: h.longestStreak,
     noMissDays: h.longestDoneRun,
@@ -105,22 +93,12 @@ export function computeMetrics(h: HistoryInput): Metrics {
       h.days.filter((d) => d.main && h.kindOf(d.main.sessionId) === 'long').map((d) => d.main?.minutes),
     ),
     pushups: max(tests.map((t) => t.results.pushups)),
-    pullups: max(pullLogs.flatMap((l) => l.sets.map((s) => s.reps))),
-    deadHangS: max(tests.map((t) => t.results.hangS)),
     handstandWallS: max(tests.map((t) => t.results.handstand?.wallS)),
     handstandFreeS: max(tests.map((t) => t.results.handstand?.freeS)),
     frontSplitCm: min(tests.map((t) => bothSides(t.results.splits?.frontL, t.results.splits?.frontR))),
     sideSplitCm: min(tests.map((t) => t.results.splits?.side)),
     sitRise: max(tests.map((t) => t.computed.sitRiseScore)),
     oneLegClosedS: max(tests.map((t) => weakerLeg(t.results.oneLeg?.closedL, t.results.oneLeg?.closedR))),
-    broadJumpVsHeight:
-      height === undefined
-        ? undefined
-        : max(
-            tests.map((t) =>
-              t.results.broadJumpCm === undefined ? undefined : t.results.broadJumpCm - height,
-            ),
-          ),
     vo2maxGainPct:
       first !== undefined && bestVo2 !== undefined && tests.length > 1
         ? (bestVo2 / first - 1) * 100
@@ -128,7 +106,7 @@ export function computeMetrics(h: HistoryInput): Metrics {
     wallZeroTests: wallBest,
     wallCm: latest?.results.wallCm,
     farmerS: latest?.results.farmerS,
-    broadJumpCm: latest?.results.broadJumpCm,
+    jumpReachCm: latest?.results.jumpReachCm,
     vo2max: latest?.computed.vo2max,
   }
 }

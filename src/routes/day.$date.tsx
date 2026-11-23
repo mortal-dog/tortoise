@@ -1,22 +1,27 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Check, ChevronLeft } from 'lucide-react'
-import { type ReactNode, useEffect, useState } from 'react'
+import { Check, ChevronLeft, X } from 'lucide-react'
+import { ExerciseLink } from '@/components/ExerciseLink'
 import { StatusMark, statusLabel } from '@/components/StatusMark'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
-import { dayTemplate } from '@/lib/calendar'
+import type { Session } from '@/data/schema'
+import { dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { compareDates, formatShort, isLocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
-import { sessionOf, splitKind, TEST_SESSION_ID } from '@/lib/plan-view'
-import { type DayRecord, nowIso } from '@/lib/records'
-import { getOverride, updateDay } from '@/lib/repo'
+import { type DayItem, dayItems, sessionOf, stepsFor, testsForDay } from '@/lib/plan-view'
+import type { LevelRecord, Variant } from '@/lib/records'
+import { getLevels, getOverride } from '@/lib/repo'
 import { planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/day/$date')({
   component: DayDetail,
 })
 
+/**
+ * A day of the plan (D-057): the same list for every day, past or to come, of each part's exercises with their videos.
+ * A day that has passed (and today, once a part is done) marks each exercise done or not done.
+ */
 function DayDetail() {
   const { date } = Route.useParams()
   const settings = useSettings()
@@ -25,9 +30,11 @@ function DayDetail() {
   const start = settings?.startDate
   const pd = start && isLocalDate(date) ? planDayOf(start, date) : null
   const override = useLive(() => (pd ? getOverride(pd.monday) : Promise.resolve(undefined)), [pd?.monday])
+  const levels = useLive(getLevels, []) ?? new Map<string, LevelRecord>()
 
   if (!settings || !history) return <Screen title="Day">{null}</Screen>
-  if (!start || !pd || !isLocalDate(date) || compareDates(date, history.week0) < 0) {
+  const tmpl = pd ? dayTemplate(pd, plan.week, override?.swaps ?? []) : null
+  if (!start || !pd || !tmpl || !isLocalDate(date) || compareDates(date, history.week0) < 0) {
     return (
       <Screen title="Day">
         <p>This day is outside the plan.</p>
@@ -35,19 +42,14 @@ function DayDetail() {
       </Screen>
     )
   }
-  const tmpl = dayTemplate(pd, plan.week, override?.swaps ?? [])
   const day = history.days.get(date)
   const status = history.statusOf(date)
-  const future = compareDates(date, t) > 0
-  const mainId = tmpl?.testDay ? TEST_SESSION_ID[tmpl.testDay] : (tmpl?.main ?? '')
-  const mainName = tmpl?.testDay
-    ? `Tortoise Test · Day ${tmpl.testDay}`
-    : tmpl
-      ? sessionOf(tmpl.main).name
-      : ''
-  const split = tmpl?.split ? sessionOf(tmpl.split) : null
-  const save = (change: (d: DayRecord) => DayRecord) => void updateDay(date, change)
-  const num = (s: string) => (s.trim() === '' ? undefined : Number(s))
+  const past = compareDates(date, t) < 0
+  const nothingDone = !day?.morning?.doneAt && !day?.main?.doneAt && !day?.split?.doneAt
+  const mark = (record: { doneAt: string } | null | undefined) => past || !!record?.doneAt
+  const main = tmpl.testDay ? null : sessionOf(tmpl.main)
+  const variant: Variant = day?.main?.variant ?? 'outdoor'
+  const split = tmpl.split ? sessionOf(tmpl.split) : null
 
   return (
     <Screen title={formatShort(date)} action={<BackLink />}>
@@ -55,192 +57,148 @@ function DayDetail() {
         <StatusMark status={status} size={22} />
         <span className="font-semibold">{statusLabel(status)}</span>
       </p>
-      {future ? (
-        <p>This day has not come yet.</p>
-      ) : (
-        <div className="space-y-3">
-          <Card>
-            <Toggle
-              label="Morning block done"
-              checked={!!day?.morning?.doneAt}
-              onChange={(on) => save((d) => ({ ...d, morning: on ? { doneAt: nowIso() } : null }))}
-            />
-          </Card>
-          <Card>
-            <Toggle
-              label={`${mainName} done`}
-              checked={!!day?.main?.doneAt}
-              onChange={(on) =>
-                save((d) => ({
-                  ...d,
-                  main: on ? { doneAt: nowIso(), sessionId: mainId, asPlanned: true } : null,
-                  ...(tmpl && !tmpl.split && !tmpl.testDay
-                    ? { split: on ? { doneAt: nowIso(), kind: 'long' as const } : null }
-                    : {}),
-                }))
-              }
-            />
-            {day?.main?.doneAt && (
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {sessionOf(tmpl?.main ?? '')?.hasVariants && !tmpl?.testDay && (
-                  <Field label="Where">
-                    <select
-                      value={day.main.variant ?? 'outdoor'}
-                      onChange={(e) =>
-                        save((d) => ({
-                          ...d,
-                          main: d.main && { ...d.main, variant: e.target.value as 'outdoor' | 'indoor' },
-                        }))
-                      }
-                      className={inputClass}
-                    >
-                      <option value="outdoor">Outdoor</option>
-                      <option value="indoor">Indoor</option>
-                    </select>
-                  </Field>
-                )}
-                <Field label="Minutes">
-                  <input
-                    inputMode="numeric"
-                    defaultValue={day.main.minutes ?? ''}
-                    onBlur={(e) =>
-                      save((d) => ({
-                        ...d,
-                        main: d.main && { ...d.main, minutes: num(e.target.value), asPlanned: false },
-                      }))
-                    }
-                    className={inputClass}
-                  />
-                </Field>
-                <Field label="Distance (km)">
-                  <input
-                    inputMode="decimal"
-                    defaultValue={day.main.distanceKm ?? ''}
-                    onBlur={(e) =>
-                      save((d) => ({ ...d, main: d.main && { ...d.main, distanceKm: num(e.target.value) } }))
-                    }
-                    className={inputClass}
-                  />
-                </Field>
-                <Field label="Effort (1–10)">
-                  <input
-                    inputMode="numeric"
-                    defaultValue={day.main.effort ?? ''}
-                    onBlur={(e) => {
-                      const v = num(e.target.value)
-                      save((d) => ({
-                        ...d,
-                        main: d.main && {
-                          ...d.main,
-                          effort: v === undefined ? undefined : Math.min(10, Math.max(1, Math.round(v))),
-                        },
-                      }))
-                    }}
-                    className={inputClass}
-                  />
-                </Field>
-                <Field label="Note" wide>
-                  <input
-                    defaultValue={day.main.note ?? ''}
-                    onBlur={(e) =>
-                      save((d) => ({
-                        ...d,
-                        main: d.main && { ...d.main, note: e.target.value || undefined },
-                      }))
-                    }
-                    className={inputClass}
-                  />
-                </Field>
-              </div>
-            )}
-          </Card>
-          {split && (
-            <Card>
-              <Toggle
-                label={`${split.name} done`}
-                checked={!!day?.split?.doneAt}
-                onChange={(on) =>
-                  save((d) => ({ ...d, split: on ? { doneAt: nowIso(), kind: splitKind(split.id) } : null }))
-                }
-              />
-            </Card>
-          )}
-          <Card>
-            <fieldset>
-              <legend className="font-semibold text-primary">Sick or injured</legend>
-              <div className="mt-2 flex gap-2">
-                {([null, 'sick', 'injured'] as const).map((p) => (
-                  <button
-                    key={p ?? 'none'}
-                    type="button"
-                    aria-pressed={(day?.paused ?? null) === p}
-                    onClick={() => save((d) => ({ ...d, paused: p }))}
-                    className={cn(
-                      'min-h-11 flex-1 rounded-xl border text-sm font-semibold',
-                      (day?.paused ?? null) === p
-                        ? 'border-sky bg-sky text-on-primary'
-                        : 'border-line text-text',
-                    )}
-                  >
-                    {p === null ? 'Neither' : p === 'sick' ? 'Sick' : 'Injured'}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-2 text-sm text-primary-strong">
-                A sick or injured day with nothing done pauses the streak; anything done still counts.
-              </p>
-            </fieldset>
-          </Card>
-        </div>
+      {past && nothingDone && (
+        <p className="mb-3 font-semibold text-brick" data-testid="day-nothing">
+          Nothing was done this day.
+        </p>
       )}
+      <div className="space-y-3">
+        <Part
+          title="Morning block"
+          marked={mark(day?.morning)}
+          done={!!day?.morning?.doneAt}
+          items={dayItems(sessionOf(tmpl.morning), 'outdoor', levels, pd, day?.morning, mark(day?.morning))}
+        />
+        {tmpl.testDay ? (
+          <Part
+            title={`Tortoise Test · Day ${tmpl.testDay}`}
+            marked={mark(day?.main)}
+            done={!!day?.main?.doneAt}
+            items={testsForDay(tmpl.testDay).map((test) => ({
+              stepId: test.id,
+              name: test.name,
+              exercise: test.name,
+              dose: test.unit,
+              ...(mark(day?.main) ? { done: !!day?.main?.doneAt } : {}),
+            }))}
+          />
+        ) : (
+          main && (
+            <MainPart
+              session={main}
+              variant={variant}
+              levels={levels}
+              pd={pd}
+              record={day?.main}
+              marked={mark(day?.main)}
+            />
+          )
+        )}
+        {split && (
+          <Part
+            title={split.name}
+            marked={mark(day?.split)}
+            done={!!day?.split?.doneAt}
+            items={dayItems(split, 'outdoor', levels, pd, day?.split, mark(day?.split))}
+          />
+        )}
+      </div>
     </Screen>
   )
 }
 
-const inputClass = 'mt-1 block min-h-11 w-full rounded-xl border border-edge bg-field px-3 text-text'
-
-function Field({ label, children, wide }: { label: string; children: ReactNode; wide?: boolean }) {
+/** The main session; a run day that is not done yet also lists its indoor version (the indoor walk). */
+function MainPart({
+  session,
+  variant,
+  levels,
+  pd,
+  record,
+  marked,
+}: {
+  session: Session
+  variant: Variant
+  levels: ReadonlyMap<string, LevelRecord>
+  pd: PlanDay
+  record: { doneAt: string; steps?: string[] } | null | undefined
+  marked: boolean
+}) {
+  const items = dayItems(session, variant, levels, pd, record, marked)
+  const shown = new Set(stepsFor(session, variant, pd).map((s) => s.id))
+  const indoor =
+    session.hasVariants && !record?.doneAt && variant === 'outdoor'
+      ? dayItems(session, 'indoor', levels, pd, undefined, false).filter((i) => !shown.has(i.stepId))
+      : []
   return (
-    // biome-ignore lint/a11y/noLabelWithoutControl: the control is the child
-    <label className={cn('text-sm', wide && 'col-span-2')}>
-      {label}
-      {children}
-    </label>
+    <Part
+      title={`${session.name}${record?.doneAt && session.hasVariants ? ` · ${variant === 'indoor' ? 'Indoor' : 'Outdoor'}` : ''}`}
+      marked={marked}
+      done={!!record?.doneAt}
+      items={items}
+      extra={
+        indoor.length > 0 ? (
+          <>
+            <h3 className="mt-3 font-semibold text-sm text-primary-strong">Indoors (rain or ice)</h3>
+            <ItemList items={indoor} />
+          </>
+        ) : null
+      }
+    />
   )
 }
 
-function Toggle({
-  label,
-  checked,
-  onChange,
+function Part({
+  title,
+  items,
+  marked,
+  done,
+  extra,
 }: {
-  label: string
-  checked: boolean
-  onChange: (on: boolean) => void
+  title: string
+  items: DayItem[]
+  marked: boolean
+  done: boolean
+  extra?: React.ReactNode
 }) {
-  // Shows the tap at once; the stored value takes over again when the write comes back.
-  const [shown, setShown] = useState(checked)
-  useEffect(() => setShown(checked), [checked])
   return (
-    <label className="flex min-h-11 items-center justify-between gap-3">
-      <span className="font-semibold">{label}</span>
-      <span className="relative flex size-7 shrink-0 items-center justify-center">
-        <input
-          type="checkbox"
-          checked={shown}
-          onChange={(e) => {
-            setShown(e.target.checked)
-            onChange(e.target.checked)
-          }}
-          className="peer size-7 appearance-none rounded-lg border-2 border-primary checked:bg-primary"
-        />
-        <Check
-          aria-hidden
-          strokeWidth={3}
-          className="pointer-events-none absolute hidden size-5 text-on-primary peer-checked:block"
-        />
-      </span>
-    </label>
+    <Card data-testid="day-part">
+      <div className="flex items-baseline justify-between gap-2">
+        <h2 className="font-semibold text-lg text-primary">{title}</h2>
+        {marked && (
+          <span className={cn('font-semibold text-sm', done ? 'text-primary' : 'text-brick')}>
+            {done ? 'Done' : 'Not done'}
+          </span>
+        )}
+      </div>
+      <ItemList items={items} />
+      {extra}
+    </Card>
+  )
+}
+
+function ItemList({ items }: { items: DayItem[] }) {
+  return (
+    <ul className="mt-2 space-y-2">
+      {items.map((item) => (
+        <li key={item.stepId} className="flex items-start gap-2" data-testid="day-item">
+          {item.done !== undefined &&
+            (item.done ? (
+              <Check aria-label="done" className="mt-0.5 size-5 shrink-0 text-primary" strokeWidth={3} />
+            ) : (
+              <X aria-label="not done" className="mt-0.5 size-5 shrink-0 text-brick" strokeWidth={3} />
+            ))}
+          <div className="min-w-0">
+            <p className="font-semibold">
+              {item.label ? `${item.label} · ` : ''}
+              {item.name}
+            </p>
+            <p className="text-sm">
+              <ExerciseLink name={item.exercise} url={item.videoUrl} /> <span>{item.dose}</span>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }
 

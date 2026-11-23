@@ -23,7 +23,7 @@ export const at99: At99Input[] = [
     direction: 'atLeast',
     sources: ['brito2014'],
   },
-  { ability: 'Jump', metric: 'broadJumpCm', line: 'Broad jump trend', direction: 'trend', ourRule: true },
+  { ability: 'Jump', metric: 'jumpReachCm', line: 'Jump-and-reach trend', direction: 'trend', ourRule: true },
   {
     ability: 'Run',
     metric: 'continuousRunKm',
@@ -44,14 +44,6 @@ export const at99: At99Input[] = [
     ability: 'Carry',
     metric: 'farmerS',
     line: 'Farmer hold 60 s',
-    value: 60,
-    direction: 'atLeast',
-    ourRule: true,
-  },
-  {
-    ability: 'Hang',
-    metric: 'deadHangS',
-    line: 'Dead hang 60 s or more',
     value: 60,
     direction: 'atLeast',
     ourRule: true,

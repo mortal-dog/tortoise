@@ -35,11 +35,8 @@ const num = (n: number | undefined) => (n === undefined ? undefined : n)
 
 /** The input fields of each test (design §6, the tests store). */
 const FIELDS: Record<string, FieldSpec[]> = {
-  'broad-jump': [
-    { label: 'Best of 3', unit: 'cm', get: (r) => r.broadJumpCm, set: (_, n) => ({ broadJumpCm: num(n) }) },
-  ],
-  'dead-hang': [
-    { label: 'Time', unit: 's', get: (r) => r.hangS, set: (_, n) => ({ hangS: num(n) }), stopwatch: {} },
+  'jump-reach': [
+    { label: 'Best of 3', unit: 'cm', get: (r) => r.jumpReachCm, set: (_, n) => ({ jumpReachCm: num(n) }) },
   ],
   'resting-hr': [
     { label: 'Beats in 60 s', unit: 'bpm', get: (r) => r.restingHr, set: (_, n) => ({ restingHr: num(n) }) },
@@ -491,19 +488,16 @@ function Rockport({
   )
 }
 
-/** Week 0 asks three start questions (plan §8). */
+/** Week 0 asks one start question (plan §8). */
 function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord | undefined }) {
   const [run, setRun] = useState(String(record?.start?.runMin ?? ''))
-  const [rope, setRope] = useState(String(record?.start?.ropeMin ?? ''))
-  const [negative, setNegative] = useState<boolean | undefined>(record?.start?.negative)
   const [saved, setSaved] = useState(false)
   const r = parseNumber(run)
-  const j = parseNumber(rope)
   const [dirty, setDirty] = useState(false)
-  const complete = r !== undefined && j !== undefined && negative !== undefined
+  const complete = r !== undefined
   const save = async () => {
-    if (r === undefined || j === undefined || negative === undefined) return
-    await saveTestResults(date, { start: { runMin: r, ropeMin: j, negative } })
+    if (r === undefined) return
+    await saveTestResults(date, { start: { runMin: r } })
     setSaved(true)
     setDirty(false)
   }
@@ -511,10 +505,10 @@ function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord 
   return (
     <Card data-testid="start-questions">
       <div className="flex items-baseline justify-between gap-2">
-        <h2 className="font-semibold text-lg text-primary">Three start questions</h2>
+        <h2 className="font-semibold text-lg text-primary">Start question</h2>
         {saved && <Check aria-label="saved" className="size-5 text-primary" strokeWidth={3} />}
       </div>
-      <p className="mt-1 text-sm">With the results, they set the starting levels at the end of Week 0.</p>
+      <p className="mt-1 text-sm">With the results, it sets the starting levels at the end of Week 0.</p>
       <div className="mt-3 space-y-3">
         <NumberField
           label="How long is an easy run comfortable?"
@@ -525,35 +519,6 @@ function StartQuestions({ date, record }: { date: LocalDate; record: TestRecord 
             setDirty(true)
           }}
         />
-        <NumberField
-          label="How long does the rope turn without stopping?"
-          unit="min"
-          value={rope}
-          onChange={(v) => {
-            setRope(v)
-            setDirty(true)
-          }}
-        />
-        <fieldset>
-          <legend className="text-sm font-semibold">
-            Can a negative pull-up be lowered under control for 5 s?
-          </legend>
-          <div className="mt-1 flex gap-2">
-            {[true, false].map((v) => (
-              <Button
-                key={String(v)}
-                variant={negative === v ? 'primary' : 'quiet'}
-                aria-pressed={negative === v}
-                onClick={() => {
-                  setNegative(v)
-                  setDirty(true)
-                }}
-              >
-                {v ? 'Yes' : 'No'}
-              </Button>
-            ))}
-          </div>
-        </fieldset>
         <Button variant="quiet" disabled={!complete} onClick={() => void save()}>
           Save
         </Button>

@@ -150,14 +150,6 @@ export const sources: SourceInput[] = [
       '874 novice runners with GPS watches, followed for a year. Injury rates overall did not differ significantly between the groups. Those who raised their weekly distance by more than 30% over 2 weeks had more distance-related injuries than those who raised it by less than 10%, but that difference was not statistically significant either (hazard ratio 1.59, confidence interval 0.96–2.66, p = 0.07). The authors call the study exploratory and still advise novices to progress by less than 30% a week.',
   },
   {
-    id: 'vandyk2019',
-    citation:
-      'van Dyk et al. Including the Nordic hamstring exercise in injury prevention programmes halves the rate of hamstring injuries. Br J Sports Med 2019.',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/30808663/',
-    finding:
-      '15 studies, 8,459 athletes. Programmes that included the Nordic hamstring exercise cut hamstring injuries by up to 51% (risk ratio 0.49).',
-  },
-  {
     id: 'sherrington2019',
     citation:
       'Sherrington et al. Exercise for preventing falls in older people living in the community. Cochrane Database Syst Rev 2019.',

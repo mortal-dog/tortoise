@@ -65,7 +65,7 @@ async function seed(db: Db): Promise<void> {
   await db.put('tests', {
     date: '2026-11-28',
     results: { pushups: 15, sitRise: { sit: 4, rise: 5 } },
-    start: { runMin: 10, ropeMin: 2, negative: true },
+    start: { runMin: 10 },
     computed: { sitRiseScore: 9 },
     updatedAt: T1,
   })

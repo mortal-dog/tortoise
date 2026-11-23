@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ClipboardList } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { BadgeMedal } from '@/components/progress/BadgeMedal'
 import { Honeycomb } from '@/components/progress/Honeycomb'
 import { Photos } from '@/components/progress/Photos'
 import { type ChartPoint, TrendChart } from '@/components/progress/TrendChart'
@@ -8,10 +9,11 @@ import { StatusMark, statusLabel } from '@/components/StatusMark'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
 import type { Metric, Milestone } from '@/data/schema'
+import { badges } from '@/lib/badges'
 import { dayTemplate } from '@/lib/calendar'
 import { addDays, compareDates, daysBetween, formatShort, type LocalDate, mondayOf } from '@/lib/dates'
 import { useLive } from '@/lib/live'
-import { type Metrics, progress } from '@/lib/milestones'
+import { type Metrics, progress, reached } from '@/lib/milestones'
 import { addPillars, donePillars, PILLARS, plannedPillars, zeroPillars } from '@/lib/pillars'
 import { sessionsById } from '@/lib/plan-view'
 import type { LevelRecord, TestRecord } from '@/lib/records'
@@ -48,8 +50,6 @@ function Progress() {
   }
   const longest = longestStreak(history.statusOf, t, history.week0)
   const testKey = tests.length && daysBetween(tests.at(-1)?.date ?? t, t) < 7 ? (tests.at(-1)?.date ?? t) : t
-  const heightCm =
-    tests.findLast((x) => x.results.heightCm !== undefined)?.results.heightCm ?? settings.profile.heightCm
 
   return (
     <Screen
@@ -75,7 +75,7 @@ function Progress() {
             today={t}
           />
           <ul className="mt-3 grid grid-cols-2 gap-1 text-sm" aria-label="Status key">
-            {(['full', 'shell', 'missed', 'paused'] as const).map((s) => (
+            {(['full', 'shell', 'missed'] as const).map((s) => (
               <li key={s} className="flex items-center gap-2">
                 <StatusMark status={s} />
                 {statusLabel(s)}
@@ -111,10 +111,7 @@ function Progress() {
                 title={s.name}
                 unit={s.unit}
                 points={points}
-                aim={aimValue(
-                  plan.tests.find((x) => x.id === s.testId),
-                  heightCm,
-                )}
+                aim={aimValue(plan.tests.find((x) => x.id === s.testId))}
               />
             ),
           }))}
@@ -288,7 +285,6 @@ function Milestones({
   metrics: Metrics
   tests: TestRecord[]
 }) {
-  const got = plan.milestones.filter((m) => earned.has(m.id))
   const first = tests[0]
   const startOf = (m: Milestone): number | undefined => {
     if (m.direction !== 'atMost' || !first) return undefined
@@ -300,7 +296,7 @@ function Milestones({
     return undefined
   }
   const next = plan.milestones
-    .filter((m) => !earned.has(m.id))
+    .filter((m) => !earned.has(m.id) && !reached(m, metrics))
     .map((m) => ({ m, p: progress(m, metrics, startOf(m)) }))
     .sort((a, b) => b.p - a.p)
     .slice(0, 3)
@@ -322,35 +318,85 @@ function Milestones({
           ))}
         </ul>
       </Card>
-      <Card>
-        <h3 className="font-semibold">
-          Earned · {got.length} of {plan.milestones.length}
-        </h3>
-        {got.length === 0 ? (
-          <p className="mt-1 text-sm">None yet: the first comes after a week with no day missed.</p>
-        ) : (
-          <ul className="mt-2 grid grid-cols-2 gap-2" data-testid="earned-milestones">
-            {got.map((m) => (
-              <li key={m.id} className="rounded-xl border border-shell px-3 py-2">
-                <p className="font-semibold text-sm">{m.name}</p>
-                <p className="text-xs">{formatShort(earned.get(m.id)?.earnedAt ?? '')}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
+      <Badges earned={earned} metrics={metrics} />
     </div>
+  )
+}
+
+/** Every milestone as a badge (D-058); tapping one shows how to earn it, or when it was earned. */
+function Badges({
+  earned,
+  metrics,
+}: {
+  earned: ReadonlyMap<string, { earnedAt: LocalDate }>
+  metrics: Metrics
+}) {
+  const list = badges(plan.milestones, metrics, earned)
+  const [open, setOpen] = useState<string | null>(null)
+  const shown = list.find((b) => b.milestone.id === open)
+  const got = list.filter((b) => b.earned).length
+  return (
+    <Card>
+      <h3 className="font-semibold">
+        Badges · {got} of {list.length}
+      </h3>
+      {shown && (
+        <div
+          className="mt-2 rounded-xl border border-edge bg-field p-3"
+          data-testid="badge-detail"
+          aria-live="polite"
+        >
+          <p className="font-semibold text-primary">{shown.milestone.name}</p>
+          <p className="mt-1 text-sm">
+            {shown.earned
+              ? shown.earnedAt
+                ? `Earned ${formatShort(shown.earnedAt)}.`
+                : 'Earned.'
+              : `To earn it: ${shown.how}`}
+          </p>
+        </div>
+      )}
+      {(['habit', 'ability'] as const).map((group) => (
+        <div key={group} className="mt-3">
+          <h4 className="font-semibold text-sm text-primary-strong">
+            {group === 'habit' ? 'Habit' : 'Ability'}
+          </h4>
+          <ul
+            className="mt-2 grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-4"
+            data-testid={`badges-${group}`}
+          >
+            {list
+              .filter((b) => b.milestone.group === group)
+              .map((b) => (
+                <li key={b.milestone.id}>
+                  <button
+                    type="button"
+                    title={b.earned ? b.milestone.name : `${b.milestone.name}: ${b.how}`}
+                    aria-pressed={open === b.milestone.id}
+                    aria-label={`${b.milestone.name}, ${b.earned ? 'earned' : 'locked'}`}
+                    data-earned={b.earned}
+                    onClick={() => setOpen(open === b.milestone.id ? null : b.milestone.id)}
+                    className="flex w-full flex-col items-center gap-1 rounded-xl p-1 text-center"
+                  >
+                    <BadgeMedal badge={b} />
+                    <span className="font-semibold text-xs leading-tight">{b.milestone.name}</span>
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))}
+    </Card>
   )
 }
 
 const METRIC_UNIT: Partial<Record<Metric, string>> = {
   wallCm: 'cm',
   sitRise: 'points',
-  broadJumpCm: 'cm',
+  jumpReachCm: 'cm',
   continuousRunKm: 'km',
   oneLegClosedS: 's',
   farmerS: 's',
-  deadHangS: 's',
   vo2max: 'mL/kg/min',
   handstandFreeS: 's',
   frontSplitCm: 'cm',

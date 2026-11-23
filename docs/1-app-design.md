@@ -24,8 +24,8 @@ only: nutrition, sleep and medicine are out of scope.
 2. **Offline first.** After the first load the app works with no network: in the basement, in airplane mode, on a trail.
 3. **One tap per thing.** "Done as planned" is the default; editing reps or weights is optional. A normal day takes under
    ten taps to log.
-4. **Forgiving streaks.** A 15-minute Shell day counts. The streak breaks only on two missed days in a row. Sick days pause
-   it. ([§5.2](#52-day-status-and-the-tortoise-streak))
+4. **Forgiving streaks.** A 15-minute Shell day counts. The streak breaks only on two missed days in a row. There is no
+   pause: the app counts what was done, not why not (D-057). ([§5.2](#52-day-status-and-the-tortoise-streak))
 5. **The plan is data.** Sessions, ladders, tests and milestones live in one typed data file built from
    [2-exercise-plan.md](2-exercise-plan.md). Changing the plan means changing data, not screens.
 6. **Show the why.** Every exercise shows one line of why. A tap opens the detail and its sources, and every number names
@@ -61,7 +61,8 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 
 ## 3. Screens
 
-A bottom tab bar, within thumb reach, floating as a glass bar (D-048), holds five tabs: **Today · Week · Progress · Library · Settings**. The session player
+A bottom tab bar, within thumb reach, floating as a glass bar (D-048), holds four tabs: **Today · Week · Progress · Settings** (D-056). Only the pill that marks the open tab moves; the bar
+itself stays still (D-059). The session player
 and the test wizard open full screen above the tabs.
 
 ### 3.1 Today (home)
@@ -87,7 +88,6 @@ and the test wizard open full screen above the tabs.
 └────────────────────────────────────────┘
 ```
 
-- **Day ring** (top right, not drawn above): empty, shell or full, filling as cards are done.
 - **Cards in the order of the day:** morning block, main session, split block. Each card shows when in the day
   it belongs (plan §4: after waking; lunch to mid-afternoon; right after the main session, in the same sitting, D-052),
   its time, its exercises with their current ladder levels, **Start** (opens the player) and **Done as planned** (one tap). The main
@@ -101,7 +101,6 @@ and the test wizard open full screen above the tabs.
 - **Make it a Shell day** folds the cards that are still open, so the day ends with the morning block. It only tidies
   the screen: the status still follows [§5.2](#52-day-status-and-the-tortoise-streak), and a tap unfolds the cards
   again.
-- **Yesterday missed?** A banner offers "Log yesterday" (the honour system), or "It was a sick day" (pauses the streak).
 - **Level-up suggestions** appear as a card when a ladder's pass rule is met: "Ready for Bulgarian split squat? Move up /
   Not yet".
 
@@ -132,7 +131,11 @@ and the test wizard open full screen above the tabs.
 - The week's label: build, light or test.
 - **Swap days:** pick two days of the week to swap their main sessions; each session takes its split block along. The
   app warns if the swap breaks a rule (two strength days in a row, intervals the day before the long run).
-- Tapping a past day opens it for viewing or editing.
+- **Tapping any day** opens its page (D-057): each part (morning block, main session, split block) with its exercises,
+  their level and dose, and each exercise's name opening its YouTube video. A day to come shows what to do; on a run
+  day it also lists the indoor version (a longer brisk walk). A day that has passed, and today once a part is done,
+  marks each exercise done or not done, and a past day with nothing done says so. The player records which steps were
+  finished; a "Done as planned" tap counts the whole part. The page is for reading: nothing is edited there.
 
 ### 3.4 Progress
 
@@ -143,7 +146,11 @@ and the test wizard open full screen above the tabs.
 - **Test trends:** a small line chart for every test of the Tortoise Test (the VO2max estimate for the Rockport walk),
   with the aim line where the test has one.
 - **Levels over time:** a step chart per ladder.
-- **Milestones:** earned badges with dates, and "next up" with progress bars.
+- **Milestones:** "next up" with progress bars, and **badges** (D-058): every milestone is a tortoise-shell hexagon
+  medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon and a ribbon. Earned medals shine (a
+  glint sweeps across, two sparkles twinkle); locked ones are grey with a lock. A tap or hover tells how to earn one or
+  when it was earned. A badge counts as earned when stored or when its goal is reached now, so a reached goal never
+  shows locked.
 - **The At-99 board:** each 99-year ability with its latest result ([plan §11](2-exercise-plan.md#11-milestones)).
 
 ### 3.5 Tortoise Test wizard
@@ -158,21 +165,9 @@ and the test wizard open full screen above the tabs.
     here;
   - height: the change against the tallest earlier record.
 - Height is asked once a year: when the last height record is 48 weeks old or more.
-- In Week 0 the wizard also asks the three start questions (easy running, the rope, a slow negative pull-up).
+- In Week 0 the wizard also asks the start question (how long an easy run is comfortable).
 - On saving: comparison with the last test; milestones awarded; and, in Week 0, the starting levels set by the rules in
   [plan §8](2-exercise-plan.md#8-the-first-13-weeks).
-
-### 3.6 Library
-
-- Search, plus filters by area (spine, strength, handstand, splits, cardio, playground) and "with video". The search
-  and filters are kept in the address (`/library?q=…&area=…`), so going back from an exercise returns to the same list.
-  A search needs every word in the name, the texts or a ladder level's name; name matches come first.
-- **Exercise page** (`/library/<id>`): how to do it, the key cue, the common mistake; the why line with source chips (a
-  chip opens the finding and its link); each ladder the exercise is on, with the current level marked and pass targets
-  shown (another level can be set by hand, after a confirmation); the last 10 logs; and a video link where one exists
-  (it opens outside the app, with the title, the channel and the day the link was checked).
-- **Source page** (`/library/sources/<id>`): the citation, the finding, the link, and the exercises and ladders citing
-  it.
 
 ### 3.7 Settings
 
@@ -201,7 +196,7 @@ and the test wizard open full screen above the tabs.
     started in the installed app, not the tab. Chromium's installed app shares the browser's data.
 - **In the installed app:** pick the Monday on which Week 0 begins: the coming Monday by default, or today on a
   Monday. Week 1 starts seven days later.
-- **Until Week 0 begins:** Today shows the days left. The Library is open, and the morning block can be tried; days
+- **Until Week 0 begins:** Today shows the days left. The morning block can be tried; days
   before Week 0 have no status and no streak.
 - The profile is optional. The Rockport test asks for age, sex and weight when it needs them.
 - A link leads to Settings → Google Drive sync: signing in there restores the Drive copy instead of starting afresh (a
@@ -221,7 +216,6 @@ Progress ┬ Shell → Day detail
          ├ Test trends → Test detail, test wizard
          ├ Milestones
          └ At-99 board
-Library ── Exercise page → Source detail
 Settings ─ Profile / Units / Google Drive sync / About
 ```
 
@@ -251,17 +245,14 @@ Settings ─ Profile / Units / Google Drive sync / About
 | Full | Morning block and main session both done | Moss green | Filled |
 | Shell | One of the two done. The morning block alone is the planned Shell day; the main session alone counts the same | Shell amber | Half filled |
 | Missed | Neither done, once the day is over | Brick | Outline |
-| Paused | Marked sick or injured, with neither done | Sky | Dashed outline |
 | Ahead | A future day, or today while nothing is done yet | Pale beige | Faint fill |
 
-- A day with something done is Full or Shell even when it is marked sick: done beats paused.
 - On a test day, the day's part of the Tortoise Test counts as the main session. On Sunday the Light session is the
   main session.
 - The split block does not change the status; it feeds its own counts and milestones.
 - **Tortoise streak:** the number of done days, Full or Shell, in the current run.
   - Count back from today, or from yesterday while today has nothing done.
   - One missed day does not end the run, but adds nothing to the count. Two missed days in a row end it.
-  - Paused days are skipped: they add nothing, end nothing, and do not come between two missed days.
   - The run never reaches back before Week 0.
 - **Longest streak:** the largest such count in the history.
 
@@ -272,10 +263,8 @@ Settings ─ Profile / Units / Google Drive sync / About
 - **Holds:** all sets at the target → suggest the next level.
 - **Two "Too hard" in a row** → suggest one level down.
 - **After 14 or more days with no logs for a ladder** → suggest one level down for a week.
-- **Endurance steps** (run–walk, rope) move only on the user's tap, at least 7 days apart. Past the ladders, the run
+- **Endurance steps** (run–walk) move only on the user's tap, at least 7 days apart. Past the ladders, the run
   cards show last week's minutes and the most that the 10% rule allows this week.
-- **By hand:** a level can be set from the Library at any time, for a start above level 1 or a step back after an
-  injury.
 - The app never changes a level by itself: the user confirms each move, and the history keeps every change with its date.
 
 ---
@@ -285,10 +274,10 @@ Settings ─ Profile / Units / Google Drive sync / About
 | Store | Key | Fields |
 |---|---|---|
 | `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}. Records from before D-053 also held dumbbellKg, location, runDefault and reminders, and from before D-055 backup {lastAt, everyDays}; they are dropped when read |
-| `days` | `YYYY-MM-DD` | paused (sick, injured or none); morning {doneAt, items}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned")}; split {doneAt, kind (front, side, both or long)}; folded (the "Make it a Shell day" tap) |
+| `days` | `YYYY-MM-DD` | morning {doneAt, steps}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned"), steps}; split {doneAt, kind (front, side, both or long), steps}; folded (the "Make it a Shell day" tap). `steps` lists the step ids the player finished; without it the whole part counts (D-057). Records from before D-057 may hold paused; it is dropped when read |
 | `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
 | `levels` | ladderId | level, since, history [{level, date}] |
-| `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, broadJumpCm, hangS, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answers {runMin, ropeMin, negative} (Week 0 only); computed {vo2max, sitRiseScore} |
+| `tests` | date of Day 1 | results {rockport {minutes, heartRate, weightKg}, jumpReachCm, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answer {runMin} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
 | `photos` | a random id; index on date | date, dataUrl (a JPEG of at most 1280 px), note (optional); added by migration 2 (D-044) |
@@ -407,7 +396,7 @@ and the Today reminder went with D-055.
 | primary | `#3E6B3F` (moss) | `#7FB77E` | Full days, buttons, headings |
 | primary-strong | `#2E5230` | `#A6D3A3` | Secondary text, in place of grey |
 | shell | `#9A6212` (amber) | `#E0A955` | Shell days, streaks |
-| sky | `#2A72AB` | `#6DB3E8` | Outdoor, daylight, paused days |
+| sky | `#2A72AB` | `#6DB3E8` | Outdoor, daylight |
 | brick | `#B23A2A` | `#E07A6A` | Missed days, warnings, delete |
 | line | `#E4DCC8` (beige) | `#2C3B2E` | Borders, dividers, days ahead |
 
@@ -428,8 +417,8 @@ and the Today reminder went with D-055.
   80 to 131 seconds each. They are pale in the light theme and deep in the dark, so that text, primary, primary-strong,
   shell, sky and brick keep 4.5:1 on the page and on every panel, over any overlap of the fields (the contrast guard
   computes every case).
-- **Small motion:** the tab bar's pill glides to the open tab; a screen settles in with a short lift; buttons press in;
-  the day ring's arc glides to its new length; the big timer glows softly.
+- **Small motion:** the tab bar's pill glides to the open tab (the bar itself never moves, D-059); a screen settles in
+  with a short lift; buttons press in; earned badges shine (D-058); the big timer glows softly.
 - **Still:** reduced motion stops the drift. There is no switch in Settings and no raindrops since D-053.
 
 ---

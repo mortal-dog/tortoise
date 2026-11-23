@@ -84,6 +84,11 @@
   --color-current: currentColor;
 }
 
+html {
+  /* Desktop scroll bars: keep their room on every page, so a short page does not shift the centred tab bar (D-059). */
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   background: var(--background);
@@ -128,6 +133,12 @@ body {
 }
 
 /* The open tab's pill glides from tab to tab. */
+.tab-bar {
+  /* Its own layer: a page change behind the bar does not repaint or nudge it (D-059). */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 .tab-pill {
   background-color: var(--glass-active);
   box-shadow: inset 0 1px 0 var(--shine);
@@ -263,4 +274,55 @@ input[type="date"]::-webkit-datetime-edit {
   .backdrop-glow {
     animation: none;
   }
+}
+
+/* Badges (D-058): an earned medal shines, a glint sweeps across it and two sparkles twinkle; a locked one is grey. */
+.badge-locked > svg {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.badge-glint {
+  transform: skewX(-20deg) translateX(0);
+  animation: badge-glint 4.2s ease-in-out infinite;
+}
+.badge-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: badge-twinkle 2.4s ease-in-out infinite;
+}
+.badge-sparkle-late {
+  animation-delay: 1.2s;
+}
+@keyframes badge-glint {
+  0%,
+  55% {
+    transform: skewX(-20deg) translateX(0);
+  }
+  100% {
+    transform: skewX(-20deg) translateX(220px);
+  }
+}
+@keyframes badge-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .badge-glint {
+    display: none;
+  }
+  .badge-sparkle {
+    animation: none;
+    opacity: 0.9;
+  }
+}
+.badge-locked .badge-glint,
+.badge-locked .badge-sparkle {
+  display: none;
 }
