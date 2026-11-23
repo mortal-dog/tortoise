@@ -3,46 +3,45 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-22, 15:29 ET)
+## Open work and next steps (as of 2026-11-23, 10:57 ET)
 
-- **Nothing in flight; the handoff sheet is empty.** Everything code can do is built, committed and pushed to
-  origin/main. The owner's asks of 2026-11-22: "implement phase 0 to 3", "do all the remaining phases", the install
-  card and the glass look (D-047, D-048, built by parallel sessions), a faster CI/CD ("can we optimize the ci cd to
-  make it faste maybe parelle? it is up to you. current speed not bad but faster is always better", D-046) and "fix
-  all issues and run compact at end" (D-049).
-- **The app is live** at `https://tortoise.doctornova.net` (HTTP 200). The first deploy was the owner's own manual run
-  #3 on `1825aba` (13:04 ET). The live build is `af76e29`'s (the install card, the glass, the settings fix), deployed by
-  a manual run at 14:49 ET on the owner's picker "Push and deploy now". The commits after it change no site files (CI,
-  docs, `ai/`), so the scheduled slot at 23:07 UTC (18:07 ET) only redeploys the same files.
+- **Nothing in flight; the handoff sheet is empty.** The owner's asks of 2026-11-23 are built, pushed and live: a
+  beginner's handstand ladder (D-051), the day's timing (D-052), no pocket lock (D-050), the settings sweep (D-053) and
+  the Google Drive backup (D-054). Live build `dcf1621`, deployed by manual run 45207939226 (green) on the owner's
+  picker "Push and deploy now"; the live page's CSP carries `www.googleapis.com`.
+- **The owner's one step for the Drive backup (not yet confirmed done):** in the Google Cloud console, the French app's
+  Web client (`392431386089-a3baa70ro45r5uegru6hjc23o9ptkhgj.apps.googleusercontent.com`, his picker "reuse") must
+  list `https://tortoise.doctornova.net` as an authorised JavaScript origin; until then Google's window says
+  "origin_mismatch". The Settings → Google Drive backup card says so. Its consent screen is in Testing (only its test
+  users can sign in). For `pnpm dev` sign-in, `http://localhost:5173` would also need adding (the French client already
+  lists it).
 - **Phase 8 is all that is left: the real-phone checklist** (`docs/3-implementation.md`, Phase 8 table), the owner's,
-  on the iPhone from Safari: install, offline, the update banner, sound with the silent switch, spoken cues, wake lock
-  and the pocket lock, background catch-up, backup through the share sheet to Files and back, the calendar file into
-  Calendar, "Use my location once", persistent storage, layout, and **Glass** (added 2026-11-22: scrolling and the
-  player stay smooth with the moving backdrop on, the phone does not grow warm over a session, Reduce Transparency
-  gives solid panels; CI found the glass costly per pixel without a GPU, D-049). Then **other platforms** (D-047):
-  Android Chrome, desktop Chrome or Edge, and the directions in any browser. **When the owner reports results, write
-  them into `docs/3-implementation.md` under Phase 8** (its done criterion), mark the domain steps done there, and fix
-  what fails.
-- **The domain steps are done** (D-035 order kept): Pages enabled with source "GitHub Actions" and custom domain
-  `tortoise.doctornova.net` by the builder on the owner's yes; the owner added the GoDaddy CNAME `tortoise` →
-  `mortal-dog.github.io` and the TXT `_github-pages-challenge-mortal-dog` (doctornova.net is "verified" for the
-  account) and turned on "Enforce HTTPS". Checked 13:00 ET: `cname` set, `https_enforced` true,
-  `protected_domain_state` verified. The TXT record must stay.
-- **Owner questions left open by the agents (optional, no picker asked yet):**
-  - the 44 new "why" lines and the four walking rows of Appendix A (D-043), written under the builder's delegation;
-  - the backup interval choices (7, 14, 30, 60, 90 days) and whether "Not today" should hide the backup reminder for
-    longer than until the app is opened again (D-042).
+  on the iPhone from Safari: install, offline, the update banner, sound with the silent switch, spoken cues, the screen
+  staying on whenever the app is open (D-050), background catch-up, backup through the share sheet to Files and back,
+  **Google Drive** (sign in from the installed app: does Google's popup open and come back in home-screen mode; a change
+  backs up within a minute; Sync now after the hour; restore on a second device or after Delete all data), layout, and
+  **Glass** (smooth scrolling and player with the drifting backdrop, no warm phone, Reduce Transparency gives solid
+  panels; D-049). Then **other platforms** (D-047): Android Chrome, desktop Chrome or Edge. **When the owner reports
+  results, write them into `docs/3-implementation.md` under Phase 8** (its done criterion) and fix what fails. The
+  calendar-file, location and storage rows are gone with D-053.
+- **Owner questions left open (optional, no picker asked yet):** the 44 "why" lines and the four walking rows of
+  Appendix A (D-043); the backup interval choices and "Not today" (D-042); the two new handstand drills (plank on the
+  hands, pike hold) have no teaching link yet (`noLinkFound` in `src/data/videos.ts`).
 - **Plan gaps still encoded by their closest reading (D-038):** A0 jumps show the squat jump (ladder level 1), not the
   table's broad jump; Thursday plyometrics counted as about 3 min; no data home yet for the ramp-week effort notes, the
-  rest between Day-2 tests, §9 stages to 99, §13 pain rules and §14 adaptations. Closed: (1) the walking rows (D-043)
-  and (4) Friday's push-up offset (D-040).
+  rest between Day-2 tests, §9 stages to 99, §13 pain rules and §14 adaptations.
+- **The domain steps are done** (D-035): Pages with source "GitHub Actions", custom domain `tortoise.doctornova.net`,
+  GoDaddy CNAME `tortoise` → `mortal-dog.github.io`, TXT `_github-pages-challenge-mortal-dog` (must stay), HTTPS
+  enforced.
 
 ## Standing rules (also in CLAUDE.md)
 
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 311 Vitest tests in 33 files and 22 e2e tests on `5a32c8d`; CI green on `3fa4a81` (run 45066211124).
+  Last green: 288 Vitest tests in 32 files and 21 e2e tests on `dcf1621`; CI green on `dcf1621` (run 45207939226).
+  The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
+  30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
 - **CI/CD (D-039, D-046, D-049):** one workflow `.github/workflows/ci.yml`, run twice a day (13:07 and 23:07 UTC) and
   by hand ("Run workflow", or `gh workflow run ci.yml --repo mortal-dog/tortoise`, input `deploy` true by default),
   never on a push or pull request. A scheduled slot works only when main changed since the workflow's last green run
@@ -68,14 +67,23 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-050**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-055**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
-- **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (reminders,
-  profile, units, backup) is saved as a function of the stored record, `saveSettings((s) => ({ units: { ...s.units,
+- **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units,
+  backup) is saved as a function of the stored record, `saveSettings((s) => ({ units: { ...s.units,
   mass: v } }))`, never spread from the rendered copy (`7f2ef15`: two times typed in a row lost the first).
 - **UI:** no grey except disabled controls (no grey class exists; the `disabled` token); iPhone first, every platform
-  (D-047); offline; **no third-party requests at runtime** (the owner kept this, D-045: no weather hint); English UI.
+  (D-047); offline; **no third-party requests at runtime except Google's sign-in and Drive, only after the user signs
+  in** (CLAUDE.md rule 7 since D-054; D-045's "no weather hint" stands); English UI.
+- **When in the day (D-052, owner's pickers):** the morning block after waking; the main session at lunch to
+  mid-afternoon, 3–4 h after it; the split block straight after the main session in the same sitting (a drink and 2
+  min of walking). The texts live in `src/data/week.ts` `dayTimes` (the "When" column of plan §4) and show on the Today
+  cards.
+- **Handstand skill ladder (D-051):** 14 levels, H1–H6 on the floor or low on the wall (plank on the hands, pike hold,
+  pike hold feet on a chair, wall plank at knee, thigh, then hip height = the old L); the morning slot is the level's
+  holds with 30-s rests, 3–6 min, not a 6-minute timer; the morning block asks feedback after its ladder steps
+  (`player.ts` `askFeedback`). The owner: a beginner; "the difficulty must grow slowly, not start at an expert level".
 - **The weekly hours are stated in four places** that must change together: `docs/2-exercise-plan.md` §4–§5,
   `docs/plan.md`, D-009 and this page.
 
@@ -93,12 +101,12 @@
 - **The guard key has no backup** besides the CI secret, which cannot be read back.
 - **iOS web-app limits** still to verify on the phone (design §2; the Phase 8 checklist): sound after a tap and the
   silent switch, speech in the home-screen app, wake lock in home-screen mode, timers stopped in the background (the
-  player catches up from timestamps), the home-screen app's separate data, the calendar file's hand-off (share sheet or
-  opening the file), the share sheet to Files.
+  player catches up from timestamps), the home-screen app's separate data, the share sheet to Files, and Google's sign-in
+  popup from the home-screen app (D-054).
 - **A level label can collide with a slot label** (A1, B2 are slots): numeric level codes read "L1", lettered ones stand
   alone ("H1", "Ba1"), in `plan-view.ts` `stepName()` and `player.ts` `levelLabel()`.
 
-## What the app holds now (2026-11-22)
+## What the app holds now (2026-11-23)
 
 - **First run** (D-047): the install card fits the browser (`src/lib/install.ts` reads the platform from the user
   agent; `src/components/InstallCard.tsx`, `FirstRun.tsx`): Install Tortoise where Chromium offers its prompt, "Tortoise
@@ -106,24 +114,27 @@
   Firefox, the address to open elsewhere in web views; "Start in this browser instead" always (the e2e first runs click
   it). A Chromium browser gets 1.5 s to answer before the directions show. Manifest: `related_applications`,
   `launch_handler` `focus-existing`.
-- **The look** (D-048): glass panels (`glass`, `glass-strong`, `veil` utilities in `src/styles.css`) over a backdrop
-  of four soft glows drifting over 80–131 s (`src/components/Backdrop.tsx`); raindrops on a canvas on Today, Week and
-  Progress, at most 24 frames a second, stopped while hidden (`src/lib/rain.ts`); a floating glass tab bar with a
-  gliding pill; Settings → Display → **Moving background** (`src/lib/effects.ts`, localStorage
-  `tortoise.movingBackdrop`, on by default); reduced motion keeps it still, reduced transparency gives solid panels; the
-  contrast guard checks every text colour over every glow overlap.
-- **Today:** cards with **Start** (the player) and "Done as planned"; on test days **Start** opens the test wizard; the
-  backup reminder; banners; the day ring and daylight strip.
+- **The look** (D-048, D-053): glass panels (`glass`, `glass-strong` utilities in `src/styles.css`) over a backdrop of
+  four soft glows drifting over 80–131 s (`src/components/Backdrop.tsx`); a floating glass tab bar with a gliding pill.
+  No raindrops and no Display switch since D-053: the backdrop always drifts (`src/lib/effects.ts` reads only reduced
+  motion), reduced transparency gives solid panels; the contrast guard checks every text colour over every glow overlap.
+- **Screen awake (D-050):** the root layout (`src/routes/__root.tsx`) holds the wake lock whenever the app is open and
+  shares its state through `WakeLockContext` (`src/lib/wake-lock.ts`); the player shows the Auto-Lock notice when it is
+  missing or refused. No pocket lock. The owner: the lock and "Hold to unlock" felt pointless; "once the app is open the
+  screen stays on, the OS cannot lock it".
+- **Today:** cards with **Start** (the player) and "Done as planned", each with its time of day (D-052); on test days
+  **Start** opens the test wizard; the backup reminder (due by the newer of the file backup and the Drive sync);
+  banners; the day ring. No habits card and no daylight strip (D-053). Run days start at Outdoor.
 - **Player** (`/play/<date>/<morning|main|split>`, D-040): units from `src/lib/player.ts` `buildUnits()` (pairs
   alternate and rest after each pair; level holds vs reps by the pass target; run–walk and rope levels as intervals;
   the interval stage by block; Week 0, ramp and light changes; Friday's push-up `levelOffset: 1`); timers from
   timestamps (`position()`); tones unlocked on Start (`src/lib/sound.ts`), spoken cues and spoken coaching (switch kept
-  in localStorage); wake lock (`src/lib/wake-lock.ts`); pocket lock (1.5-s press); feedback; the summary saves logs and
+  in localStorage); feedback (in the morning block only after its ladder steps); the summary saves logs and
   the card in one transaction (`repo.ts` `savePlayedSession`).
 - **Library** (D-043): `library.index.tsx` (search, area and video filters kept in the address),
   `library.$exerciseId.tsx` (how, cue, mistake, why with source chips, ladder with "Set" by hand, last 10 logs, video
   link with its check date), `library.sources.$sourceId.tsx`. Every exercise has a `why` (the schema requires it); 48
-  of 78 have a video link (`src/data/videos.ts`, oEmbed titles, checked 2026-11-22; the order kept by the owner,
+  of 80 have a video link (`src/data/videos.ts`, oEmbed titles, checked 2026-11-22; the order kept by the owner,
   D-045).
 - **Tortoise Test** (`/test/<Day 1 date>?day=1|2`, D-041): cards save on their own; "Finish" first saves every card
   with unsaved changes (a race the e2e test caught under load), marks the day done, sets Week 0's starting levels
@@ -132,9 +143,17 @@
 - **Progress** (D-041): numbers and minutes per pillar this week; the Shell (two weeks a row); milestones (next up,
   earned; checked on open); photos (D-044: `photos` store, migration 2, JPEG ≤ 1280 px as data URLs, in backups); At
   99; test trends with aim lines (`aimLine` in `src/data/tests.ts`); level step charts; empty charts listed in one line.
-- **Settings** (D-042): every section of design §3.7; backup export (share sheet or download) and import (validate,
-  preview, merge by `updatedAt` or replace; schema-1 files read as having no photos); the calendar file (RFC 5545,
-  floating times, weekly rules, alarms); Display (Moving background); reset (type DELETE).
+- **Settings** (D-042, D-053, D-054): Plan, Profile, Units (kg/lb, km/mi), **Google Drive backup**, **Backup file**
+  (export by share sheet or download; import with validate, preview, merge by `updatedAt` or replace), About, Reset
+  (type DELETE; it also forgets the Google sign-in). Gone: dumbbell weight, Daylight, Runs, Display, Reminders,
+  Storage; old records drop those fields when read (zod strips unknown keys).
+- **Google Drive backup (D-054):** `src/lib/sync/google.ts` (GIS token model, scope `drive.appdata` + email, session
+  in localStorage `tortoise.google`, script loaded only on the sign-in tap), `drive.ts` (list, read, resumable write in
+  `appDataFolder`), `sync.ts` (one `device-<id>.json` per device in the backup file's format; uploads only when dirty:
+  20 s after a change, on hide, on open or return after 3 min, only with a live token; a device's first sign-in and
+  "Restore from Google Drive" merge every device file; an empty phone never uploads), `src/components/settings/
+  DriveCard.tsx`; `startAutoSync()` in `src/main.tsx`; `onChange()` in `src/lib/live.ts`. Tests:
+  `tests/db/drive-sync.test.ts` (fake Drive). Details: `ai/memory/drive-backup.md`.
 
 ## Decisions to remember (details in docs/decisions.md)
 
@@ -149,8 +168,8 @@
   longest Saturday run; Week 0 about 5½ h, the ramp-up weeks about 6½ (set under the owner's delegation: "you arrange
   the daily intensity" and "I have time"). It is 7½, not the 7 h of the first summary.
 - **App (D-010–D-014, D-047):** the iPhone first and every platform since D-047; the address
-  `https://tortoise.doctornova.net`, fixed forever; data only on the phone; reminders by calendar file; a Shell day
-  counts, and the streak breaks only on two missed days in a row.
+  `https://tortoise.doctornova.net`, fixed forever; data on the phone with a Google Drive copy once signed in (D-054);
+  no reminders since D-053; a Shell day counts, and the streak breaks only on two missed days in a row.
 - **Day status and streak (D-029):** either part alone makes a Shell day; a day with something done is never Paused;
   one missed day is bridged without counting; paused days are skipped; on a test day the test part stands in for the
   main session.
@@ -164,15 +183,19 @@
   (player), D-041 (test wizard, Progress), D-042 (settings, backup, reminders), D-043 (library, content), D-044
   (spoken coaching, photos; weather not built), D-045 (owner: no weather hint; video links as chosen), D-046 (CI gates
   side by side, actions on Node 24), D-047 (owner: every platform; the install card), D-048 (owner: the glass look),
-  D-049 (CI renders the e2e at 1x).
+  D-049 (CI renders the e2e at 1x); 2026-11-23: D-050 (owner: no pocket lock, screen on while open), D-051 (beginner
+  handstand ladder, builder's ruling on the owner's ask), D-052 (owner: when in the day), D-053 (owner: no habits,
+  daylight, runs, display, reminders, storage, raindrops; the habits advice and paluch2022/stamatakis2022 gone from the
+  plan), D-054 (owner: Google Drive backup, file backup kept, the French client ID).
 
 ## Where things are
 
 - `src/data/` the plan as data (`plan.ts`, `schema.ts`, `sessions.ts`, `ladders.ts`, `exercises.ts`, `videos.ts`,
   `tests.ts` with `aimLine`, `rules.ts`, `start-rules.ts`, `milestones.ts`, `at99.ts`, `rationale.ts`).
-- `src/lib/` `dates`, `calendar`, `status`, `progression`, `calc`, `daylight`, `milestones`, `pillars`, `records`,
+- `src/lib/` `dates`, `calendar`, `status`, `progression`, `calc`, `milestones`, `pillars`, `records`,
   `db` (migrations 1–2), `repo`, `live`, `plan-view`, `use-app`, `player`, `sound`, `wake-lock`, `use-now`,
-  `test-results`, `test-repo`, `photos`, `library`, `backup`, `ics`, `share`, `install`, `effects`, `rain`.
+  `test-results`, `test-repo`, `photos`, `library`, `backup`, `share`, `install`, `effects`, `sync/` (google, drive,
+  sync). Removed by D-053: `daylight`, `ics`, `rain`, `src/data/habits.ts`, `RemindersCard`.
 - `src/routes/` `index.tsx` (Today), `week.tsx`, `day.$date.tsx`, `play.$date.$slot.tsx`, `test.$date.tsx`,
   `progress.tsx`, `library.index.tsx`, `library.$exerciseId.tsx`, `library.sources.$sourceId.tsx`, `settings.tsx`,
   `debug.week.tsx`; `src/components/` `player/`, `test/`, `progress/`, `settings/`, `Backdrop.tsx`, `FirstRun.tsx`,
@@ -184,7 +207,8 @@
 - Commits of 2026-11-22: `35f88ff` CI/CD, `d8e112c` Phase 4, `97cd9a1` Phase 6, `c332503` Phase 7, `7f3b5be` Phase 5,
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
-  the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`).
+  the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054.
 
 ## Background
 

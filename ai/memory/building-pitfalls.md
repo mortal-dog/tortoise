@@ -64,6 +64,15 @@ metadata:
 - **A deploy run from the session:** `gh workflow run ci.yml` (it deploys) was refused by the auto-mode classifier even
   after the owner approved Pages. It went through once the owner's picker in the same session named it ("Push and
   deploy now", 2026-11-22). A run with `-f deploy=false`, or on a branch, deploys nothing and ran without asking.
+- **Counts written into tests** (2026-11-23): adding two exercises broke four hard-coded numbers: "78 exercises" in
+  `tests/e2e/library.spec.ts` and `tests/component/library.test.tsx`, the Appendix A row count in
+  `tests/content/plan.test.ts`, and the why-table size in `tests/content/library.test.ts` (44 → 46); the `plank` search
+  order in `tests/unit/library.test.ts` follows the exercise order. A ladder's `note` must equal its doc paragraph
+  after `**` is dropped (`verbatim.test.ts`). Removing a source also changes the "Part A: N PubMed abstracts" count in
+  `docs/sources.md`, and `plan.test.ts` fails on a source no data uses.
+- **Heavy tests under load** (2026-11-23): the 60-year IndexedDB test and the personal-term guard timed out at vitest's
+  5-s default while another repo's tests ran (load average 19–27); both have a 30-s limit since `4933a2a`. A timeout in
+  a full run that passes alone is load: check `uptime` before chasing it.
 - **Bugs the Phase 2 tests caught:** with one log, `slice(-2)` put it in `prev`, not `latest` (use `at(-1)`/`at(-2)`).
 
 **Why:** each cost a failed gate or a refused step on 2026-11-22 (Phases 0–9, then the settings race and the CI
