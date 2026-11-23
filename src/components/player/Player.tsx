@@ -1,8 +1,8 @@
 // The session player (design §3.2): full screen, one unit at a time, feedback after each exercise, and a summary that
 // saves the logs and marks the card done.
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Lock, Volume2, VolumeX, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Volume2, VolumeX, X } from 'lucide-react'
+import { useContext, useEffect, useState } from 'react'
 import { Banner, Button, Card } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import type { LocalDate } from '@/lib/dates'
@@ -10,8 +10,7 @@ import { clockText, coachingText, type Unit } from '@/lib/player'
 import type { Variant } from '@/lib/records'
 import { type PlayedSession, type Slot, savePlayedSession } from '@/lib/repo'
 import { canSpeak, setSpokenCues, speak, spokenCuesOn, unlockAudio } from '@/lib/sound'
-import { useWakeLock } from '@/lib/wake-lock'
-import { PocketLock } from './PocketLock'
+import { WakeLockContext } from '@/lib/wake-lock'
 import { type UnitResult, UnitRunner } from './runners'
 
 type Feedback = 'easy' | 'right' | 'hard'
@@ -47,10 +46,9 @@ export function Player(props: PlayerProps) {
   const [index, setIndex] = useState(0)
   const [done, setDone] = useState<Done[]>([])
   const [pending, setPending] = useState<Done | null>(null)
-  const [locked, setLocked] = useState(false)
   const [spoken, setSpoken] = useState(() => spokenCuesOn())
   const finished = startedAt !== null && index >= units.length && !pending
-  const wake = useWakeLock(startedAt !== null && !finished)
+  const wake = useContext(WakeLockContext)
   const unit = units[index]
 
   // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target and key cue.
@@ -110,8 +108,7 @@ export function Player(props: PlayerProps) {
       {(wake === 'unsupported' || wake === 'refused') && startedAt !== null && !finished && (
         <div className="mt-3">
           <Banner tone="shell">
-            The screen may turn off by itself. For the session, set Auto-Lock to Never (Settings, Display
-            &amp; Brightness).
+            The screen may turn off by itself. Set Auto-Lock to Never (Settings, Display &amp; Brightness).
           </Banner>
         </div>
       )}
@@ -137,16 +134,12 @@ export function Player(props: PlayerProps) {
       </div>
 
       {startedAt !== null && !finished && !pending && (
-        <div className="mt-4 flex justify-between gap-2">
+        <div className="mt-4 flex justify-start gap-2">
           <Button variant="quiet" onClick={() => advance({ unit: unit as Unit, result: [], feedback: [] })}>
             Skip this
           </Button>
-          <Button variant="quiet" onClick={() => setLocked(true)}>
-            <Lock aria-hidden className="size-4" /> Pocket lock
-          </Button>
         </div>
       )}
-      {locked && <PocketLock onUnlock={() => setLocked(false)} />}
     </main>
   )
 }

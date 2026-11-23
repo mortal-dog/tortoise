@@ -1,8 +1,11 @@
-// Keeps the screen on during a session (design §2). Safari releases the lock when the app goes to the background, so it
-// is asked for again when the app returns. Where the API is missing or refuses, the player shows a notice instead.
-import { useEffect, useState } from 'react'
+// Keeps the screen on while the app is open (design §2, D-050). Safari releases the lock when the app goes to the
+// background, so it is asked for again when the app returns. Where the API is missing or refuses, the player shows a
+// notice instead. The root layout holds the lock and shares its state through WakeLockContext.
+import { createContext, useEffect, useState } from 'react'
 
 export type WakeState = 'on' | 'unsupported' | 'refused' | 'off'
+
+export const WakeLockContext = createContext<WakeState>('off')
 
 export function useWakeLock(active: boolean): WakeState {
   const [state, setState] = useState<WakeState>('off')

@@ -66,7 +66,6 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
   // Monday of Week 5 (Block 2, a build week): 3 sets.
   await startPlanThenGoTo(page, '2026-12-28')
   await page.getByRole('link', { name: 'Start Strength A' }).click()
-  await expect(page.getByTestId('pocket-lock')).toHaveCount(0)
   await expect(page.getByRole('navigation', { name: 'Main' })).toHaveCount(0) // full screen
   await page.getByRole('button', { name: 'Start', exact: true }).click()
 
@@ -101,17 +100,9 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
   await expect(page.getByTestId('rest')).toHaveCount(0)
   await page.getByRole('button', { name: 'Set done' }).click()
   await expect(page.getByTestId('rest')).toBeVisible()
-  // Locked in a pocket, taps do nothing until a long press; the rest timer keeps running underneath.
-  await page.getByRole('button', { name: 'Pocket lock' }).click()
-  await expect(page.getByTestId('pocket-lock')).toBeVisible()
+  // The rest timer runs out on its own.
   await page.clock.runFor(76_000)
   await expect(page.getByTestId('rest')).toHaveCount(0)
-  const unlock = page.getByRole('button', { name: 'Hold to unlock' })
-  await unlock.hover()
-  await page.mouse.down()
-  await page.clock.runFor(1_600)
-  await page.mouse.up()
-  await expect(page.getByTestId('pocket-lock')).toHaveCount(0)
 
   await playToSummary(page)
   await expect(page.getByTestId('summary-sets')).not.toHaveText('0')

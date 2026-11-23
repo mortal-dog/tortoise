@@ -204,7 +204,7 @@ Phase 4; the Progress, Library and Settings tabs hold only what Phase 3 needs un
 - Step kinds: reps, hold, interval, timed, stretch.
 - Timers based on timestamps, so they catch up after the app returns from the background.
 - Sound: audio unlocked on Start; tones; optional spoken cues.
-- Screen: wake lock and the pocket lock.
+- Screen: the wake lock, held by the root layout whenever the app is open (D-050).
 - Feedback after each exercise, the end summary, and saving the logs.
 
 **Done when:** the step-engine unit tests pass; e2e tests with a fake clock run Strength A and a 4 × 4 session; and on the
@@ -213,7 +213,7 @@ iPhone, sound, wake lock and background catch-up have been checked by hand.
 **Done (2026-11-22), apart from the phone:** `src/lib/player.ts` builds the units and runs the timelines;
 `tests/unit/player.test.ts` covers pairs, Week 0, the ramp, the light week, the interval stages, run–walk levels, holds,
 stretches, Friday's level offset and the timeline arithmetic. `tests/e2e/player.spec.ts` runs Strength A on a fake
-clock (the rest timer, the pair, the pocket lock, saving the logs and the card) and the 4 × 4 (work and rest, a
+clock (the rest timer, the pair, saving the logs and the card) and the 4 × 4 (work and rest, a
 10-minute jump standing in for the background, pause). Today's cards have **Start**; the player is full screen
 (`/play/<date>/<slot>`). Construction choices: D-040. Sound, speech, wake lock and background catch-up on the iPhone
 are in the Phase 8 checklist.
@@ -329,7 +329,7 @@ a picker.
 | Offline | Works in airplane mode after the first load |
 | Update | A new deploy shows the update banner, and the new version loads after a tap |
 | Sound | Cues with the ring/silent switch on and off; a spoken cue |
-| Screen | Wake lock in the installed app; the pocket lock |
+| Screen | Wake lock in the installed app, held whenever the app is open |
 | Background | Timers catch up after locking the phone mid-interval |
 | Backup | Export through the share sheet to Files; import back |
 | Reminders | The calendar file imports and rings, through "Add to Calendar" (the share sheet) or "Open the calendar file"; note which works from the home-screen app |

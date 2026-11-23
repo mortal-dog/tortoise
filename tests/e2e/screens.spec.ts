@@ -50,7 +50,5 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.getByRole('button', { name: 'Start', exact: true }).click()
     await page.getByRole('button', { name: 'Start', exact: true }).click()
     await page.screenshot({ path: info.outputPath(`${scheme}-10-player-hold.png`), fullPage: true })
-    await page.getByRole('button', { name: 'Pocket lock' }).click()
-    await page.screenshot({ path: info.outputPath(`${scheme}-11-player-lock.png`), fullPage: true })
   })
 }

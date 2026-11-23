@@ -51,7 +51,7 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 | Sound | Web Audio starts only after a tap; the ring/silent switch may mute it (verify) | Unlock audio on the session's Start tap; every cue is also shown on screen |
 | Speech | Safari's speech synthesis uses the phone's own voices and needs no network (verify in the home-screen app) | Spoken cues are optional; tones and text always carry the cue |
 | Vibration | Safari has no Vibration API | Visual and sound cues only |
-| Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on during sessions; if that fails, a notice to set Auto-Lock |
+| Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on whenever the app is open (D-050); if that fails, a notice in the player to set Auto-Lock |
 | Background | iOS suspends a web app in the background; timers stop firing | Timers run from timestamps and catch up on return; cues need the screen on |
 | Notifications | Web Push needs a push server | No push in v1; a calendar file sets the reminders ([§9](#9-reminders)) |
 | Calendar file | iOS adds the events of an iCalendar file to its Calendar. Which hand-off works from a home-screen app, the share sheet or opening the file, is not yet known (verify) | Try the share sheet first, then opening the file; the reminder times are also shown as text |
@@ -123,8 +123,8 @@ and the test wizard open full screen above the tabs.
 
 - **After each exercise:** "Too easy / Right / Too hard". Two "too hard" answers in a row suggest one level down; the pass
   rule suggests one level up.
-- **Pocket lock** for outdoor runs: the screen stays on and touch is locked until a long press, so the phone can ride in a
-  pocket without stray taps.
+- **No lock layer (D-050).** The screen stays on for as long as the app is open, and only the phone's side button locks
+  it. There is no pocket lock: on an outdoor run a stray touch in a pocket can tap a button, which the owner accepted.
 - **Summary at the end:** total time, sets, a 1–10 effort pick, and an optional note. Saving marks the card done.
 
 ### 3.3 Week
