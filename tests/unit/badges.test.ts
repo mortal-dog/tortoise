@@ -14,12 +14,11 @@ function at(m: (typeof plan.milestones)[number], miss: boolean): Metrics {
 }
 
 describe('badges (D-058)', () => {
-  it('give every milestone a badge with a way to earn it, a mark and an icon', () => {
+  it('give every milestone a badge with a way to earn it and an icon', () => {
     const list = badges(plan.milestones, {}, none)
     expect(list.map((b) => b.milestone.id)).toEqual(plan.milestones.map((m) => m.id))
     for (const b of list) {
       expect(b.how.length, b.milestone.id).toBeGreaterThan(20)
-      expect(b.mark, b.milestone.id).not.toBe('')
       expect(b.icon, b.milestone.id).toBeDefined()
       expect(b.earned, b.milestone.id).toBe(false)
     }
@@ -91,7 +90,6 @@ describe('badges (D-058)', () => {
     expect(tiers).toEqual(['bronze', 'gold', 'jade', 'sapphire'])
     const row = badges(plan.milestones, {}, none).find((b) => b.milestone.id === 'row-3')
     expect(row?.tier).toBe('gold')
-    expect(row?.mark).toBe('P3')
     expect(row?.how).toContain('One-arm row, a 2-s squeeze at the top and 3 s down')
     expect(badges(plan.milestones, {}, none).find((b) => b.milestone.id === 'hatchling')?.tier).toBe('bronze')
   })

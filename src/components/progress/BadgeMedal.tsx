@@ -28,9 +28,10 @@ function hex(cx: number, cy: number, r: number): string {
 }
 
 /**
- * A badge medal (D-058): a shell-scute hexagon with a metal rim, a domed face, the milestone's icon and a ribbon with its
- * mark. An earned medal shines: a glint sweeps across it and two sparkles twinkle (still under reduced motion). A
- * locked one is grey with a lock, the one place outside disabled controls where the app uses grey (the owner's ask).
+ * A badge medal (D-058): a shell-scute hexagon with a metal rim, a domed face and the milestone's icon; no ribbon or
+ * mark, since what earns it shows only in the card (D-070). An earned medal shines: a glint sweeps across it and two
+ * sparkles twinkle (still under reduced motion). A locked one is grey with a lock, the one place outside disabled
+ * controls where the app uses grey (the owner's ask).
  */
 export function BadgeMedal({ badge, size = 84 }: { badge: Badge; size?: number }) {
   const id = useId().replace(/:/g, '')
@@ -72,27 +73,6 @@ export function BadgeMedal({ badge, size = 84 }: { badge: Badge; size?: number }
             fill="rgb(255 255 255 / 0.55)"
           />
         </g>
-        <rect
-          x="24"
-          y="80"
-          width="52"
-          height="17"
-          rx="5"
-          fill={metal.rim[1]}
-          stroke={metal.rim[0]}
-          strokeWidth="1.5"
-        />
-        <text
-          x="50"
-          y="92.5"
-          textAnchor="middle"
-          fontSize={badge.mark.length > 6 ? 9 : 11}
-          fontWeight="700"
-          fill="#fff"
-          style={{ fontVariantNumeric: 'tabular-nums' }}
-        >
-          {badge.mark}
-        </text>
         <path
           className="badge-sparkle"
           d="M 84 14 l 2.2 5 5 2.2 -5 2.2 -2.2 5 -2.2 -5 -5 -2.2 5 -2.2 z"

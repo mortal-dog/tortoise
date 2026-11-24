@@ -38,8 +38,6 @@ interface MetricStyle {
   /** Turn the icon upside down (the handstand). */
   flip?: boolean
   how: (n: number) => string
-  /** The short mark on the badge's ribbon. */
-  mark: (n: number) => string
 }
 
 /** The longest name that fits one line under a medal in the three-column grid on a 375-px-wide phone. */
@@ -49,38 +47,31 @@ const STYLE: Record<Exclude<Metric, 'level'>, MetricStyle> = {
   noMissDays: {
     icon: Egg,
     how: (n) => `Do the morning block or the main session on ${n} days in a row, with none missed.`,
-    mark: (n) => `${n} d`,
   },
   streak: {
     icon: Turtle,
     how: (n) =>
       `Reach a tortoise streak of ${n} days. One missed day is bridged; two missed days in a row end the streak.`,
-    mark: (n) => `${n} d`,
   },
   outdoorSessions: {
     icon: Sun,
     how: (n) => `Do ${n} main sessions outdoors.`,
-    mark: (n) => `${n}×`,
   },
   runKm: {
     icon: Route,
     how: (n) => `Run ${n.toLocaleString('en')} km in all. Enter the distance at the end of each run.`,
-    mark: (n) => `${n.toLocaleString('en')} km`,
   },
   continuousRunKm: {
     icon: Footprints,
     how: (n) => `Run ${n} km in one run. Enter the distance at the end of the run.`,
-    mark: (n) => `${n} km`,
   },
   longRunMin: {
     icon: Timer,
     how: (n) => `Do a long run of ${n} minutes.`,
-    mark: (n) => `${n} min`,
   },
   splitBlocks: {
     icon: MoveHorizontal,
     how: (n) => `Finish ${n} split blocks. Sunday's Light session counts as one.`,
-    mark: (n) => `${n}×`,
   },
 }
 
@@ -109,8 +100,7 @@ function levelStyle(m: Milestone): MetricStyle {
   return {
     ...look,
     how: () =>
-      `Reach ${ladder?.name ?? m.ladderId} ${shown}${level ? `: ${level.name}` : ''}. The app suggests the next level when the one you are on feels easy.`,
-    mark: () => shown,
+      `Reach ${ladder?.name ?? m.ladderId} ${shown}${level ? `: ${level.name}` : ''}. Every few weeks, after a session, the app asks whether to go one level harder.`,
   }
 }
 
@@ -120,7 +110,6 @@ export interface Badge {
   flip: boolean
   tier: Tier
   how: string
-  mark: string
   earned: boolean
   /** The day it was stored as earned; undefined when it is earned now and the award is not written yet. */
   earnedAt?: string
@@ -148,7 +137,6 @@ export function badges(
       flip: style.flip ?? false,
       tier,
       how: style.how(m.threshold),
-      mark: style.mark(m.threshold),
       earned: !!stored || reached(m, metrics),
       ...(stored ? { earnedAt: stored.earnedAt } : {}),
     }

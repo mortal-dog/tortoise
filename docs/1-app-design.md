@@ -147,7 +147,7 @@ the Tortoise Test button and the At-99 board (D-067).
 - **Numbers:** the tortoise streak and the longest one; full days this month; Shell days; minutes per pillar
   (strength, aerobic, skills, mobility) this week against the plan.
 - **Milestones:** "next up" with progress bars, and **badges** (D-058): every milestone is a tortoise-shell hexagon
-  medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon and a ribbon. Earned medals shine (a
+  medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon (no ribbon or mark since D-070). Earned medals shine (a
   glint sweeps across, two sparkles twinkle); locked ones are grey with a lock. A tap opens the badge's card (D-066):
   the medal large, its full name, Earned with the date or Locked, how to earn it and, while locked, how far along; ✕,
   a tap outside or Escape closes it. No hover tooltips. Under each medal its name on one line: a real name
