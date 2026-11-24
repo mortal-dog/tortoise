@@ -57,8 +57,6 @@ export interface Unit {
   minutes?: Range
   /** The timeline of a hold, stretch or interval unit. */
   segments?: Segment[]
-  /** "Too easy / Right / Too hard" after it (design §3.2): the main work, not warm-ups, cool-downs or stretches. */
-  askFeedback: boolean
   /** Whether finishing it writes a log. */
   logged: boolean
 }
@@ -111,7 +109,6 @@ function pairUnits(a: Unit, b: Unit): Unit {
     sets: Math.max(a.sets, b.sets),
     // The plan: alternate A1 and A2, and rest after each pair. The rest is the pair's, whichever step carries it.
     restS: Math.max(a.restS, b.restS),
-    askFeedback: a.askFeedback || b.askFeedback,
     logged: a.logged || b.logged,
   }
 }
@@ -130,8 +127,6 @@ function unitFor(step: Step, input: BuildInput): Unit {
     part: step.part,
     exercises: [exercise],
     perSide: !!(step.perSide || level?.pass.perSide),
-    // The morning block asks only after its ladder steps (the handstand, the one-leg stance), so "too hard" can step down.
-    askFeedback: mainWork && (session.kind !== 'morning' || level !== undefined),
     logged: mainWork || step.part === 'split',
   }
 

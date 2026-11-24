@@ -30,6 +30,8 @@ export function newlyEarned(
 export function progress(m: Milestone, metrics: Metrics): number {
   const v = metrics[metricKey(m)]
   if (v === undefined) return 0
+  // A ladder starts at level 1, so level 1 is no progress yet: L2 of a goal at L4 is a third of the way.
+  if (m.metric === 'level') return m.threshold <= 1 ? 1 : clamp01((v - 1) / (m.threshold - 1))
   if (m.direction === 'atLeast')
     return m.threshold <= 0 ? (v >= m.threshold ? 1 : 0) : clamp01(v / m.threshold)
   return v <= m.threshold ? 1 : 0

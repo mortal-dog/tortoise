@@ -10,18 +10,9 @@ import { adjustDose, dayTemplate, type PlanDay } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { compareDates, daysBetween, formatShort, type LocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
-import {
-  currentLevel,
-  laddersIn,
-  minutesText,
-  sessionOf,
-  sessionSummary,
-  splitKind,
-  stepsFor,
-} from '@/lib/plan-view'
-import { type LadderLog, type Suggestion, suggest } from '@/lib/progression'
+import { minutesText, sessionOf, sessionSummary, splitKind, stepsFor } from '@/lib/plan-view'
 import { type DayRecord, type LevelRecord, nowIso, type Variant } from '@/lib/records'
-import { getAllLogs, getLevels, getOverride, type Slot, setLevel, updateDay } from '@/lib/repo'
+import { getLevels, getOverride, type Slot, updateDay } from '@/lib/repo'
 import { type History, planDayOf, useHistory, useSettings, useToday } from '@/lib/use-app'
 
 export const Route = createFileRoute('/')({
@@ -77,10 +68,8 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
   const pd = planDayOf(startDate, t)
   const override = useLive(() => getOverride(pd.monday), [pd.monday])
   const levels = useLive(getLevels, []) ?? new Map<string, LevelRecord>()
-  const logs = useLive(getAllLogs, [])
   const tmpl = dayTemplate(pd, plan.week, override?.swaps ?? [])
   const day = history.days.get(t)
-  const [dismissed, setDismissed] = useState<string[]>([])
   const [variantChoice, setVariantChoice] = useState<Variant | null>(null)
   if (!tmpl) return null
 
@@ -92,8 +81,6 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
   const splitDone = !!day?.split?.doneAt
   const folded = !!day?.folded
   const variant: Variant = day?.main?.variant ?? variantChoice ?? 'outdoor'
-
-  const suggestion = levelSuggestion([morning, ...(main ? [main] : [])], levels, logs ?? [], t, pd, dismissed)
 
   const markMain = (sessionId: string, v?: Variant) =>
     updateDay(t, (d) => {
@@ -124,26 +111,6 @@ function TodayPlan({ startDate, history, t }: TodayProps) {
         <Banner tone="sky">Week 0: learn the movements at half volume, every ladder at level 1.</Banner>
       )}
       {pd.isLight && <Banner tone="sky">Light week: 2 sets, runs 30% shorter, half the intervals.</Banner>}
-
-      {suggestion && (
-        <Banner tone="primary">
-          <p className="font-semibold">
-            {suggestion.kind === 'up'
-              ? `Ready for ${suggestion.to.name}?`
-              : suggestion.kind === 'down'
-                ? `Two hard sessions in a row: step back to ${suggestion.to.name}?`
-                : `Two weeks off: one level down for a week, to ${suggestion.to.name}?`}
-          </p>
-          <div className="mt-2 flex gap-2">
-            <Button onClick={() => void setLevel(suggestion.ladderId, suggestion.to.level, t)}>
-              {suggestion.kind === 'up' ? 'Move up' : 'Step back'}
-            </Button>
-            <Button variant="quiet" onClick={() => setDismissed((x) => [...x, suggestion.ladderId])}>
-              Not yet
-            </Button>
-          </div>
-        </Banner>
-      )}
 
       <PlanCard
         testId="card-morning"
@@ -333,36 +300,4 @@ function VariantSwitch({ value, onChange }: { value: Variant; onChange: (v: Vari
       ))}
     </fieldset>
   )
-}
-
-function levelSuggestion(
-  sessions: Session[],
-  levels: ReadonlyMap<string, LevelRecord>,
-  logs: ReadonlyArray<{
-    ladderId?: string
-    date: string
-    level?: number
-    sets: LadderLog['sets']
-    feedback?: LadderLog['feedback']
-  }>,
-  t: LocalDate,
-  pd: PlanDay,
-  dismissed: string[],
-): (Suggestion & { ladderId: string }) | null {
-  if (pd.kind === 'week0') return null
-  for (const ladder of laddersIn(sessions)) {
-    if (dismissed.includes(ladder.id)) continue
-    const mine: LadderLog[] = logs
-      .filter((l) => l.ladderId === ladder.id && l.level !== undefined)
-      .map((l) => ({
-        date: l.date,
-        level: l.level as number,
-        sets: l.sets,
-        ...(l.feedback ? { feedback: l.feedback } : {}),
-      }))
-    if (mine.length === 0) continue
-    const s = suggest(ladder, currentLevel(ladder, levels, pd).level, mine, t)
-    if (s) return { ...s, ladderId: ladder.id }
-  }
-  return null
 }

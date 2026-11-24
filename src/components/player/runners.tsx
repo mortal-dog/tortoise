@@ -1,6 +1,6 @@
 // The runners of the player's step kinds (design §3.2): reps with a set tracker and rest timer, timelines for holds,
 // stretches and intervals, a stopwatch for holds to the maximum, and an elapsed timer for runs and walks.
-import { Minus, Pause, Play, Plus, SkipForward } from 'lucide-react'
+import { Pause, Play, SkipForward } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/cn'
@@ -54,60 +54,17 @@ function BigTime({ ms, label }: { ms: number; label?: string }) {
   )
 }
 
-function Stepper({
-  label,
-  value,
-  onChange,
-  step = 1,
-  min = 0,
-  unit,
-}: {
-  label: string
-  value: number
-  onChange: (n: number) => void
-  step?: number
-  min?: number
-  unit?: string
-}) {
-  return (
-    <div className="flex items-center justify-center gap-3">
-      <button
-        type="button"
-        aria-label={`Fewer ${label}`}
-        onClick={() => onChange(Math.max(min, Math.round((value - step) * 10) / 10))}
-        className="flex size-12 items-center justify-center rounded-full border border-primary text-primary"
-      >
-        <Minus aria-hidden className="size-5" />
-      </button>
-      <p className="min-w-24 text-center">
-        <span className="font-semibold text-4xl tabular-nums" data-testid={`stepper-${label}`}>
-          {value}
-        </span>
-        <span className="ml-1 text-sm text-primary-strong">{unit ?? label}</span>
-      </p>
-      <button
-        type="button"
-        aria-label={`More ${label}`}
-        onClick={() => onChange(Math.round((value + step) * 10) / 10)}
-        className="flex size-12 items-center justify-center rounded-full border border-primary text-primary"
-      >
-        <Plus aria-hidden className="size-5" />
-      </button>
-    </div>
-  )
-}
-
-/** Reps: tap each set; the rest timer starts on its own; a pair alternates and rests after each pair. */
+/**
+ * Reps: tap each set at the plan's dose (D-069: nothing to count or weigh); the rest timer starts on its own; a pair
+ * alternates and rests after each pair.
+ */
 function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
   const [done, setDone] = useState<UnitResult>(() => unit.exercises.map(() => []))
   const [active, setActive] = useState(0)
-  const [reps, setReps] = useState<number[]>(() => unit.exercises.map((e) => e.reps?.max ?? 10))
-  const [kg, setKg] = useState<Array<number | null>>(() => unit.exercises.map(() => null))
   const [rest, setRest] = useState<Clock | null>(null)
   const now = useNow(rest !== null)
   const restLeft = rest ? unit.restS * 1000 - elapsedMs(rest, now) : 0
   const ex = unit.exercises[active] ?? unit.exercises[0]
-  const counted = !!ex?.reps || unit.target.includes('max')
   const setNo = Math.min(unit.sets, (done[active]?.length ?? 0) + 1)
 
   useEffect(() => {
@@ -121,17 +78,7 @@ function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
   if (!ex) return null
 
   const logSet = () => {
-    const next = done.map((sets, i) =>
-      i === active
-        ? [
-            ...sets,
-            {
-              ...(counted ? { reps: reps[i] } : {}),
-              ...(kg[i] !== null && kg[i] !== undefined ? { kg: kg[i] ?? 0 } : {}),
-            },
-          ]
-        : sets,
-    )
+    const next = done.map((sets, i) => (i === active ? [...sets, {}] : sets))
     setDone(next)
     const finished = next.every((s) => s.length >= unit.sets)
     if (finished) {
@@ -190,33 +137,8 @@ function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
           : ''}
         {unit.perSide ? ' per side' : ''}
       </p>
-      {counted && (
-        <Stepper
-          label="reps"
-          value={reps[active] ?? 0}
-          onChange={(n) => setReps(reps.map((r, i) => (i === active ? n : r)))}
-        />
-      )}
-      {kg[active] === null ? (
-        <p className="text-center">
-          <button
-            type="button"
-            className="text-sm font-semibold text-primary underline"
-            onClick={() => setKg(kg.map((k, i) => (i === active ? 10 : k)))}
-          >
-            Add weight
-          </button>
-        </p>
-      ) : (
-        <Stepper
-          label="kg"
-          step={0.5}
-          value={kg[active] ?? 0}
-          onChange={(n) => setKg(kg.map((k, i) => (i === active ? n : k)))}
-        />
-      )}
       <Button className="min-h-14 w-full text-lg" onClick={logSet}>
-        {counted || unit.sets > 1 ? 'Set done' : 'Done'}
+        {unit.sets > 1 ? 'Set done' : 'Done'}
       </Button>
     </div>
   )

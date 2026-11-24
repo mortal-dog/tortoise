@@ -1,25 +1,23 @@
-// The session player (design §3.2): full screen, one unit at a time, feedback after each exercise, and a summary that
-// saves the logs and marks the card done.
+// The session player (design §3.2): full screen, one unit at a time at the plan's fixed dose, and a summary that asks
+// the check-ins that are due (D-069), saves the logs and marks the card done.
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Volume2, VolumeX, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, Equal, Volume2, VolumeX, X } from 'lucide-react'
 import { useContext, useEffect, useState } from 'react'
 import { ExerciseLink } from '@/components/ExerciseLink'
 import { Banner, Button, Card } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import type { LocalDate } from '@/lib/dates'
 import { clockText, coachingText, type Unit } from '@/lib/player'
+import { type Answer, type CheckIn, levelAfter } from '@/lib/progression'
 import type { Variant } from '@/lib/records'
 import { type PlayedSession, type Slot, savePlayedSession } from '@/lib/repo'
 import { canSpeak, setSpokenCues, speak, spokenCuesOn, unlockAudio } from '@/lib/sound'
 import { WakeLockContext } from '@/lib/wake-lock'
 import { type UnitResult, UnitRunner } from './runners'
 
-type Feedback = 'easy' | 'right' | 'hard'
-
 interface Done {
   unit: Unit
   result: UnitResult
-  feedback: Array<Feedback | undefined>
   /** Tapped "Skip this": the step does not count as done (D-057). */
   skipped?: boolean
 }
@@ -30,17 +28,13 @@ export interface PlayerProps {
   sessionId: string
   title: string
   units: Unit[]
+  /** The ladders whose check-in is due after this session (D-069). */
+  checkIns: CheckIn[]
   variant?: Variant
   splitKind?: PlayedSession['splitKind']
   /** Runs and long sessions ask for the distance. */
   asksDistance: boolean
 }
-
-const FEEDBACK: Array<{ value: Feedback; label: string }> = [
-  { value: 'easy', label: 'Too easy' },
-  { value: 'right', label: 'Right' },
-  { value: 'hard', label: 'Too hard' },
-]
 
 export function Player(props: PlayerProps) {
   const { units, title } = props
@@ -48,26 +42,21 @@ export function Player(props: PlayerProps) {
   const [startedAt, setStartedAt] = useState<number | null>(null)
   const [index, setIndex] = useState(0)
   const [done, setDone] = useState<Done[]>([])
-  const [pending, setPending] = useState<Done | null>(null)
   const [spoken, setSpoken] = useState(() => spokenCuesOn())
-  const finished = startedAt !== null && index >= units.length && !pending
+  const finished = startedAt !== null && index >= units.length
   const wake = useContext(WakeLockContext)
   const unit = units[index]
 
   // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target.
   useEffect(() => {
-    if (spoken && startedAt !== null && unit && !pending) speak(coachingText(unit))
-  }, [spoken, startedAt, unit, pending])
+    if (spoken && startedAt !== null && unit) speak(coachingText(unit))
+  }, [spoken, startedAt, unit])
 
   const complete = (result: UnitResult) => {
-    if (!unit) return
-    const entry: Done = { unit, result, feedback: unit.exercises.map(() => undefined) }
-    if (unit.askFeedback && result.some((s) => s.length > 0)) setPending(entry)
-    else advance(entry)
+    if (unit) advance({ unit, result })
   }
   const advance = (entry: Done) => {
     setDone((d) => [...d, entry])
-    setPending(null)
     setIndex((i) => i + 1)
   }
 
@@ -125,8 +114,6 @@ export function Player(props: PlayerProps) {
               setStartedAt(Date.now())
             }}
           />
-        ) : pending ? (
-          <FeedbackStep entry={pending} onAnswer={(fb) => advance({ ...pending, feedback: fb })} />
         ) : finished ? (
           <Summary {...props} startedAt={startedAt} done={done} onSaved={() => void navigate({ to: '/' })} />
         ) : unit ? (
@@ -136,12 +123,9 @@ export function Player(props: PlayerProps) {
         ) : null}
       </div>
 
-      {startedAt !== null && !finished && !pending && (
+      {startedAt !== null && !finished && (
         <div className="mt-4 flex justify-start gap-2">
-          <Button
-            variant="quiet"
-            onClick={() => advance({ unit: unit as Unit, result: [], feedback: [], skipped: true })}
-          >
+          <Button variant="quiet" onClick={() => advance({ unit: unit as Unit, result: [], skipped: true })}>
             Skip this
           </Button>
         </div>
@@ -223,43 +207,6 @@ function UnitView({ unit, children }: { unit: Unit; children: React.ReactNode })
   )
 }
 
-function FeedbackStep({
-  entry,
-  onAnswer,
-}: {
-  entry: Done
-  onAnswer: (fb: Array<Feedback | undefined>) => void
-}) {
-  const [answers, setAnswers] = useState<Array<Feedback | undefined>>(entry.feedback)
-  const asked = entry.unit.exercises
-    .map((e, i) => ({ e, i }))
-    .filter(({ i }) => (entry.result[i]?.length ?? 0) > 0)
-  useEffect(() => {
-    if (asked.every(({ i }) => answers[i])) onAnswer(answers)
-  })
-  return (
-    <div className="space-y-5">
-      {asked.map(({ e, i }) => (
-        <fieldset key={e.stepId} className="space-y-2">
-          <legend className="font-semibold text-lg">How was {e.title}?</legend>
-          <div className="grid grid-cols-3 gap-2">
-            {FEEDBACK.map((f) => (
-              <Button
-                key={f.value}
-                variant={answers[i] === f.value ? 'primary' : 'quiet'}
-                className="min-h-14"
-                onClick={() => setAnswers(answers.map((a, j) => (j === i ? f.value : a)))}
-              >
-                {f.label}
-              </Button>
-            ))}
-          </div>
-        </fieldset>
-      ))}
-    </div>
-  )
-}
-
 function Summary({
   date,
   slot,
@@ -267,14 +214,15 @@ function Summary({
   variant,
   splitKind,
   asksDistance,
+  checkIns,
   startedAt,
   done,
   onSaved,
 }: PlayerProps & { startedAt: number; done: Done[]; onSaved: () => void }) {
   const [endedAt] = useState(() => Date.now())
-  const [effort, setEffort] = useState<number | null>(null)
-  const [note, setNote] = useState('')
+  const [answers, setAnswers] = useState<Record<string, Answer>>({})
   const [distance, setDistance] = useState('')
+  const answered = checkIns.every((c) => answers[c.ladder.id])
   const [saving, setSaving] = useState(false)
   const sets = done.reduce((n, d) => n + d.result.reduce((m, s) => m + s.length, 0), 0)
   const ms = endedAt - startedAt
@@ -292,7 +240,6 @@ function Summary({
           ...(e.ladderId ? { ladderId: e.ladderId } : {}),
           ...(e.level ? { level: e.level } : {}),
           sets: s,
-          ...(d.feedback[i] ? { feedback: d.feedback[i] } : {}),
         })
       })
     }
@@ -308,11 +255,13 @@ function Summary({
       variant,
       splitKind,
       minutes: ms / 60_000,
-      ...(effort ? { effort } : {}),
-      ...(note.trim() ? { note: note.trim() } : {}),
       ...(asksDistance && km > 0 ? { distanceKm: km } : {}),
       steps,
       logs,
+      checkIns: checkIns.map((c) => {
+        const answer = answers[c.ladder.id] ?? 'keep'
+        return { ladderId: c.ladder.id, level: levelAfter(c, answer), eased: answer === 'easier' }
+      }),
     })
     onSaved()
   }
@@ -334,23 +283,14 @@ function Summary({
           </dd>
         </Card>
       </dl>
-      {slot === 'main' && (
-        <fieldset>
-          <legend className="font-semibold">Effort, 1 to 10</legend>
-          <div className="mt-2 grid grid-cols-5 gap-2">
-            {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-              <Button
-                key={n}
-                variant={effort === n ? 'primary' : 'quiet'}
-                aria-pressed={effort === n}
-                onClick={() => setEffort(n)}
-              >
-                {n}
-              </Button>
-            ))}
-          </div>
-        </fieldset>
-      )}
+      {checkIns.map((c) => (
+        <CheckInCard
+          key={c.ladder.id}
+          check={c}
+          value={answers[c.ladder.id]}
+          onChange={(a) => setAnswers({ ...answers, [c.ladder.id]: a })}
+        />
+      ))}
       {asksDistance && (
         <label className="block">
           <span className="font-semibold">Distance in km (optional)</span>
@@ -362,18 +302,89 @@ function Summary({
           />
         </label>
       )}
-      <label className="block">
-        <span className="font-semibold">Note (optional)</span>
-        <textarea
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          rows={2}
-          className="mt-1 w-full rounded-xl border border-edge bg-field px-3 py-2 text-text"
-        />
-      </label>
-      <Button className="min-h-14 w-full text-lg" disabled={saving} onClick={() => void save()}>
+      <Button className="min-h-14 w-full text-lg" disabled={saving || !answered} onClick={() => void save()}>
         Save
       </Button>
     </div>
+  )
+}
+
+/** The level's name with its code: "Floor push-up (L3)". */
+function levelText(code: string, name: string): string {
+  return `${name} (${/^\d/.test(code) ? `L${code}` : code})`
+}
+
+/**
+ * One check-in (D-069): "one level harder, keep, or one level easier?" for a ladder whose turn has come. After two
+ * weeks or more without the ladder, "easier" comes first.
+ */
+function CheckInCard({
+  check,
+  value,
+  onChange,
+}: {
+  check: CheckIn
+  value: Answer | undefined
+  onChange: (a: Answer) => void
+}) {
+  const options: Array<{ answer: Answer; label: string; detail?: string; icon: typeof ArrowUp }> = [
+    ...(check.harder
+      ? [
+          {
+            answer: 'harder' as const,
+            label: 'Harder',
+            detail: levelText(check.harder.code, check.harder.name),
+            icon: ArrowUp,
+          },
+        ]
+      : []),
+    { answer: 'keep', label: 'Keep', detail: levelText(check.current.code, check.current.name), icon: Equal },
+    ...(check.easier
+      ? [
+          {
+            answer: 'easier' as const,
+            label: 'Easier',
+            detail: levelText(check.easier.code, check.easier.name),
+            icon: ArrowDown,
+          },
+        ]
+      : []),
+  ]
+  if (check.afterTimeOff) options.reverse()
+  return (
+    <fieldset
+      className="glass rounded-2xl border border-edge p-4"
+      data-testid={`check-in-${check.ladder.id}`}
+    >
+      <legend className="sr-only">{check.ladder.name}: harder, keep or easier?</legend>
+      <p className="font-semibold text-primary">{check.ladder.name}</p>
+      <p className="mt-0.5 text-sm">
+        {check.afterTimeOff
+          ? 'Back after two weeks or more: start one level easier?'
+          : 'Time to check in. How did it feel lately?'}
+      </p>
+      <div className="mt-3 grid gap-2">
+        {options.map((o) => (
+          <button
+            key={o.answer}
+            type="button"
+            aria-pressed={value === o.answer}
+            onClick={() => onChange(o.answer)}
+            className={cn(
+              'flex min-h-12 items-center gap-3 rounded-xl border px-3 py-2 text-left transition-transform active:scale-[0.98]',
+              value === o.answer
+                ? 'border-primary bg-primary text-on-primary'
+                : 'border-edge bg-field text-text',
+            )}
+          >
+            <o.icon aria-hidden className="size-5 shrink-0" />
+            <span className="min-w-0">
+              <span className="block font-semibold">{o.label}</span>
+              {o.detail && <span className="block text-sm">{o.detail}</span>}
+            </span>
+          </button>
+        ))}
+      </div>
+    </fieldset>
   )
 }

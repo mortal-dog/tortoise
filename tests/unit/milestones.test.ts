@@ -34,7 +34,8 @@ describe('the milestone engine', () => {
   })
 
   it('measures progress toward a threshold', () => {
-    expect(progress(m('p', 'level', 4, 'push'), { 'level:push': 1 })).toBe(0.25)
+    expect(progress(m('p', 'level', 4, 'push'), { 'level:push': 1 })).toBe(0)
+    expect(progress(m('p', 'level', 4, 'push'), { 'level:push': 2 })).toBeCloseTo(1 / 3, 10)
     expect(progress(m('s', 'splitBlocks', 50), {})).toBe(0)
   })
 

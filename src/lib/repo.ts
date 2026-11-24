@@ -93,9 +93,10 @@ export async function saveSettings(
  */
 export async function startPlan(week0Monday: LocalDate, answers: StartAnswers = {}): Promise<void> {
   const week1 = addDays(week0Monday, 7)
-  await saveSettings({ startDate: week1 })
+  // The levels first: saving the start date ends the first run, and the app may reload before later writes land.
   for (const [ladderId, level] of startingLevels(plan.startRules, plan.ladders, answers))
     await setLevel(ladderId, level, week1)
+  await saveSettings({ startDate: week1 })
   // Ask once, at the moment the data starts to matter (design §2).
   await requestPersistentStorage().catch(() => null)
 }
@@ -169,19 +170,38 @@ export interface PlayedSession {
   /** The split kind for a split block, and for the Sunday session that holds the split work. */
   splitKind?: 'front' | 'side' | 'both' | 'long'
   minutes: number
-  effort?: number
-  note?: string
   distanceKm?: number
   /** The step ids finished in the player; skipped steps are left out (D-057). */
   steps: string[]
   logs: Array<Omit<LogRecord, 'id' | 'updatedAt' | 'date' | 'sessionId'>>
+  /** The check-ins answered after the session (D-069): each ladder's level after the answer. */
+  checkIns?: Array<{ ladderId: string; level: number; eased: boolean }>
 }
 
-/** Saves a session the player ran: its logs and the day's card, in one transaction (design §3.2). */
+/**
+ * Saves a session the player ran: its logs, the day's card and the check-ins' answers, in one transaction (design
+ * §3.2, D-069). An answer dates the ladder's check-in; a new level joins its history.
+ */
 export async function savePlayedSession(p: PlayedSession): Promise<void> {
   const db = await getDb()
   const at = nowIso()
-  await db.transaction(['days', 'logs'], 'readwrite', async (tx) => {
+  await db.transaction(['days', 'logs', 'levels'], 'readwrite', async (tx) => {
+    const levels = tx.objectStore('levels')
+    for (const c of p.checkIns ?? []) {
+      const current = (await request(levels.get(c.ladderId))) as LevelRecord | undefined
+      const changed = current?.level !== c.level
+      levels.put({
+        ladderId: c.ladderId,
+        level: c.level,
+        since: changed || !current ? p.date : current.since,
+        history: changed
+          ? [...(current?.history ?? []), { level: c.level, date: p.date }]
+          : (current?.history ?? []),
+        askedAt: p.date,
+        eased: c.eased,
+        updatedAt: at,
+      } satisfies LevelRecord)
+    }
     const logs = tx.objectStore('logs')
     for (const l of p.logs) {
       logs.put({ ...l, id: newId(), date: p.date, sessionId: p.sessionId, updatedAt: at } satisfies LogRecord)
@@ -200,8 +220,6 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
         sessionId: p.sessionId,
         minutes: Math.round(p.minutes),
         ...(p.variant ? { variant: p.variant } : {}),
-        ...(p.effort ? { effort: p.effort } : {}),
-        ...(p.note ? { note: p.note } : {}),
         ...(p.distanceKm ? { distanceKm: p.distanceKm } : {}),
         steps: p.steps,
       }

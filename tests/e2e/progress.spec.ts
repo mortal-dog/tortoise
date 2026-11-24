@@ -8,16 +8,16 @@ async function at(page: Page, isoDate: string) {
   await page.goto('/')
 }
 
-test('the start question sets the run–walk step, and Progress shows the badges, each with its card', async ({
+test('the start questions set the run–walk step, and Progress shows the badges, each with its card', async ({
   page,
 }, info) => {
   await page.clock.setFixedTime(new Date('2026-11-23T09:00:00Z'))
   await page.goto('/')
   await page.getByRole('button', { name: 'Start in this browser instead' }).click()
-  await page.getByLabel('How long is an easy run comfortable?').fill('15')
+  await page.getByTestId('start-runMin').getByRole('button', { name: 'About 10 min' }).click()
   await page.getByRole('button', { name: 'Start the plan' }).click()
 
-  // Week 1: the run starts at R4 (10–29 min), every other ladder at level 1 (D-067). No test anywhere.
+  // Week 1: the run starts at R4 (about 10 min), the other answers left at their lowest start at level 1 (D-069).
   await at(page, '2026-12-01')
   await expect(page.getByTestId('card-main')).toContainText('Run–walk R4')
   await at(page, '2026-11-30')

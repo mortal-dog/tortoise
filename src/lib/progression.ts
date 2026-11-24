@@ -1,86 +1,75 @@
-// Progression suggestions (design §5.3, plan §7). The app only suggests; the user confirms every move.
+// Check-ins (D-069, plan §7): the doses are fixed in the session; after a session the app asks, for each ladder whose
+// turn has come, "one level harder, keep, or one level easier?". It never changes a level by itself.
 import type { Ladder, LadderLevel } from '@/data/schema'
-import { daysBetween, type LocalDate } from './dates'
+import { compareDates, daysBetween, type LocalDate } from './dates'
+import type { LevelRecord } from './records'
 
-export type Feedback = 'easy' | 'right' | 'hard'
+export type Answer = 'harder' | 'keep' | 'easier'
 
-export interface LadderLog {
-  date: LocalDate
-  /** The level number the log was done at. */
-  level: number
-  sets: Array<{ reps?: number; seconds?: number }>
-  feedback?: Feedback
-}
-
-export type Suggestion =
-  | { kind: 'up'; to: LadderLevel }
-  | { kind: 'down'; to: LadderLevel; reason: 'too-hard' }
-  | { kind: 'down-for-a-week'; to: LadderLevel; reason: 'time-off' }
-
-/** Days with no logs after which one level down for a week is suggested (design §5.3). */
+/** After "one level easier", the next check-in comes after this many days, to step back up after a recovery. */
+export const EASED_DAYS = 7
+/** A ladder not done for this many days is asked about at once, "easier" first. */
 export const TIME_OFF_DAYS = 14
-/** Endurance steps: at least this many days on a step before the next (plan §7.8, §7.9). */
-export const ENDURANCE_MIN_DAYS = 7
+
+export interface CheckIn {
+  ladder: Ladder
+  current: LadderLevel
+  /** The next level up; none at the ladder's top. */
+  harder?: LadderLevel
+  /** The level below; none at level 1. */
+  easier?: LadderLevel
+  /** Back after two weeks or more without this ladder: "easier" comes first. */
+  afterTimeOff: boolean
+}
 
 function levelAt(ladder: Ladder, level: number): LadderLevel | undefined {
   return ladder.levels.find((l) => l.level === level)
 }
 
-function meetsReps(log: LadderLog, pass: LadderLevel['pass']): boolean {
-  if (pass.reps === undefined) return false
-  const sets = pass.sets ?? 1
-  const good = log.sets.filter((s) => (s.reps ?? 0) >= (pass.reps ?? 0))
-  return good.length >= sets && (log.feedback === 'right' || log.feedback === 'easy')
-}
-
-function meetsHold(log: LadderLog, pass: LadderLevel['pass']): boolean {
-  if (pass.seconds === undefined) return false
-  const sets = pass.sets ?? 1
-  return log.sets.filter((s) => (s.seconds ?? 0) >= (pass.seconds ?? 0)).length >= sets
+function latest(dates: Array<LocalDate | undefined>): LocalDate | undefined {
+  return dates
+    .filter((d): d is LocalDate => !!d)
+    .sort(compareDates)
+    .at(-1)
 }
 
 /**
- * The suggestion for one ladder, or null.
- * - After 14 or more days with no logs: one level down for a week.
- * - Two "too hard" in a row: one level down.
- * - Reps: all sets at the top of the range, logged right or too easy, in two sessions in a row: the next level.
- * - Holds: all sets at the target: the next level.
- * - Endurance steps move only on the user's tap, so they get no suggestion here.
+ * The check-ins due today for the ladders of a session. A ladder's turn comes `askEveryDays` after its last check-in
+ * or level change (a week after an "easier"), counted from Week 1's Monday; none in Week 0. A ladder not done for
+ * `TIME_OFF_DAYS` is due at once.
  */
-export function suggest(
-  ladder: Ladder,
-  currentLevel: number,
-  logs: readonly LadderLog[],
-  todayDate: LocalDate,
-): Suggestion | null {
-  const current = levelAt(ladder, currentLevel)
-  if (!current || ladder.kind === 'endurance') return null
-  const sorted = [...logs].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
-  const last = sorted.at(-1)
-  const below = levelAt(ladder, currentLevel - 1)
-  const above = levelAt(ladder, currentLevel + 1)
-  if (last && below && daysBetween(last.date, todayDate) >= TIME_OFF_DAYS) {
-    return { kind: 'down-for-a-week', to: below, reason: 'time-off' }
+export function checkInsDue(
+  ladders: readonly Ladder[],
+  levels: ReadonlyMap<string, LevelRecord>,
+  /** The last day before today each ladder was done. */
+  lastDone: ReadonlyMap<string, LocalDate>,
+  today: LocalDate,
+  week1: LocalDate,
+): CheckIn[] {
+  if (compareDates(today, week1) < 0) return []
+  const out: CheckIn[] = []
+  for (const ladder of ladders) {
+    const rec = levels.get(ladder.id)
+    const current = levelAt(ladder, rec?.level ?? 1)
+    if (!current) continue
+    const harder = levelAt(ladder, current.level + 1)
+    const easier = levelAt(ladder, current.level - 1)
+    if (!harder && !easier) continue
+    const last = lastDone.get(ladder.id)
+    const afterTimeOff = last !== undefined && daysBetween(last, today) >= TIME_OFF_DAYS
+    const from = latest([week1, rec?.askedAt, rec?.since]) ?? week1
+    const every = rec?.eased ? EASED_DAYS : ladder.askEveryDays
+    if (!afterTimeOff && daysBetween(from, today) < every) continue
+    out.push({ ladder, current, ...(harder ? { harder } : {}), ...(easier ? { easier } : {}), afterTimeOff })
   }
-  const atLevel = sorted.filter((l) => l.level === currentLevel)
-  const latest = atLevel.at(-1)
-  const prev = atLevel.at(-2)
-  if (prev && latest && prev.feedback === 'hard' && latest.feedback === 'hard' && below) {
-    return { kind: 'down', to: below, reason: 'too-hard' }
-  }
-  if (!above) return null
-  const pass = current.pass
-  if (pass.reps !== undefined) {
-    if (prev && latest && meetsReps(prev, pass) && meetsReps(latest, pass)) return { kind: 'up', to: above }
-    return null
-  }
-  if (pass.seconds !== undefined && latest && meetsHold(latest, pass)) return { kind: 'up', to: above }
-  return null
+  return out
 }
 
-/** Whether an endurance step may move up: at least 7 days on the current one. */
-export function canStepUp(since: LocalDate, todayDate: LocalDate): boolean {
-  return daysBetween(since, todayDate) >= ENDURANCE_MIN_DAYS
+/** The level an answer moves to. */
+export function levelAfter(check: CheckIn, answer: Answer): number {
+  if (answer === 'harder' && check.harder) return check.harder.level
+  if (answer === 'easier' && check.easier) return check.easier.level
+  return check.current.level
 }
 
 /** Past the ladders, run and rope time grow by at most 10% a week (plan §2, rule 4; our rule). */

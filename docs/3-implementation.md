@@ -206,6 +206,7 @@ Phase 4; the Progress, Library and Settings tabs hold only what Phase 3 needs un
 - Timers based on timestamps, so they catch up after the app returns from the background.
 - Sound: audio unlocked on Start; tones; optional spoken cues.
 - Screen: the wake lock, held by the root layout whenever the app is open (D-050).
+- *D-069 replaced the feedback after each exercise with check-ins on the summary.*
 - Feedback after each exercise, the end summary, and saving the logs.
 
 **Done when:** the step-engine unit tests pass; e2e tests with a fake clock run Strength A and a 4 × 4 session; and on the

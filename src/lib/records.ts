@@ -87,6 +87,10 @@ export const LevelRecord = z.object({
   level: z.number().int().positive(),
   since: LocalDate,
   history: z.array(z.object({ level: z.number().int().positive(), date: LocalDate })),
+  /** The last check-in on this ladder, whatever the answer (D-069). */
+  askedAt: LocalDate.optional(),
+  /** The last check-in answered "one level easier": the next comes after a week. */
+  eased: z.boolean().optional(),
   updatedAt: Instant,
 })
 export type LevelRecord = z.infer<typeof LevelRecord>

@@ -18,7 +18,7 @@ phone checks, is next. See `docs/3-implementation.md`.
 | `docs/sources.md` | Every source, with the finding read in its raw text |
 | `ai/resume.md` | The handoff sheet (global §0); finished entries move to `ai/resume-done.md` |
 | `src/data/` | The plan as data (schema, sessions, ladders, milestones, sources); changes with the plan docs (rule 6) |
-| `src/lib/` | The rules as pure functions (calendar, streak, progression, daylight, milestones) and the IndexedDB layer |
+| `src/lib/` | The rules as pure functions (calendar, streak, check-ins, milestones, badges) and the IndexedDB layer |
 | `src/routes/`, `src/components/` | The screens (TanStack Router, file-based) |
 | `tests/` | Vitest (`unit`, `content`, `db`, `component`, `guard`) and Playwright (`e2e`) |
 

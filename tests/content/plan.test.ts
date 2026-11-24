@@ -386,7 +386,17 @@ describe('start rules', () => {
     return best
   }
 
-  it('follow the table of §8', () => {
+  it('follow the table of §8 (D-069)', () => {
+    expect([0, 4, 5, 14, 15, 29, 30, 60].map((n) => startCode('push', { pushups: n }))).toEqual([
+      '1',
+      '1',
+      '2',
+      '2',
+      '3',
+      '3',
+      '4',
+      '4',
+    ])
     expect([0, 9.5, 10, 29, 30, 45].map((n) => startCode('run', { runMin: n }))).toEqual([
       'R1',
       'R1',
@@ -395,7 +405,16 @@ describe('start rules', () => {
       'R8',
       'R8',
     ])
-    expect(plan.startRules.map((r) => r.ladderId)).toEqual(['run'])
+    expect([0, 1].map((n) => startCode('balance', { oneLeg30: n }))).toEqual(['Ba1', 'Ba2'])
+    expect([0, 1].map((n) => startCode('handstand-skill', { handstandWall30: n }))).toEqual(['H1', 'H8'])
+    for (const [ladder, code] of [
+      ['squat', '2'],
+      ['bridge', '2'],
+      ['row', 'P2'],
+      ['back-extension', '2'],
+    ])
+      expect(startCode(ladder as string, { trains: 1 }), ladder).toBe(code)
+    expect(startCode('squat', { trains: 0 })).toBe('1')
   })
 })
 

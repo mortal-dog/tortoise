@@ -108,7 +108,7 @@ this is an injury or quitting, not a slow start. So the plan ramps up over 3 wee
    not statistically significant [nielsen2014].
 5. **Every fourth week is light** (a deload week): fewer sets, shorter runs, half the intervals. The morning block and the
    splits continue as usual (*our rule*).
-6. **Move up by the ladder rules** (§7), one level at a time (*our rule*).
+6. **Move one level at a time, when you say so** (§7): the app asks every few weeks (*our rule*).
 7. **Outdoors when the weather allows.** Runs and the long Saturday session are outside in daylight; a longer brisk walk
    indoors is the indoor version (§12).
 8. **Respect the pain rules** (§13). Muscle burn is fine; joint or tendon pain means going back a level.
@@ -326,15 +326,18 @@ straddle is the pancake), and a deep squat hold 2 × 60 s.
 
 ## 7. Progression ladders
 
-**When to move up** (*our rule*; the app suggests, you confirm):
-- **Reps:** all sets at the top of the range with 1 or more reps in reserve, in two sessions in a row. Then move to the next
-  level and start at the bottom of its range. A level's range ends at its pass number and starts about a third below
-  it: a pass at 3 × 12 means working from 3 × 8.
-- **Holds:** all sets at the target time.
-- **Endurance:** one ladder step at a time, with at least a week on each; beyond the ladders, at most +10% a week.
-- **Too hard twice in a row:** go one level down.
-- **After two or more weeks off:** go one level down for a week.
-- **Starting higher:** the start question sets the first run–walk step (§8).
+**When to move** (*our rule*; D-069). In a session the dose is fixed: nothing is counted or adjusted. After a session,
+for each ladder whose turn has come, the app asks: **one level harder, keep, or one level easier?** You decide; the app
+never moves a level by itself.
+- **How often:** strength ladders every 2 weeks; the handstand skill track and balance every 3 weeks; the run–walk every
+  week; jumps every 4 weeks (bone and tendon adapt slowly). The first check-ins come two weeks or more into Week 1.
+- **After "easier":** the next check-in comes after a week, from the lower level, so a recovery can step back up soon.
+- **After two weeks or more without a ladder:** it is asked about at once, with "easier" first.
+- **Answering:** "harder" when the level's pass target (the table's last column) felt easy with 1 or more reps in reserve
+  and nothing hurt the next day; "easier" when it hurt or could not be finished. A level's range ends at its pass
+  number and starts about a third below it: a pass at 3 × 12 means working from 3 × 8.
+- **Endurance:** one step at a time; beyond the ladders, at most +10% a week.
+- **Starting higher:** the start questions set the first levels (§8).
 
 ### 7.1 Squat
 
@@ -508,14 +511,18 @@ then none).
   means half the sets (rounded up), half the run or rope minutes and half the interval repeats, all at an easy effort,
   with every ladder at level 1 (*our rule*). If running is new, walk briskly instead of running.
 
-**Starting levels from the start question**
+**Starting levels from the start questions**
 
-One question is asked when the plan starts: how long an easy run is comfortable.
+Five questions are asked when the plan starts (D-069); each answer starts a ladder where its pass is not yet met.
 
-| Family | Rule |
+| Question | Rule |
 |---|---|
-| Run | 30 min of easy running is comfortable (asked) → R8; 10 min → R4; less → R1 |
-| Everything else | Level 1, to learn the form; the ladder rules move it up fast (§7) |
+| Floor push-ups in a row | 0–4 → Push 1; 5–14 → 2; 15–29 → 3; 30 or more → 4 |
+| An easy run without stopping | Not yet → R1; about 10 min → R4; 30 min or more → R8 |
+| One leg for 30 s, eyes open, each leg | Yes → Ba2 |
+| A chest-to-wall handstand for 30 s | Yes → H8 |
+| Lifting weights at least twice a week for 3 months or more | Yes → Squat 2, Bridge 2, Row P2, Back extension 2 |
+| Everything else | Level 1, to learn the form; the check-ins move it (§7) |
 
 ### Block 1 (Weeks 1–4): ramp
 

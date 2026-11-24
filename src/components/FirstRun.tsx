@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { cn } from '@/lib/cn'
 import { addDays, compareDates, defaultWeek0Monday, formatShort, isLocalDate, weekday } from '@/lib/dates'
 import { currentPlatform, useInstallView, useStandalone } from '@/lib/install'
 import { startPlan } from '@/lib/repo'
+import type { StartAnswers } from '@/lib/start-levels'
 import { useToday } from '@/lib/use-app'
 import { InstallCard } from './InstallCard'
 import { Button, Card, Screen } from './ui'
@@ -32,11 +34,64 @@ function Welcome({ onBrowser }: { onBrowser: () => void }) {
   )
 }
 
+/** The start questions (D-069): each answer sets a ladder's first level by the start rules (plan §8). */
+const QUESTIONS: Array<{
+  key: keyof StartAnswers
+  text: string
+  options: Array<{ label: string; value: number }>
+}> = [
+  {
+    key: 'pushups',
+    text: 'How many push-ups on the floor can you do in a row?',
+    options: [
+      { label: '0–4', value: 0 },
+      { label: '5–14', value: 5 },
+      { label: '15–29', value: 15 },
+      { label: '30 or more', value: 30 },
+    ],
+  },
+  {
+    key: 'runMin',
+    text: 'How long can you run at an easy pace without stopping?',
+    options: [
+      { label: 'Not yet', value: 0 },
+      { label: 'About 10 min', value: 10 },
+      { label: '30 min or more', value: 30 },
+    ],
+  },
+  {
+    key: 'oneLeg30',
+    text: 'Can you stand on one leg for 30 s, eyes open, on each leg?',
+    options: [
+      { label: 'No', value: 0 },
+      { label: 'Yes', value: 1 },
+    ],
+  },
+  {
+    key: 'handstandWall30',
+    text: 'Can you hold a handstand with your chest to a wall for 30 s?',
+    options: [
+      { label: 'No', value: 0 },
+      { label: 'Yes', value: 1 },
+    ],
+  },
+  {
+    key: 'trains',
+    text: 'Have you lifted weights at least twice a week for 3 months or more?',
+    options: [
+      { label: 'No', value: 0 },
+      { label: 'Yes', value: 1 },
+    ],
+  },
+]
+
+/** Every answer starts at its lowest choice, so a skipped question starts that exercise at level 1. */
+const FIRST: Required<StartAnswers> = { pushups: 0, runMin: 0, oneLeg30: 0, handstandWall30: 0, trains: 0 }
+
 function PickMonday() {
   const t = useToday()
   const [monday, setMonday] = useState(() => defaultWeek0Monday(t))
-  const [runMin, setRunMin] = useState('')
-  const run = runMin.trim() === '' ? undefined : Number(runMin)
+  const [answers, setAnswers] = useState<Required<StartAnswers>>(FIRST)
   const valid = isLocalDate(monday) && weekday(monday) === 'mon' && compareDates(monday, t) >= 0
 
   return (
@@ -46,8 +101,7 @@ function PickMonday() {
           Week 0 begins on
         </label>
         <p className="mt-1 text-sm text-primary-strong">
-          A Monday: learn the movements at half volume, every exercise at its first level. Week 1 starts seven
-          days later.
+          A Monday: learn the movements at half volume. Week 1 starts seven days later.
         </p>
         <input
           id="week0"
@@ -66,30 +120,39 @@ function PickMonday() {
             Week 0: {formatShort(monday)} to {formatShort(addDays(monday, 6))}.
           </p>
         )}
-        <label htmlFor="run-min" className="mt-5 block font-semibold text-primary">
-          How long is an easy run comfortable?
-        </label>
+      </Card>
+      <Card className="mt-4">
+        <h2 className="font-semibold text-lg text-primary">Where you start</h2>
         <p className="mt-1 text-sm text-primary-strong">
-          In minutes, without stopping; 0 if you do not run yet. It sets where the run–walk starts. Every
-          other exercise starts at its first level and moves up when it feels easy.
+          Five quick questions set the first level of each exercise. After that the app asks every few weeks:
+          harder, keep, or easier.
         </p>
-        <div className="mt-2 flex items-center gap-2">
-          <input
-            id="run-min"
-            type="number"
-            inputMode="numeric"
-            min={0}
-            value={runMin}
-            onChange={(e) => setRunMin(e.target.value)}
-            className="min-h-11 w-28 rounded-xl border border-edge bg-field px-3 text-text"
-          />
-          <span className="text-sm">min</span>
+        <div className="mt-2 divide-y divide-line">
+          {QUESTIONS.map((q) => (
+            <fieldset key={q.key} className="py-3" data-testid={`start-${q.key}`}>
+              <legend className="font-semibold">{q.text}</legend>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {q.options.map((o) => (
+                  <button
+                    key={o.label}
+                    type="button"
+                    aria-pressed={answers[q.key] === o.value}
+                    onClick={() => setAnswers({ ...answers, [q.key]: o.value })}
+                    className={cn(
+                      'min-h-11 rounded-xl border px-3 font-semibold text-sm transition-transform active:scale-[0.97]',
+                      answers[q.key] === o.value
+                        ? 'border-primary bg-primary text-on-primary'
+                        : 'border-edge bg-field text-text',
+                    )}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          ))}
         </div>
-        <Button
-          className="mt-4 w-full"
-          disabled={!valid}
-          onClick={() => void startPlan(monday, run !== undefined && run >= 0 ? { runMin: run } : {})}
-        >
+        <Button className="mt-4 w-full" disabled={!valid} onClick={() => void startPlan(monday, answers)}>
           Start the plan
         </Button>
       </Card>

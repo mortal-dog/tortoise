@@ -21,14 +21,18 @@ const visible = (page: Page, name: string | RegExp) =>
     .isVisible()
     .catch(() => false)
 
-/** Plays whatever step is on screen until the summary, answering "Right" to every feedback question. */
+/** Answers "Keep" in every check-in on the summary that has no answer yet (D-069). */
+async function keepTheRest(page: Page) {
+  for (const card of await page.locator('[data-testid^="check-in-"]').all()) {
+    if ((await card.locator('[aria-pressed="true"]').count()) === 0)
+      await card.getByRole('button', { name: /^Keep/ }).click()
+  }
+}
+
+/** Plays whatever step is on screen until the summary; the doses are fixed, nothing is counted (D-069). */
 async function playToSummary(page: Page) {
   for (let i = 0; i < 200; i++) {
     if (await page.getByTestId('summary').isVisible()) return
-    if (await visible(page, 'Right')) {
-      for (const b of await page.getByRole('button', { name: 'Right', exact: true }).all()) await b.click()
-      continue
-    }
     if (await visible(page, 'Skip the rest')) {
       await page.getByRole('button', { name: 'Skip the rest' }).click()
       continue
@@ -81,7 +85,7 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
     }
   }
 
-  // A0: 3 × 5 squat jumps, 60 s rest after each set, then feedback.
+  // A0: 3 × 5 squat jumps, 60 s rest after each set; no feedback question and nothing to count (D-069).
   for (let set = 1; set <= 3; set++) {
     await expect(page.getByTestId('set-count')).toContainText(`Set ${set} of 3`)
     await page.getByRole('button', { name: 'Set done' }).click()
@@ -91,11 +95,11 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
       await expect(page.getByTestId('rest')).toHaveCount(0)
     }
   }
-  await page.getByRole('button', { name: 'Right', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Too easy' })).toHaveCount(0)
 
   // A1 + A2: alternate, and rest only after the pair.
   await expect(page.getByTestId('unit-title')).toHaveText('Squat · L1 + Push · L1')
-  await page.getByRole('button', { name: 'More reps' }).click()
+  await expect(page.getByRole('button', { name: 'More reps' })).toHaveCount(0)
   await page.getByRole('button', { name: 'Set done' }).click()
   await expect(page.getByTestId('rest')).toHaveCount(0)
   await page.getByRole('button', { name: 'Set done' }).click()
@@ -106,12 +110,17 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
 
   await playToSummary(page)
   await expect(page.getByTestId('summary-sets')).not.toHaveText('0')
-  await page.getByRole('button', { name: '6', exact: true }).click()
+  // Four weeks into Week 1: the check-ins are due (D-069). Save waits for every answer.
+  const push = page.getByTestId('check-in-push')
+  await expect(push).toContainText('Push')
+  await expect(page.getByRole('button', { name: 'Save' })).toBeDisabled()
+  await push.getByRole('button', { name: /^Harder/ }).click()
+  await keepTheRest(page)
   await page.getByRole('button', { name: 'Save' }).click()
 
   await expect(page.getByTestId('card-main')).toBeVisible()
   await expect(page.getByTestId('card-main').getByLabel('done')).toBeVisible()
-  // The sets went into the logs, where the level-up suggestions read them.
+  // The sets went into the logs, where the check-ins read when a ladder was last done.
   const logs = await page.evaluate(
     () =>
       new Promise<number>((resolve) => {
@@ -123,6 +132,20 @@ test('Strength A runs pair by pair with the rest timer, and saving marks the car
       }),
   )
   expect(logs).toBeGreaterThanOrEqual(5)
+  // "Harder" moved Push up one level, dated today.
+  const level = await page.evaluate(
+    () =>
+      new Promise<{ level: number; askedAt?: string }>((resolve) => {
+        const open = indexedDB.open('tortoise')
+        open.onsuccess = () => {
+          const get = open.result.transaction('levels').objectStore('levels').get('push')
+          get.onsuccess = () => resolve(get.result)
+        }
+      }),
+  )
+  expect(level).toMatchObject({ level: 2, askedAt: '2026-12-28' })
+  await page.reload()
+  await expect(page.getByTestId('card-main')).toContainText('Push L2')
 })
 
 test('the 4 × 4 runs from timestamps through work and rest, and catches up after a jump', async ({
@@ -160,9 +183,8 @@ test('the 4 × 4 runs from timestamps through work and rest, and catches up afte
   await page.getByRole('button', { name: 'Resume' }).click()
 
   await page.clock.runFor(20 * 60_000)
-  await expect(page.getByRole('button', { name: 'Right', exact: true })).toBeVisible()
-  await page.getByRole('button', { name: 'Right', exact: true }).click()
   await playToSummary(page)
+  await keepTheRest(page)
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByTestId('card-main').getByLabel('done')).toBeVisible()
 })

@@ -94,8 +94,10 @@ export type LadderLevel = z.infer<typeof LadderLevel>
 export const Ladder = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string(),
-  /** How the pass rule reads (design §5.3): reps, holds, endurance steps (by tap), or a skill. */
+  /** How the dose reads: reps, holds, endurance steps, or a skill. */
   kind: z.enum(['reps', 'hold', 'endurance', 'skill']),
+  /** Days between two check-ins on this ladder ("one level harder, keep, or one level easier?", D-069). */
+  askEveryDays: z.number().int().positive(),
   /** The plan section, e.g. "7.1". */
   section: z.string(),
   levels: z.array(LadderLevel).min(1),
@@ -239,14 +241,14 @@ export const Milestone = z.object({
 export type Milestone = z.infer<typeof Milestone>
 
 /**
- * A start rule (plan §8): a value asked when the plan starts sets a ladder's starting level code. A band matches when
+ * A start rule (plan §8): a start answer sets a ladder's starting level code (D-069). A band matches when
  * min ≤ v and (max is null or v < max): half-open, so bands meet without a gap for any value, whole or not. When
  * several rules match one ladder, the highest level wins.
  */
 export const StartRule = z.object({
   ladderId: z.string(),
-  /** One of the start answers. */
-  input: z.enum(['runMin']),
+  /** One of the start answers (a count, minutes, or 1 for yes and 0 for no). */
+  input: z.enum(['pushups', 'runMin', 'oneLeg30', 'handstandWall30', 'trains']),
   bands: z.array(z.object({ min: z.number(), max: z.number().nullable(), code: z.string() })).min(1),
   ...evidence,
 })

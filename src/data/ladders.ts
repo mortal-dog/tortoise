@@ -3,8 +3,8 @@
 // targets are the plan's own choices (our rule). A level's `exerciseId` is the base exercise of Appendix A whose entry
 // describes the variant.
 //
-// `kind` follows design §5.3. The core ladder mixes reps and holds (the dead bug is reps); its levels say which by
-// `pass.reps` or `pass.seconds`.
+// `kind` says how the dose reads; `askEveryDays` sets the check-ins (D-069). The core ladder mixes reps and holds
+// (the dead bug is reps); its levels say which by `pass.reps` or `pass.seconds`.
 import type { z } from 'zod'
 import type { Ladder } from './schema'
 
@@ -15,6 +15,7 @@ export const ladders: LadderInput[] = [
     id: 'squat',
     name: 'Squat',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.1',
     ourRule: true,
     levels: [
@@ -60,6 +61,7 @@ export const ladders: LadderInput[] = [
     id: 'bridge',
     name: 'Bridge',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.2',
     ourRule: true,
     levels: [
@@ -104,6 +106,7 @@ export const ladders: LadderInput[] = [
     id: 'push',
     name: 'Push',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.3',
     ourRule: true,
     levels: [
@@ -155,6 +158,7 @@ export const ladders: LadderInput[] = [
     id: 'handstand-skill',
     name: 'Handstand: skill track',
     kind: 'skill',
+    askEveryDays: 21,
     section: '7.4',
     ourRule: true,
     levels: [
@@ -263,6 +267,7 @@ export const ladders: LadderInput[] = [
     id: 'handstand-strength',
     name: 'Handstand: strength track',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.4',
     ourRule: true,
     levels: [
@@ -294,6 +299,7 @@ export const ladders: LadderInput[] = [
     id: 'row',
     name: 'Row',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.5',
     ourRule: true,
     levels: [
@@ -324,6 +330,7 @@ export const ladders: LadderInput[] = [
     id: 'back-extension',
     name: 'Back extension',
     kind: 'reps',
+    askEveryDays: 14,
     section: '7.6',
     ourRule: true,
     sources: ['katzman2010'],
@@ -370,6 +377,7 @@ export const ladders: LadderInput[] = [
     id: 'core',
     name: 'Core',
     kind: 'hold',
+    askEveryDays: 14,
     section: '7.7',
     ourRule: true,
     levels: [
@@ -401,6 +409,7 @@ export const ladders: LadderInput[] = [
     id: 'run',
     name: 'Run–walk',
     kind: 'endurance',
+    askEveryDays: 7,
     section: '7.8',
     ourRule: true,
     levels: [
@@ -488,6 +497,7 @@ export const ladders: LadderInput[] = [
     id: 'jumps',
     name: 'Jumps',
     kind: 'reps',
+    askEveryDays: 28,
     section: '7.10',
     ourRule: true,
     levels: [
@@ -519,6 +529,7 @@ export const ladders: LadderInput[] = [
     id: 'grip',
     name: 'Grip and carry',
     kind: 'hold',
+    askEveryDays: 14,
     section: '7.11',
     ourRule: true,
     levels: [
@@ -556,6 +567,7 @@ export const ladders: LadderInput[] = [
     id: 'balance',
     name: 'Balance',
     kind: 'hold',
+    askEveryDays: 21,
     section: '7.12',
     ourRule: true,
     // Only Ba1's cell says "per leg"; the morning block's dose ("The level's time per leg", §6.1) makes every level

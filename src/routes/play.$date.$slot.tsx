@@ -4,12 +4,13 @@ import { Player } from '@/components/player/Player'
 import { Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
 import { dayTemplate } from '@/lib/calendar'
-import { isLocalDate } from '@/lib/dates'
+import { compareDates, isLocalDate, type LocalDate } from '@/lib/dates'
 import { useLive } from '@/lib/live'
-import { sessionOf, splitKind } from '@/lib/plan-view'
+import { laddersById, sessionOf, splitKind } from '@/lib/plan-view'
 import { buildUnits } from '@/lib/player'
+import { checkInsDue } from '@/lib/progression'
 import type { Variant } from '@/lib/records'
-import { getLevels, getOverride, type Slot } from '@/lib/repo'
+import { getAllLogs, getLevels, getOverride, type Slot } from '@/lib/repo'
 import { planDayOf, useSettings } from '@/lib/use-app'
 
 export const Route = createFileRoute('/play/$date/$slot')({
@@ -33,6 +34,7 @@ function Play() {
   )
   const override = overrideBox?.o
   const levels = useLive(getLevels, [])
+  const logs = useLive(getAllLogs, [])
   const tmpl = pd ? dayTemplate(pd, plan.week, override?.swaps ?? []) : null
   const validSlot = (SLOTS as readonly string[]).includes(slot) ? (slot as Slot) : null
   const sessionId =
@@ -45,7 +47,7 @@ function Play() {
       : null
   const session = sessionId ? sessionOf(sessionId) : null
   const variant: Variant | undefined = session?.hasVariants ? (v ?? 'outdoor') : undefined
-  const ready = !!(settings && levels && pd && overrideBox)
+  const ready = !!(settings && levels && logs && pd && overrideBox)
 
   // Built once the data is in, so a change elsewhere never reshuffles a session that is running.
   // biome-ignore lint/correctness/useExhaustiveDependencies: frozen on purpose once ready
@@ -56,6 +58,23 @@ function Play() {
         : null,
     [ready, session?.id, variant],
   )
+
+  // The check-ins due after this session (D-069), frozen with the units.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: frozen on purpose once ready
+  const checkIns = useMemo(() => {
+    if (!units || !levels || !logs || !startDate) return []
+    const ids = [
+      ...new Set(units.flatMap((u) => u.exercises.map((e) => e.ladderId)).filter((x): x is string => !!x)),
+    ]
+    const lastDone = new Map<string, LocalDate>()
+    for (const l of logs) {
+      if (!l.ladderId || compareDates(l.date, date) >= 0) continue
+      const prev = lastDone.get(l.ladderId)
+      if (!prev || compareDates(l.date, prev) > 0) lastDone.set(l.ladderId, l.date)
+    }
+    const ladders = ids.map((id) => laddersById.get(id)).filter((l) => !!l)
+    return checkInsDue(ladders, levels, lastDone, date, startDate)
+  }, [units])
 
   if (!settings || !levels) return <Screen title="Session">{null}</Screen>
   if (!session || !units || !pd || !validSlot) {
@@ -82,6 +101,7 @@ function Play() {
       sessionId={session.id}
       title={session.name}
       units={units}
+      checkIns={checkIns}
       variant={variant}
       splitKind={kind}
       asksDistance={

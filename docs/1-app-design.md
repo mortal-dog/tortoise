@@ -100,8 +100,7 @@ open full screen above the tabs.
 - **Make it a Shell day** folds the cards that are still open, so the day ends with the morning block. It only tidies
   the screen: the status still follows [§5.2](#52-day-status-and-the-tortoise-streak), and a tap unfolds the cards
   again.
-- **Level-up suggestions** appear as a card when a ladder's pass rule is met: "Ready for Bulgarian split squat? Move up /
-  Not yet".
+- No level suggestions on Today: the check-ins come after a session (§3.2, D-069).
 
 ### 3.2 Session player (full screen)
 
@@ -111,18 +110,19 @@ open full screen above the tabs.
 
   | Kind | Behaviour |
   |---|---|
-  | Reps | Tap each set; the rest timer starts on its own; +/− adjusts reps and weight |
+  | Reps | Tap each set at the plan's dose; the rest timer starts on its own; nothing to count or weigh (D-069) |
   | Hold | A countdown per set, with "per side" handled automatically |
   | Interval | Work/rest cycles with a 3-2-1 countdown, start and end tones, and an optional spoken cue ("Easy, 60 seconds") |
   | Timed | A run or walk: elapsed time; run–walk steps cue each switch |
   | Stretch | A hold timer per position and side |
 
-- **After each exercise:** "Too easy / Right / Too hard". Two "too hard" answers in a row suggest one level down; the pass
-  rule suggests one level up. The morning block asks only after its ladder steps, the handstand and the one-leg stance
-  (D-051).
+- **Fixed doses (D-069):** no questions after an exercise and no rep or weight steppers; the session is the plan's.
 - **No lock layer (D-050).** The screen stays on for as long as the app is open, and only the phone's side button locks
   it. There is no pocket lock: on an outdoor run a stray touch in a pocket can tap a button, which the owner accepted.
-- **Summary at the end:** total time, sets, a 1–10 effort pick, and an optional note. Saving marks the card done.
+- **Summary at the end:** total time and sets; the distance on an outdoor run (for the running badges); and the
+  **check-ins** that are due (§5.3): per ladder "Harder" (the next level's name), "Keep" or "Easier" (the level below),
+  "Easier" first after two weeks without the ladder. Save waits for every answer; saving marks the card done and moves
+  the levels in the same transaction.
 
 ### 3.3 Week
 
@@ -180,8 +180,9 @@ the Tortoise Test button and the At-99 board (D-067).
   - Apple's installed web apps keep their own data, apart from the browser's, so on an iPhone, iPad or Mac the plan is
     started in the installed app, not the tab. Chromium's installed app shares the browser's data.
 - **In the installed app:** pick the Monday on which Week 0 begins: the coming Monday by default, or today on a
-  Monday. Week 1 starts seven days later. The start question (how long an easy run is comfortable, in minutes) sets
-  the run–walk's first step; every other ladder starts at level 1 (D-067).
+  Monday. Week 1 starts seven days later. Five start questions, answered by a tap and preset to the lowest choice,
+  set the first levels (push-ups, the easy run, one leg 30 s, a wall handstand 30 s, lifting weights; plan §8,
+  D-069); every other ladder starts at level 1.
 - **Until Week 0 begins:** Today shows the days left. The morning block can be tried; days
   before Week 0 have no status and no streak.
 - The profile is optional.
@@ -193,7 +194,7 @@ the Tortoise Test button and the At-99 board (D-067).
 ## 4. Navigation map
 
 ```
-First run ─ Install card → start Monday and the start question
+First run ─ Install card → start Monday and the start questions
 Today ──┬─ Session player (full screen)
         └─ Day detail (yesterday / any past day)
 Week ───── Day detail, swap days
@@ -235,16 +236,15 @@ Settings ─ Profile / Units / Google Drive sync / About
   - The run never reaches back before Week 0.
 - **Longest streak:** the largest such count in the history.
 
-### 5.3 Progression suggestions
+### 5.3 Check-ins (D-069)
 
-- **Reps:** all sets at the top of the range, logged "Right" or "Too easy", in two sessions in a row → suggest the next
-  level.
-- **Holds:** all sets at the target → suggest the next level.
-- **Two "Too hard" in a row** → suggest one level down.
-- **After 14 or more days with no logs for a ladder** → suggest one level down for a week.
-- **Endurance steps** (run–walk) move only on the user's tap, at least 7 days apart. Past the ladders, the run
-  cards show last week's minutes and the most that the 10% rule allows this week.
-- The app never changes a level by itself: the user confirms each move, and the history keeps every change with its date.
+- A ladder's check-in is due `askEveryDays` after its last check-in or level change, counted from Week 1's Monday
+  (none in Week 0): strength 14 days, the handstand skill track and balance 21, the run–walk 7, jumps 28
+  ([plan §7](2-exercise-plan.md#7-progression-ladders)).
+- After "Easier" the next comes after 7 days. A ladder not done for 14 days or more is due at once, "Easier" first.
+- It is asked after a session that uses the ladder, on the summary; no "Harder" at a ladder's top, no "Easier" at level 1.
+- The app never changes a level by itself; the history keeps every change with its date. The levels record keeps the
+  check-in's date (`askedAt`) and whether it was "Easier" (`eased`).
 
 ---
 
@@ -253,9 +253,9 @@ Settings ─ Profile / Units / Google Drive sync / About
 | Store | Key | Fields |
 |---|---|---|
 | `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}. Records from before D-053 also held dumbbellKg, location, runDefault and reminders, and from before D-055 backup {lastAt, everyDays}; they are dropped when read |
-| `days` | `YYYY-MM-DD` | morning {doneAt, steps}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10, note, asPlanned (a one-tap "Done as planned"), steps}; split {doneAt, kind (front, side, both or long), steps}; folded (the "Make it a Shell day" tap). `steps` lists the step ids the player finished; without it the whole part counts (D-057). Records from before D-057 may hold paused; it is dropped when read |
-| `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{reps, seconds, kg}], feedback (easy, right or hard) |
-| `levels` | ladderId | level, since, history [{level, date}] |
+| `days` | `YYYY-MM-DD` | morning {doneAt, steps}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10 and note (no longer written since D-069), asPlanned (a one-tap "Done as planned"), steps}; split {doneAt, kind (front, side, both or long), steps}; folded (the "Make it a Shell day" tap). `steps` lists the step ids the player finished; without it the whole part counts (D-057). Records from before D-057 may hold paused; it is dropped when read |
+| `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{seconds}] (reps, kg and feedback no longer written since D-069) |
+| `levels` | ladderId | level, since, history [{level, date}], askedAt, eased (D-069) |
 | `tests` | date of Day 1 | (no screen since D-067; the store keeps any test records taken before) results {rockport {minutes, heartRate, weightKg}, jumpReachCm, farmerS, heightCm, wallCm, sitRise {sit, rise}, oneLeg {openL, openR, closedL, closedR}, pushups, squatHoldS, splits {frontL, frontR, side}, handstand {wallS, freeS}, restingHr}; start answer {runMin} (Week 0 only); computed {vo2max, sitRiseScore} |
 | `overrides` | Monday of the week | swaps [[day, day]] |
 | `milestones` | milestoneId | earnedAt |
