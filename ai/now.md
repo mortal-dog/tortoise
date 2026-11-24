@@ -9,8 +9,8 @@
   green on `c8f6d07`: 246 Vitest in 28 files, 16 e2e.
 - **Live is `2c46e68`** (scheduled run 45287012727, 23:14 UTC, green: D-060 to D-062). **Not deployed yet:** `4dad116`
   (D-063, D-064), `6f049f2` (D-065), `447a5f6` (D-066), `3c09296` (D-067, D-068), `c8f6d07` (D-069). The next
-  scheduled run (13:07 UTC 2026-11-24, 08:07 ET; GitHub starts schedules late) publishes main; a manual deploy run
-  needs his yes in a picker. After it, check the live site: About shows "App 0.1.N (c8f6d07…)" with N = the commit
+  scheduled run (13:07 UTC 2026-11-24, 08:07 ET; GitHub starts schedules late) publishes main; his picker of 2026-11-23 evening:
+  "wait for tomorrow's scheduled run" (no manual deploy). After it, check the live site: About shows "App 0.1.N (c8f6d07…)" with N = the commit
   count of main; first run shows the five start questions; no Tortoise Test anywhere; a badge tap opens its card;
   a session's summary asks the check-ins that are due.
 - **D-069 (`c8f6d07`): levels move by check-ins, the owner's model** ("on first use the app asks the user's fitness
@@ -45,7 +45,7 @@
   date or Locked, metal · group, "How to earn it"/"What it took", a progress bar while locked; ✕, a tap outside or
   Escape closes; focus returns to the badge); no `title` tooltips; labels one line (`label` ≤ `LABEL_MAX` 14, the e2e
   checks each fits). A level badge's progress counts from level 1. **A start answer can earn level badges at once**
-  (e.g. 30+ push-ups → Push L3, L4): a builder's ruling that a badge reflects the real level; not asked.
+  (e.g. 30+ push-ups → Push L3, L4): his picker 2026-11-23 "keep: a badge reflects the real level".
 - **D-068 (owner, CLAUDE.md rule 10): before every commit, docs, code and badges agree** ("remember to keep the docs and
   the actual code in sync, and the badges too: some badges may become very hard, impossible or too easy to earn
   because of code changes. Check this before every commit; write it into a memory rule"). `tests/unit/badges.test.ts`
