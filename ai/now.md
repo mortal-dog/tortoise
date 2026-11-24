@@ -46,8 +46,8 @@
   Topsy-Turvy, Cartwheel, Free Spirit (Handstand H6/H8/H10/H13); Atlas (strength track S3); Heron, Flamingo (Balance
   Ba3/Ba6); Springbok (Jumps L3); Trotter, Pacer (Run–walk R4/R8); Limber, Supple, Willow, Silk Ribbon (10/50/100/365
   split blocks; Sunday's Light counts); Road Runner, Long Hauler, Stayer (5 km, 10 km, 90-min run). Level metric
-  `level:<ladderId>` = the highest level ever in the history, so a step back keeps them. The medal's ribbon still shows
-  the mark (L3, 100 km, 10×). A tap opens `BadgeDialog` (portal; medal 124 px with a tier halo, Earned
+  `level:<ladderId>` = the highest level ever in the history, so a step back keeps them. The medal has no ribbon or mark
+  since his picker "Remove the text": icon and metal only; a level badge's card says the app asks every few weeks. A tap opens `BadgeDialog` (portal; medal 124 px with a tier halo, Earned
   date or Locked, metal · group, "How to earn it"/"What it took", a progress bar while locked; ✕, a tap outside or
   Escape closes; focus returns to the badge; the "Next up" rows open it too, with a 40-px medal whose lock scales);
   no `title` tooltips; the name under a medal is one line (the e2e checks each fits). A level badge's progress counts from level 1. **A start answer can earn level badges at once**
