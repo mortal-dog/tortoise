@@ -70,6 +70,14 @@ metadata:
   order in `tests/unit/library.test.ts` follows the exercise order. A ladder's `note` must equal its doc paragraph
   after `**` is dropped (`verbatim.test.ts`). Removing a source also changes the "Part A: N PubMed abstracts" count in
   `docs/sources.md`, and `plan.test.ts` fails on a source no data uses.
+- **A write that ends a screen goes last** (2026-11-23, D-069): `startPlan` saved the start date and then the start
+  levels; saving the start date ends the first run, and the e2e reloaded before the level writes landed, so the
+  run–walk showed R1 for an answer of R4. Write the levels first, the record that switches the screen last.
+- **Biome's unsafe unused-import fix, alone:** `pnpm exec biome lint --only=correctness/noUnusedImports --write --unsafe
+  src` removes only unused imports; a blanket `--unsafe` also runs `useSortedClasses` (it once glued class names).
+- **Computing the week's hours:** `index.tsx` `sessionMinutes()` changes only endurance minutes; strength sets halved
+  (Week 0) or at 2 (ramp) are not in a card's minutes, so the plan's hours are estimates; a throwaway test can sum the
+  cards (vitest silences `console.log`: write to a scratch file).
 - **Heavy tests under load** (2026-11-23): the 60-year IndexedDB test and the personal-term guard timed out at vitest's
   5-s default while another repo's tests ran (load average 19–27); both have a 30-s limit since `4933a2a`. A timeout in
   a full run that passes alone is load: check `uptime` before chasing it.

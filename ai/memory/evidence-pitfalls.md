@@ -7,7 +7,7 @@ metadata:
 
 **Standing pitfalls**
 
-- **Rockport (kline1987):** the abstract gives only the L/min equation:
+- **Rockport (kline1987), history only since D-067 removed the test and the source:** the abstract gives only the L/min equation:
   6.9652 + 0.0091 × weight (lb) − 0.0257 × age + 0.5955 × sex − 0.2240 × time (min) − 0.0115 × heart rate.
   - The widely quoted mL/kg/min version (132.853 − …) is not in the abstract.
   - The app converts: L/min × 1000 ÷ weight (kg).
