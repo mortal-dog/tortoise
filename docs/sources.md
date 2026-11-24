@@ -5,10 +5,10 @@ Every number the Tortoise plan takes from evidence names one of these sources by
 
 **How each source was checked.** Every source was read in its raw text, and each "Finding" restates only what that
 text says.
-- **Part A:** 24 PubMed abstracts, fetched through NCBI E-utilities (`efetch`) on 2026-11-21.
-- **Part B:** 19 sources from the Straight Back page (<https://money.doctornova.net/posture>), which read each one on
-  2026-11-17. All 19 were read again on 2026-11-21:
-  - the PubMed abstract for 14 of them;
+- **Part A:** 21 PubMed abstracts, fetched through NCBI E-utilities (`efetch`) on 2026-11-21.
+- **Part B:** 17 sources from the Straight Back page (<https://money.doctornova.net/posture>), which read each one on
+  2026-11-17. All of them were read again on 2026-11-21:
+  - the PubMed abstract for 12 of them;
   - the full text on PubMed Central for ros2022, oc2023, sheaf2017 and katzman2010 (the signs cited from oc2023 are
     in its Appendix 1);
   - the web page for octftf.
