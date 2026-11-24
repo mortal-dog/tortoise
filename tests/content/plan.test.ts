@@ -359,6 +359,13 @@ describe('against the plan text', () => {
     for (const s of plan.sessions) expect(s.ourRule, s.id).toBe(true)
   })
 
+  it('lists every milestone by its name in the tables of §11 (D-070)', () => {
+    const doc = readRepoFile('docs/2-exercise-plan.md')
+    const s11 = doc.slice(doc.indexOf('## 11. Milestones'), doc.indexOf('## 12. '))
+    const rows = new Set([...s11.matchAll(/^\| ([^|]+?) \|/gm)].map((m) => m[1]))
+    expect(plan.milestones.filter((m) => !rows.has(m.name)).map((m) => m.name)).toEqual([])
+  })
+
   it('has the milestones of §11, the ability ones read from ladder levels (D-067)', () => {
     const ids = plan.milestones.map((m) => m.id)
     expect(ids).toContain('hatchling')

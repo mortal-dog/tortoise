@@ -38,8 +38,8 @@ test('the start questions set the run–walk step, and Progress shows the badges
   // Badges (D-058, D-066): the reached one shines; a tap opens a card that tells how to earn a locked one, closed by ✕.
   // No hover tooltips, and every label under a medal is one line that fits, not cut off.
   await expect(page.getByRole('link', { name: /Tortoise Test/ })).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Run–walk R4, earned' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Run–walk R8, locked' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Trotter, earned' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Pacer, locked' })).toBeVisible()
   const labels = page.getByTestId('badge-label')
   await expect(labels).toHaveCount(41)
   const fits = await labels.evaluateAll((els) =>
@@ -58,9 +58,16 @@ test('the start questions set the run–walk step, and Progress shows the badges
   await page.screenshot({ path: info.outputPath('badge-card.png') })
   await card.getByRole('button', { name: 'Close' }).click()
   await expect(card).toHaveCount(0)
-  await page.getByRole('button', { name: 'Run–walk R4, earned' }).click()
-  await expect(page.getByRole('dialog', { name: 'Run–walk R4' })).toContainText('What it took')
+  await page.getByRole('button', { name: 'Trotter, earned' }).click()
+  await expect(page.getByRole('dialog', { name: 'Trotter' })).toContainText('What it took')
+  // The name is a name; the rule that earned it is in the card (D-070).
+  await expect(page.getByRole('dialog', { name: 'Trotter' })).toContainText('Reach Run–walk R4')
   await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  // A "Next up" row opens the same card.
+  await page.getByTestId('next-milestones').getByRole('button').first().click()
+  await expect(page.getByRole('dialog')).toContainText('How to earn it')
+  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await page.screenshot({ path: info.outputPath('progress.png'), fullPage: true })
 })

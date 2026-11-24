@@ -25,13 +25,16 @@ describe('badges (D-058)', () => {
     }
   })
 
-  it('have a short label that fits one line under the medal, each one different', () => {
+  it('have a real name that fits one line under the medal, each one different, never the rule (D-070)', () => {
     const list = badges(plan.milestones, {}, none)
     for (const b of list) {
-      expect(b.label.length, b.milestone.id).toBeLessThanOrEqual(LABEL_MAX)
-      expect(b.label.length, b.milestone.id).toBeGreaterThan(0)
+      const name = b.milestone.name
+      expect(name.length, b.milestone.id).toBeLessThanOrEqual(LABEL_MAX)
+      expect(name.length, b.milestone.id).toBeGreaterThan(0)
+      // A digit means a threshold or level code leaked into the name: "Push L3", "Road 100 km".
+      expect(name, b.milestone.id).not.toMatch(/\d/)
     }
-    expect(new Set(list.map((b) => b.label)).size).toBe(list.length)
+    expect(new Set(list.map((b) => b.milestone.name)).size).toBe(list.length)
   })
 
   it('can each be earned: the metric is computed, a level exists on a ladder the week uses (D-068)', () => {

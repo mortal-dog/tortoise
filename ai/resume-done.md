@@ -352,3 +352,9 @@ Phase 0 (D-021).
   reps/kg steppers, no feedback step, summary without effort and note (distance stays for the km badges), a check-in
   section for due ladders, Save needs every answer; Today: no suggestion banner; progression.ts → checkIns().
 - Done: D-069 committed (gates green: 246 Vitest, 16 e2e).
+
+## Badge names are names (owner ask 2026-11-23, D-070)
+- Owner: "badge names must not be the details; the details are seen by tapping."
+- Plan: milestones.ts names (Hatchling-style, ≤14 chars, unique); badges.ts drops `label` (name = label); Next up rows
+  open the badge card; e2e/unit tests; plan §11 + design §3.4 + D-070; gates; commit, push, compact.
+- Done: D-070 committed (gates green: 247 Vitest, 16 e2e).

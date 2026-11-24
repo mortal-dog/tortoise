@@ -4,13 +4,13 @@ import { BadgeDialog } from '@/components/progress/BadgeDialog'
 import { BadgeMedal } from '@/components/progress/BadgeMedal'
 import { Card, Screen } from '@/components/ui'
 import { plan } from '@/data/plan'
-import { badges } from '@/lib/badges'
+import { type Badge, badges } from '@/lib/badges'
 import { dayTemplate } from '@/lib/calendar'
 import { cn } from '@/lib/cn'
 import { addDays, compareDates, type LocalDate, mondayOf } from '@/lib/dates'
 import { useLive } from '@/lib/live'
 import { awardMilestones, getEarnedMilestones, loadMetrics } from '@/lib/milestone-repo'
-import { type Metrics, progress, reached } from '@/lib/milestones'
+import { type Metrics, progress } from '@/lib/milestones'
 import { addPillars, donePillars, PILLARS, plannedPillars, zeroPillars } from '@/lib/pillars'
 import { sessionsById } from '@/lib/plan-view'
 import { longestStreak } from '@/lib/status'
@@ -154,49 +154,54 @@ function Milestones({
   earned: ReadonlyMap<string, { earnedAt: LocalDate }>
   metrics: Metrics
 }) {
-  const next = plan.milestones
-    .filter((m) => !earned.has(m.id) && !reached(m, metrics))
-    .map((m) => ({ m, p: progress(m, metrics) }))
-    .sort((a, b) => b.p - a.p)
+  const list = badges(plan.milestones, metrics, earned)
+  const [open, setOpen] = useState<string | null>(null)
+  const close = useCallback(() => setOpen(null), [])
+  const shown = list.find((b) => b.milestone.id === open)
+  const next = list
+    .filter((b) => !b.earned)
+    .map((b) => ({ b, p: progress(b.milestone, metrics) }))
+    .sort((a, z) => z.p - a.p)
     .slice(0, 3)
   return (
     <div className="space-y-3">
       <Card>
         <h3 className="font-semibold">Next up</h3>
-        <ul className="mt-2 space-y-2" data-testid="next-milestones">
-          {next.map(({ m, p }) => (
-            <li key={m.id}>
-              <div className="flex justify-between text-sm">
-                <span>{m.name}</span>
-                <span className="tabular-nums">{Math.round(p * 100)}%</span>
-              </div>
-              <div className="mt-1 h-2 rounded-full bg-line" aria-hidden>
-                <div className="h-2 rounded-full bg-shell" style={{ width: `${p * 100}%` }} />
-              </div>
+        <ul className="mt-2 space-y-1" data-testid="next-milestones">
+          {next.map(({ b, p }) => (
+            <li key={b.milestone.id}>
+              <button
+                type="button"
+                aria-haspopup="dialog"
+                onClick={() => setOpen(b.milestone.id)}
+                className="flex w-full items-center gap-3 rounded-xl py-1.5 text-left transition-transform duration-150 active:scale-[0.98]"
+              >
+                <BadgeMedal badge={b} size={40} />
+                <span className="min-w-0 flex-1">
+                  <span className="flex justify-between gap-2 text-sm">
+                    <span className="truncate font-semibold">{b.milestone.name}</span>
+                    <span className="tabular-nums">{Math.round(p * 100)}%</span>
+                  </span>
+                  <span className="mt-1 block h-2 rounded-full bg-line" aria-hidden>
+                    <span className="block h-2 rounded-full bg-shell" style={{ width: `${p * 100}%` }} />
+                  </span>
+                </span>
+              </button>
             </li>
           ))}
         </ul>
       </Card>
-      <Badges earned={earned} metrics={metrics} />
+      <Badges list={list} onOpen={setOpen} />
+      {shown && <BadgeDialog badge={shown} share={progress(shown.milestone, metrics)} onClose={close} />}
     </div>
   )
 }
 
 /**
- * Every milestone as a badge (D-058). A tap opens the badge's card (D-066): how to earn it, or when it was earned. The
- * label under each medal is one line; the card holds the full name. No hover tooltips.
+ * Every milestone as a badge (D-058). A tap opens the badge's card (D-066): how to earn it, or when it was earned.
+ * Under each medal stands its name on one line, a real name, never the rule that earns it (D-070). No hover tooltips.
  */
-function Badges({
-  earned,
-  metrics,
-}: {
-  earned: ReadonlyMap<string, { earnedAt: LocalDate }>
-  metrics: Metrics
-}) {
-  const list = badges(plan.milestones, metrics, earned)
-  const [open, setOpen] = useState<string | null>(null)
-  const close = useCallback(() => setOpen(null), [])
-  const shown = list.find((b) => b.milestone.id === open)
+function Badges({ list, onOpen }: { list: Badge[]; onOpen: (id: string) => void }) {
   const got = list.filter((b) => b.earned).length
   return (
     <Card>
@@ -224,7 +229,7 @@ function Badges({
                     aria-haspopup="dialog"
                     aria-label={`${b.milestone.name}, ${b.earned ? 'earned' : 'locked'}`}
                     data-earned={b.earned}
-                    onClick={() => setOpen(b.milestone.id)}
+                    onClick={() => onOpen(b.milestone.id)}
                     className="flex w-full min-w-0 flex-col items-center gap-1.5 rounded-2xl px-0.5 pt-1 pb-2 text-center transition-transform duration-150 active:scale-95"
                   >
                     <BadgeMedal badge={b} size={76} />
@@ -235,7 +240,7 @@ function Badges({
                       )}
                       data-testid="badge-label"
                     >
-                      {b.label}
+                      {b.milestone.name}
                     </span>
                   </button>
                 </li>
@@ -243,7 +248,6 @@ function Badges({
           </ul>
         </div>
       ))}
-      {shown && <BadgeDialog badge={shown} share={progress(shown.milestone, metrics)} onClose={close} />}
     </Card>
   )
 }

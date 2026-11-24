@@ -114,8 +114,17 @@ export function BadgeMedal({ badge, size = 84 }: { badge: Badge; size?: number }
         style={{ top: size * 0.27, width: size * 0.4, height: size * 0.4 }}
       />
       {!badge.earned && (
-        <span className="absolute right-0 bottom-[18%] flex size-6 items-center justify-center rounded-full bg-surface ring-1 ring-edge">
-          <Lock aria-hidden className="size-3.5 text-text" strokeWidth={2.5} />
+        // The lock grows with the medal: 24 px on the grid's 76-px medal, smaller on the Next-up rows.
+        <span
+          className="absolute right-0 bottom-[18%] flex items-center justify-center rounded-full bg-surface ring-1 ring-edge"
+          style={{ width: Math.round(size * 0.3), height: Math.round(size * 0.3) }}
+        >
+          <Lock
+            aria-hidden
+            className="text-text"
+            strokeWidth={2.5}
+            style={{ width: Math.round(size * 0.18), height: Math.round(size * 0.18) }}
+          />
         </span>
       )}
     </span>

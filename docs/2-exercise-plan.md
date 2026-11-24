@@ -573,6 +573,8 @@ question puts it (§8); the ladder rules move each one up (§7). The milestones 
 
 Every threshold here is *our rule*.
 
+Each badge has a name of its own; what earns it shows when the badge is tapped (D-070).
+
 ### Habit milestones
 
 The tortoise streak counts the days done, full or Shell, with no two missed days in a row.
@@ -584,19 +586,49 @@ The tortoise streak counts the days done, full or Shell, with no two missed days
 | Adult | A streak of 100 days |
 | Elder | A streak of 365 days |
 | Ancient | A streak of 1,000 days |
-| Bask 10 / 50 / 100 / 500 | Outdoor sessions logged |
-| Long road 100 / 500 / 1,000 km | Running distance logged |
+| First Light | 10 main sessions outdoors |
+| Warm Shell | 50 main sessions outdoors |
+| Sunbather | 100 main sessions outdoors |
+| Sun King | 500 main sessions outdoors |
+| Wanderer | 100 km run in all |
+| Voyager | 500 km run in all |
+| Odyssey | 1,000 km run in all |
 
 ### Ability milestones (from the levels reached, the split blocks and the runs)
 
 A level counts once it is reached, even after a step back (D-067).
 
-- **Push:** L3, L4, L5, L6.
-- **Squat:** L3, L5. **Bridge:** L3, L5. **Row:** P3. **Back extension:** L3, L5. **Core:** L3.
-- **Handstand:** H6, H8, H10, H13; the strength track's S3.
-- **Balance:** Ba3, Ba6. **Jumps:** L3. **Run–walk:** R4, R8.
-- **Splits:** 10, 50, 100 and 365 split blocks done (Sunday's Light session counts as one).
-- **Running:** the first continuous 5 km and 10 km; a 90-minute long run.
+| Milestone | When it is earned |
+|---|---|
+| Floor Strong | Push L3 |
+| Slow Burn | Push L4 |
+| Sky Feet | Push L5 |
+| Pack Mule | Push L6 |
+| Split Second | Squat L3 |
+| Deep Roots | Squat L5 |
+| Drawbridge | Bridge L3 |
+| Stone Arch | Bridge L5 |
+| Oarsman | Row P3 |
+| Upright | Back extension L3 |
+| Iron Spine | Back extension L5 |
+| Hollow Shell | Core L3 |
+| Wall Climber | Handstand H6 |
+| Topsy-Turvy | Handstand H8 |
+| Cartwheel | Handstand H10 |
+| Free Spirit | Handstand H13 |
+| Atlas | Handstand strength track S3 |
+| Heron | Balance Ba3 |
+| Flamingo | Balance Ba6 |
+| Springbok | Jumps L3 |
+| Trotter | Run–walk R4 |
+| Pacer | Run–walk R8 |
+| Limber | 10 split blocks done (Sunday's Light session counts as one) |
+| Supple | 50 split blocks done |
+| Willow | 100 split blocks done |
+| Silk Ribbon | 365 split blocks done |
+| Road Runner | The first continuous 5 km |
+| Long Hauler | The first continuous 10 km |
+| Stayer | A 90-minute long run |
 
 ---
 

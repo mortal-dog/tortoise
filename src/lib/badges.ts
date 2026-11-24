@@ -1,8 +1,9 @@
-// Badges (D-058, D-066, D-067): every milestone of plan §11 shows as a badge on Progress. Locked badges are grey; a tap
-// opens a card that tells how to earn one (no hover tooltips). Each badge has a short label that fits one line under
-// the medal; the card shows the milestone's full name. A badge counts as earned when the milestone is stored as earned
-// or its metric reaches the threshold now, so a badge whose goal is met is never shown locked, even before the award
-// has been written. Ability badges are ladder levels reached, split blocks done and runs (D-067: no test).
+// Badges (D-058, D-066, D-067, D-070): every milestone of plan §11 shows as a badge on Progress. Locked badges are
+// grey; a tap opens a card that tells how to earn one (no hover tooltips). Under the medal stands the badge's name, a
+// real name on one line, never the rule that earns it (D-070); the rule is `how`, in the card. A badge counts as
+// earned when the milestone is stored as earned or its metric reaches the threshold now, so a badge whose goal is met
+// is never shown locked, even before the award has been written. Ability badges are ladder levels reached, split
+// blocks done and runs (D-067: no test).
 import type { LucideIcon } from 'lucide-react'
 import {
   ArrowDownUp,
@@ -39,11 +40,9 @@ interface MetricStyle {
   how: (n: number) => string
   /** The short mark on the badge's ribbon. */
   mark: (n: number) => string
-  /** The one-line label under the medal (at most LABEL_MAX characters); the milestone's name when absent. */
-  label?: (n: number) => string
 }
 
-/** The longest label that fits one line under a medal in the three-column grid on a 375-px-wide phone. */
+/** The longest name that fits one line under a medal in the three-column grid on a 375-px-wide phone. */
 export const LABEL_MAX = 14
 
 const STYLE: Record<Exclude<Metric, 'level'>, MetricStyle> = {
@@ -60,25 +59,21 @@ const STYLE: Record<Exclude<Metric, 'level'>, MetricStyle> = {
   },
   outdoorSessions: {
     icon: Sun,
-    label: (n) => `Bask ${n}`,
     how: (n) => `Do ${n} main sessions outdoors.`,
     mark: (n) => `${n}×`,
   },
   runKm: {
     icon: Route,
-    label: (n) => `Road ${n.toLocaleString('en')} km`,
     how: (n) => `Run ${n.toLocaleString('en')} km in all. Enter the distance at the end of each run.`,
     mark: (n) => `${n.toLocaleString('en')} km`,
   },
   continuousRunKm: {
     icon: Footprints,
-    label: (n) => `Run ${n} km`,
     how: (n) => `Run ${n} km in one run. Enter the distance at the end of the run.`,
     mark: (n) => `${n} km`,
   },
   longRunMin: {
     icon: Timer,
-    label: (n) => `Run ${n} min`,
     how: (n) => `Do a long run of ${n} minutes.`,
     mark: (n) => `${n} min`,
   },
@@ -126,8 +121,6 @@ export interface Badge {
   tier: Tier
   how: string
   mark: string
-  /** One line under the medal. */
-  label: string
   earned: boolean
   /** The day it was stored as earned; undefined when it is earned now and the award is not written yet. */
   earnedAt?: string
@@ -156,7 +149,6 @@ export function badges(
       tier,
       how: style.how(m.threshold),
       mark: style.mark(m.threshold),
-      label: style.label?.(m.threshold) ?? m.name,
       earned: !!stored || reached(m, metrics),
       ...(stored ? { earnedAt: stored.earnedAt } : {}),
     }

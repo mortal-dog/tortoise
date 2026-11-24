@@ -150,7 +150,9 @@ the Tortoise Test button and the At-99 board (D-067).
   medal, its metal (bronze, gold, jade, sapphire) set by its step, with an icon and a ribbon. Earned medals shine (a
   glint sweeps across, two sparkles twinkle); locked ones are grey with a lock. A tap opens the badge's card (D-066):
   the medal large, its full name, Earned with the date or Locked, how to earn it and, while locked, how far along; ✕,
-  a tap outside or Escape closes it. No hover tooltips. Under each medal a short label on one line. A badge counts as
+  a tap outside or Escape closes it. No hover tooltips. Under each medal its name on one line: a real name
+  (Hatchling, Heron, Atlas), never the rule that earns it, which only the card shows (D-070). A "Next up" row opens
+  the same card. A badge counts as
   earned when stored or when its goal is reached now, so a reached goal never shows locked. The ability badges are
   ladder levels reached (the highest level ever, so a step back keeps them), split blocks done and runs (D-067).
 
