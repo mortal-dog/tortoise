@@ -6,9 +6,9 @@
 ## Open work and next steps (as of 2026-11-23, 19:03 ET)
 
 - **Nothing in flight; the handoff sheet is empty.** All of the owner's 2026-11-23 asks are built and pushed; gates
-  green on `c8f6d07`: 246 Vitest in 28 files, 16 e2e.
+  green on `12b73a1`: 247 Vitest in 28 files, 16 e2e.
 - **Live is `2c46e68`** (scheduled run 45287012727, 23:14 UTC, green: D-060 to D-062). **Not deployed yet:** `4dad116`
-  (D-063, D-064), `6f049f2` (D-065), `447a5f6` (D-066), `3c09296` (D-067, D-068), `c8f6d07` (D-069). The next
+  (D-063, D-064), `6f049f2` (D-065), `447a5f6` (D-066), `3c09296` (D-067, D-068), `c8f6d07` (D-069), `12b73a1` (D-070). The next
   scheduled run (13:07 UTC 2026-11-24, 08:07 ET; GitHub starts schedules late) publishes main; his picker of 2026-11-23 evening:
   "wait for tomorrow's scheduled run" (no manual deploy). After it, check the live site: About shows "App 0.1.N (c8f6d07…)" with N = the commit
   count of main; first run shows the five start questions; no Tortoise Test anywhere; a badge tap opens its card;
@@ -37,14 +37,20 @@
   wiyanad2018 (oc2023 stays via a §9 rationale entry `bone-density-checks`). Week 0 is half volume all seven days
   (about 6 h, was 5½). `test-repo.ts` → `milestone-repo.ts`. The DB `tests` store and `TestRecord` stay for old data,
   no screen. Plan §10 is now "No fitness test" (numbering kept).
-- **Badges now (D-058, D-066, D-067):** 41: 12 habit (Hatchling … Ancient, Bask 10/50/100/500, Road 100/500/1,000 km),
-  29 ability: ladder levels (Push L3–L6, Squat L3/L5, Bridge L3/L5, Row P3, Back L3/L5, Core L3, Handstand
-  H6/H8/H10/H13, Pike push S3, Balance Ba3/Ba6, Jumps L3, Run–walk R4/R8; metric `level:<ladderId>` = the highest
-  level ever in the history, so a step back keeps them), Splits 10/50/100/365 (split blocks done; Sunday's Light
-  counts), run logs (5 km, 10 km, 90 min). A tap opens `BadgeDialog` (portal; medal 124 px with a tier halo, Earned
+- **Badges now (D-058, D-066, D-067, D-070):** 41, each with a real name, never its rule (D-070, owner: "don't use the
+  details as a badge's name. The details are what a tap shows"; ≤ 14 characters, no digit, tested; plan §11 lists
+  name → rule, tested). 12 habit: Hatchling, Juvenile, Adult, Elder, Ancient (streaks); First Light, Warm Shell,
+  Sunbather, Sun King (10/50/100/500 outdoor sessions); Wanderer, Voyager, Odyssey (100/500/1,000 km). 29 ability:
+  Floor Strong, Slow Burn, Sky Feet, Pack Mule (Push L3–L6); Split Second, Deep Roots (Squat L3/L5); Drawbridge, Stone
+  Arch (Bridge L3/L5); Oarsman (Row P3); Upright, Iron Spine (Back L3/L5); Hollow Shell (Core L3); Wall Climber,
+  Topsy-Turvy, Cartwheel, Free Spirit (Handstand H6/H8/H10/H13); Atlas (strength track S3); Heron, Flamingo (Balance
+  Ba3/Ba6); Springbok (Jumps L3); Trotter, Pacer (Run–walk R4/R8); Limber, Supple, Willow, Silk Ribbon (10/50/100/365
+  split blocks; Sunday's Light counts); Road Runner, Long Hauler, Stayer (5 km, 10 km, 90-min run). Level metric
+  `level:<ladderId>` = the highest level ever in the history, so a step back keeps them. The medal's ribbon still shows
+  the mark (L3, 100 km, 10×). A tap opens `BadgeDialog` (portal; medal 124 px with a tier halo, Earned
   date or Locked, metal · group, "How to earn it"/"What it took", a progress bar while locked; ✕, a tap outside or
-  Escape closes; focus returns to the badge); no `title` tooltips; labels one line (`label` ≤ `LABEL_MAX` 14, the e2e
-  checks each fits). A level badge's progress counts from level 1. **A start answer can earn level badges at once**
+  Escape closes; focus returns to the badge; the "Next up" rows open it too, with a 40-px medal whose lock scales);
+  no `title` tooltips; the name under a medal is one line (the e2e checks each fits). A level badge's progress counts from level 1. **A start answer can earn level badges at once**
   (e.g. 30+ push-ups → Push L3, L4): his picker 2026-11-23 "keep: a badge reflects the real level".
 - **D-068 (owner, CLAUDE.md rule 10): before every commit, docs, code and badges agree** ("remember to keep the docs and
   the actual code in sync, and the badges too: some badges may become very hard, impossible or too easy to earn
@@ -149,7 +155,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-070**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-071**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -309,7 +315,7 @@
   no ring), D-058 (owner: badges; the style a builder's ruling), D-059 (builder: the still tab bar), D-065 (builder:
   version from git), D-066 (owner: a badge's card with ✕, no hover tooltips, one-line labels), D-067 (owner: no fitness
   test; ability badges by ladder level), D-068 (owner: docs, code and badges agree before every commit), D-069 (owner:
-  levels move by check-ins after a session; five start questions).
+  levels move by check-ins after a session; five start questions), D-070 (owner: badges have real names).
 
 ## Where things are
 
@@ -339,7 +345,7 @@
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, then the source counts in `docs/sources.md` (Part A 21, Part B 17).
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, `12b73a1` D-070 (badge names), and the source counts in `docs/sources.md` (Part A 21, Part B 17).
 
 ## Background
 
