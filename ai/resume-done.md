@@ -1,6 +1,23 @@
 <!-- Finished handoff entries of this repo, newest first (protocol: ~/Repo/script/claude/resume.md).
      This repo is PUBLIC: no personal health or household facts in this file. -->
 
+## 2026-11-27: Drive sync of all state across devices (D-071) — started 2026-11-27 14:23 ET, done 2026-11-27 14:32 ET
+
+**Why:** the owner (translated): on sign-in a just-started device must take Drive's progress, and Drive must carry
+every state (days kept, days missed, badges, progress, settings); when both sides hold progress that cannot be merged
+sensibly, the user chooses which side overwrites the other, confirmed again and again when the overwritten side is
+older or larger.
+
+**Steps**
+- [x] ♻️ one shared `tortoise.json` with a generation; two-way merge; legacy device files merged and deleted
+- [x] ♻️ first sync ranks progress > plan > nothing; same plan merges; different plans → SyncConflictDialog (REPLACE
+      typed when the replaced side holds more or older history)
+- [x] ♻️ spoken cues into the settings record; undone swaps keep their record
+- [x] ♻️ D-071, docs 1-app-design §10, 3-implementation Phase 8 row, plan.md
+- [x] ♻️ gates green: 261 Vitest in 29 files, build, 16 e2e
+- [x] ⚠️ committed and ⛔ pushed 5d0bb73 (rule 9) — do not push again
+- [x] ♻️ compact-ai run
+
 ## 2026-11-23: equipment in Settings › About; bring the design docs up to date — started 2026-11-23 18:10 ET, done 2026-11-23 18:14 ET
 
 **Why:** the owner (translated): "we changed a lot of code and features, so update the design docs to match; and in

@@ -1,6 +1,6 @@
 ---
 name: drive-backup
-description: How the Google Drive sync (D-054, D-055) works as the app's only backup — sign-in, the hidden-frame and next-tap renewal, the silent landing page, triggers, restore, the owner's Google Cloud steps, tests
+description: How the Google Drive sync (D-054, D-055, D-071) works as the app's only backup — sign-in, the hidden-frame and next-tap renewal, the silent landing page, triggers, the shared file synced both ways, the first-sync ranking and conflict dialog, the owner's Google Cloud steps, tests
 metadata:
   type: project
 ---
@@ -28,21 +28,34 @@ parser and the merge (`importBackup` is merge-only; `repo.ts` `mergeBackup()`).
   external script, no inline code. The service worker serves every navigation the app shell **except**
   `/oauth-silent.html` (`src/sw/sw.ts`); without that exemption the frame would get the app. The app's CSP has
   `frame-src 'self' https://accounts.google.com` because the frame's redirect ends on the app's own origin.
-- **When (D-055):** `autoSync()` uploads only when dirty (`onChange()` from `src/lib/live.ts` marks it) or when a
-  sign-in's first sync has not finished: 20 s after the last change, on `visibilitychange` (hidden or shown), on
-  `online`, and every 5 min while visible. With nothing to upload, an opening still renews a dead token so the
-  visit's changes find a live one. A `TypeError` from fetch (or `navigator.onLine === false`) is status `offline`, no
-  error, still dirty. No Background Sync (Safari has none).
-- **Files:** one `device-<id>.json` per device in `appDataFolder`, a whole backup in the backup format (`BACKUP_FORMAT`,
-  read back with `parseBackup`), photos included. Writes are resumable uploads (POST/PATCH `uploadType=resumable`,
-  then PUT to the `Location` header), because photos can pass the 5 MB one-request limit.
-- **Restore:** the first sync after a sign-in (`tortoise.drive` has no fileId and no lastSync: a new device, or after
-  Reset or Sign out, which clear it) merges every device file (newer `updatedAt` wins); a damaged or newer file is
-  skipped whole. There is no Restore button since D-055. A plain sync only uploads, so a deletion here (photos, swaps)
-  is not undone by the Drive copy, and another device's later changes do not come in.
+- **When (D-055, D-071):** `autoSync()` = `syncNow()` unless signed out or a conflict waits: 20 s after the last own
+  change (`onChange()` from `src/lib/live.ts`; writes from Drive notify with `fromSync` and are not counted), on
+  `visibilitychange` (hidden or shown), on `online`, and every 5 min while visible. A `TypeError` from fetch (or
+  `navigator.onLine === false`) is status `offline`, no error, still dirty. No Background Sync (Safari has none).
+- **One shared file (D-071):** `tortoise.json` in `appDataFolder`, a whole backup in the backup format plus
+  `generation` (optional zod field, BACKUP_VERSION still 1), photos included. Writes are resumable uploads
+  (POST/PATCH `uploadType=resumable&fields=id,name,modifiedTime`, then PUT to the `Location` header). The D-054
+  `device-*.json` files, and a second `tortoise.json` two devices created at once, are "extras": merged in, deleted
+  after the write (only those read successfully).
+- **Each sync (`exchange()`):** list the folder; read the shared file only when its id/modifiedTime differ from the
+  cache (`tortoise.drive`: fileId, seen, generation, lastSync, dirty), or on a first sync, or with a choice; merge it
+  (newer `updatedAt` wins, D-032); write when dirty, when the file is missing, when extras were merged, or when this
+  device holds a record the copy lacks or holds older (`aheadOf`, so a write lost to a race heals at the next sync).
+  A damaged or newer-version shared file is never written over: status error.
+- **First sync after sign-in (no `generation` in the cache), and a generation mismatch:** `firstSync(local, remote)`
+  ranks progress (a day with a done part or a logged set) 2, a plan alone 1, nothing 0; the higher side replaces the
+  other whole (`replaceWithBackup` / a write with a new generation); equal 1, or equal 2 on the same `startDate`,
+  merge; equal 2 on different plans → status `conflict` with both `summarize()`s → `SyncConflictDialog` (root layout):
+  Use Google Drive's / Keep this device's / Sign out instead, then a confirm step; REPLACE typed when `losesMore()`
+  (more days, earlier first day, or more badges on the replaced side). `resolveConflict(choice)` reruns with the
+  choice. "Keep this device's" writes a new generation, so the other devices compare again instead of merging back.
+- **No deletions while synced:** an undone week swap keeps its record with no swaps (a deleted record would come back
+  from another copy). `deletePhoto` exists but has no screen since D-062.
 - **The card** (`DriveCard.tsx`): "Google Drive sync"; signed in, one line "Last sync: <formatLong date>, <HH:MM>"
   (or "not yet"), an error line only on an error, Sync now (shows "Syncing…" while busy) and Sign out; signed out,
   only "Sign in with Google". The owner wants no other wording on it (D-055).
+- **Settings synced too:** the spoken-cue switch lives in the settings record (`spokenCues`) since D-071; localStorage
+  `tortoise.spokenCues` is only the player's fast copy.
 - **Safety:** a phone with no `startDate` and no days never uploads; Reset calls `driveSignOut(false)` (forget, no
   revoke) so the empty phone cannot sync over its copy.
 - **Client ID and the owner's steps:** the French app's Web client
@@ -51,21 +64,26 @@ parser and the merge (`importBackup` is merge-only; `repo.ts` `mergeBackup()`).
   `https://tortoise.doctornova.net` (without it Google's window says "origin_mismatch") and the authorised redirect URI
   `https://tortoise.doctornova.net/oauth-silent.html` (without it every renewal waits for a tap). For dev sign-in,
   `http://localhost:5173` would be needed as an origin too.
-- **Tests:** `tests/db/drive-sync.test.ts` drives `exchange()`, `syncNow()` and `autoSync()` with an in-memory fake
-  `Drive` set by `resetSyncForTests(drive)` (it also re-reads the state from storage and disarms the tap);
+- **Tests:** `tests/db/drive-sync.test.ts` drives `exchange()`, `syncNow()`, `autoSync()` and `resolveConflict()`
+  with an in-memory fake `Drive` (modified time moves on each write; `anotherDevice()` wipes the DB and cache to play a
+  second phone; `editShared()` plays another device's write; `noteChangeForTests()` marks a change) set by
+  `resetSyncForTests(drive)` (it also re-reads the state from storage and disarms the tap);
   `resetGoogleForTests()` clears the cooldown and the cached script; a live token is faked by writing
   `tortoise.google` with a future `expiresAt`; the frame is answered by dispatching a `MessageEvent` with the iframe's
   own `state`; Google's script is faked on `window.google` and `fetch` is stubbed for the userinfo call. The component
-  test checks the card's single line; `tests/e2e/smoke.spec.ts` frames `/oauth-silent.html` under the service worker
+  tests check the card's single line and the conflict dialog's steps (`tests/component/sync-conflict.test.tsx`); `tests/e2e/smoke.spec.ts` frames `/oauth-silent.html` under the service worker
   and expects its post. Nothing in e2e talks to Google.
 
 **Why:** the owner: "change the backup to a Google login with a Google Drive backup, like the French repo; the sync
 is automatic, find a suitable time to sync by itself" (D-054); then "make sure google drive sync is automatic, and
 remove other way to store backup and retrieve and just show sync", "remove all other wordings. you can just show last
-sync date time", "delete backup file feature from settings" (D-055).
+sync date time", "delete backup file feature from settings" (D-055); 2026-11-27: on sign-in a just-started device
+must take Drive's progress, every state must sync to another device, and a clash must let the user choose, confirmed
+"again and again" when the overwritten side is older or larger (D-071).
 
 **How to apply:** unverified on a real phone until Phase 8: whether GIS's popup opens and returns from the home-screen
 app on iOS (from the button and from the next-tap renewal), and whether Google exposes `Location` to the browser for
-resumable uploads (Google's own CORS upload sample reads it). Safari refuses Google's cookies in the frame, so on the
+resumable uploads (Google's own CORS upload sample reads it), whether the final upload response carries
+`modifiedTime` (if not, each sync after an upload reads the copy once more, harmless), and DELETE in appDataFolder. Safari refuses Google's cookies in the frame, so on the
 iPhone expect renewals from the next tap. If the upload fails with "Google Drive gave no upload address", fall back to a
 multipart upload for files under 5 MB. See [[building-pitfalls]].

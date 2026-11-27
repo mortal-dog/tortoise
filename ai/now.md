@@ -3,16 +3,41 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-23, 19:03 ET)
+## Open work and next steps (as of 2026-11-27, 14:35 ET)
 
-- **Nothing in flight; the handoff sheet is empty.** All of the owner's 2026-11-23 asks are built and pushed; gates
-  green on `12b73a1`: 247 Vitest in 28 files, 16 e2e.
-- **Live is `2c46e68`** (scheduled run 45287012727, 23:14 UTC, green: D-060 to D-062). **Not deployed yet:** `4dad116`
-  (D-063, D-064), `6f049f2` (D-065), `447a5f6` (D-066), `3c09296` (D-067, D-068), `c8f6d07` (D-069), `12b73a1` (D-070). The next
-  scheduled run (13:07 UTC 2026-11-24, 08:07 ET; GitHub starts schedules late) publishes main; his picker of 2026-11-23 evening:
-  "wait for tomorrow's scheduled run" (no manual deploy). After it, check the live site: About shows "App 0.1.N (c8f6d07…)" with N = the commit
-  count of main; first run shows the five start questions; no Tortoise Test anywhere; a badge tap opens its card;
-  a session's summary asks the check-ins that are due.
+- **Nothing in flight; the handoff sheet is empty.** The owner's 2026-11-27 ask (the sync of all state across devices)
+  is built and pushed as `5d0bb73` (D-071); gates green on it: 261 Vitest in 29 files, build, 16 e2e.
+- **Live is `f2f0848`** (D-063 to D-070; scheduled runs green since 45621967711, 2026-11-25 13:16 UTC, the latest
+  46005563267 on 2026-11-27 13:15 UTC). **Not deployed yet:** `5d0bb73` (D-071); the next scheduled run (23:07 UTC
+  2026-11-27, 18:07 ET; GitHub starts schedules late) publishes it. A manual deploy run needs his yes in a picker.
+- **D-071 (`5d0bb73`): the Drive sync carries every record to every device, both ways, and asks when two plans
+  clash.** The owner: "a very serious problem: syncing progress. When a user has just started, chosen the plan, then
+  signs in to Google in Settings, the app must look whether Drive already holds progress; if so, update the local state
+  to the Drive state directly. The Drive state must hold every state: how many days kept up, which day was missed,
+  every badge, every progress state; when signing in on another device, everything, settings too, must sync." And: "if
+  the local side already holds progress … and the remote holds state too that cannot be merged well and sensibly, let
+  the user choose whether the local state overwrites the remote Drive state or the remote overwrites the local one, and
+  ask again and again for confirmation if the state being overwritten is older or larger." The bug it fixed: a new
+  phone's first sync merged by `updatedAt`, so its just-chosen plan and start levels, being newer, beat Drive's; and a
+  plain sync only uploaded, so another device's changes never came in. Now:
+  - one shared `tortoise.json` in appDataFolder with a `generation` (the copy's lineage); the D-054 `device-*.json`
+    files are merged in once and deleted (an old app version may re-create its file; it is merged and deleted again);
+  - each sync lists the folder, reads the copy only when its `modifiedTime` differs from the cache's `seen`, merges it
+    (newer `updatedAt` wins), and writes when dirty or when this device is ahead (`aheadOf`) — a lost write heals;
+  - the first sync after sign-in (`firstSync()` in `sync.ts`): progress (a day with a done part or a logged set) >
+    a plan alone > nothing; the higher side replaces the other whole; same Week 1 Monday with progress, or both
+    plan-only, merge; different plans with progress → `SyncConflictDialog` (root layout, over every screen):
+    "Use Google Drive's" / "Keep this device's" / "Sign out of Google instead", then a confirm step, and REPLACE typed
+    when the replaced side has more days, an earlier first day or more badges (`losesMore()` in `backup.ts`); the sync
+    waits (autoSync skips while `conflict`);
+  - replacing Drive gives a new generation; a device that synced under the old one compares again (and may ask) at its
+    next sync instead of merging its old records back;
+  - spoken cues moved into the settings record (`spokenCues`; localStorage keeps a fast copy); an undone week swap
+    keeps its record with empty swaps (no deletions, since a deleted record would come back from another copy);
+  - autoSync now runs at every D-055 moment whether dirty or not (to read other devices); "Last sync" = last finished
+    sync.
+  Unverified with real Google: whether `fields=id,name,modifiedTime` on the resumable upload returns `modifiedTime`
+  (if not, every sync after an upload reads the copy once more, harmless) and `DELETE files/<id>` in appDataFolder.
 - **D-069 (`c8f6d07`): levels move by check-ins, the owner's model** ("on first use the app asks the user's fitness
   level and starts at about the right level; when the app thinks it is time to raise the intensity it asks first …
   No editing of counts or times on the day: all fixed. Each ask also offers a lower intensity … after lowering, the
@@ -101,15 +126,15 @@
   staying on whenever the app is open (D-050), background catch-up, **Google Drive** (sign in from the installed app:
   does Google's popup open and come back in home-screen mode; a change syncs within a minute and "Last sync" moves;
   after an hour, opening the app and tapping anything renews the sign-in with no other step, a window may flash and
-  close; restore on a second device or after Delete all data; D-054, D-055), layout, and
+  close; on a second device or after Delete all data, signing in brings in everything even after a plan was chosen
+  there first; a session done on one device shows on the other after its next sync; two different plans with progress
+  show the choice dialog, REPLACE asked when the replaced side holds more; D-054, D-055, D-071), layout, and
   **the new screens** (badges shine and a tap opens the badge's card, closed by ✕; a name plays its video in the app;
   the tab bar stays still when tabs are tapped; the five start questions; the check-ins on a summary; D-057 to D-069),
   and **Glass** (smooth scrolling and player with the drifting backdrop, no warm phone, Reduce Transparency gives solid
   panels; D-049). Then **other platforms** (D-047): Android Chrome, desktop Chrome or Edge. **When the owner reports
   results, write them into `docs/3-implementation.md` under Phase 8** (its done criterion) and fix what fails. The
   calendar-file, location and storage rows went with D-053, the backup-file row with D-055.
-- **A known limit of the sync, not asked about:** a plain sync only uploads this device's file; another device's
-  changes come in only when this device signs in (first sign-in restore). Told the owner 2026-11-23.
 - **Plan gaps still encoded by their closest reading (D-038):** Thursday's squat jumps counted as about 3 min; no data home yet for the ramp-week effort notes,
   §9 stages to 99 (except its bone-density rationale), §13 pain rules and §14 adaptations.
 - **The domain steps are done** (D-035): Pages with source "GitHub Actions", custom domain `tortoise.doctornova.net`,
@@ -121,8 +146,8 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 246 Vitest tests in 28 files and 16 e2e tests on `c8f6d07` (local); CI green last on `2c46e68` (run
-  45287012727).
+  Last green: 261 Vitest tests in 29 files and 16 e2e tests on `5d0bb73` (local); CI green last on `f2f0848` (run
+  46005563267).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
   `tests/unit/dates.test.ts` (every day of 1900–2100) timed out once at 5.5 s on 2026-11-23 under load and passed on
@@ -155,7 +180,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-071**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-072**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -255,16 +280,19 @@
   stays when signed in, "It cannot be undone." when not). Gone: dumbbell weight, Daylight, Runs, Display, Reminders,
   Storage (D-053), the Backup file card with export, share sheet, import, preview and Replace (D-055); old records drop
   those fields, and the settings record's `backup` field, when read (zod strips unknown keys).
-- **Google Drive sync (D-054, D-055), the only backup:** `src/lib/sync/google.ts` (GIS token model, scope
+- **Google Drive sync (D-054, D-055, D-071), the only backup:** `src/lib/sync/google.ts` (GIS token model, scope
   `drive.appdata` + email, session in localStorage `tortoise.google`; `silentToken()` hidden-frame renew, `preloadGis()`
-  once signed in), `public/oauth-silent.{html,js}` (the frame's landing page), `drive.ts` (list, read, resumable write
-  in `appDataFolder`), `sync.ts` (one `device-<id>.json` per device in the backup format; `ensureToken()` → silent
-  frame → `armNextTap()` on `click`/`keydown`; `autoSync()` uploads only when dirty; a device's first sync after
-  sign-in restores by merge; an empty phone never uploads; status `offline` is no error),
-  `src/components/settings/DriveCard.tsx`; `startAutoSync()` in `src/main.tsx`; `onChange()` in `src/lib/live.ts`;
-  `mergeBackup()` in `repo.ts` (`importBackup` is merge-only). Tests: `tests/db/drive-sync.test.ts` (fake Drive,
-  `resetSyncForTests(drive)`), the silent page under the service worker in `tests/e2e/smoke.spec.ts`. Details:
-  `ai/memory/drive-backup.md`.
+  once signed in), `public/oauth-silent.{html,js}` (the frame's landing page), `drive.ts` (list all, read, resumable
+  write returning id + modifiedTime, delete, in `appDataFolder`), `sync.ts` (one shared `tortoise.json` with a
+  `generation`; cache `tortoise.drive` = fileId, seen, generation, lastSync, dirty; `exchange()` both ways; `firstSync()`
+  ranking; `resolveConflict()`; `ensureToken()` → silent frame → `armNextTap()` on `click`/`keydown`; an empty phone
+  never uploads; status `offline` is no error, `conflict` waits for the dialog), `src/components/SyncConflictDialog.tsx`
+  (`ConflictDialog`, `REPLACE_WORD`), `src/components/settings/DriveCard.tsx`; `startAutoSync()` in `src/main.tsx`;
+  `onChange((fromSync) => …)` in `src/lib/live.ts` (writes from Drive notify with `fromSync`, not counted as changes);
+  `backup.ts` `mergeStores`, `aheadOf`, `summarize`, `losesMore`, `replaceAll`; `repo.ts` `mergeBackup`,
+  `replaceWithBackup`. Tests: `tests/db/drive-sync.test.ts` (fake Drive with moving modified times,
+  `resetSyncForTests(drive)`, `noteChangeForTests()`), `tests/component/sync-conflict.test.tsx`, the silent page under
+  the service worker in `tests/e2e/smoke.spec.ts`. Details: `ai/memory/drive-backup.md`.
 
 ## Decisions to remember (details in docs/decisions.md)
 
@@ -315,7 +343,8 @@
   no ring), D-058 (owner: badges; the style a builder's ruling), D-059 (builder: the still tab bar), D-065 (builder:
   version from git), D-066 (owner: a badge's card with ✕, no hover tooltips, one-line labels), D-067 (owner: no fitness
   test; ability badges by ladder level), D-068 (owner: docs, code and badges agree before every commit), D-069 (owner:
-  levels move by check-ins after a session; five start questions), D-070 (owner: badges have real names).
+  levels move by check-ins after a session; five start questions), D-070 (owner: badges have real names), D-071 (owner: the Drive sync carries every record
+  both ways; a clash of plans asks; the shared file, generation and ranking are builder's rulings).
 
 ## Where things are
 
@@ -345,7 +374,7 @@
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, `12b73a1` D-070 (badge names), and the source counts in `docs/sources.md` (Part A 21, Part B 17).
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, `12b73a1` D-070 (badge names), `5d0bb73` D-071 (sync of all state, 2026-11-27), and the source counts in `docs/sources.md` (Part A 21, Part B 17).
 
 ## Background
 
