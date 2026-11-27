@@ -41,7 +41,7 @@ const rows: Row[] = [
   { id: 'dead-bug', name: 'Dead bug', area: 'strength', unit: 'reps' },
   { id: 'hollow-hold', name: 'Hollow body hold', area: 'strength', unit: 'seconds' },
   // Jumps, rope, running and walking
-  { id: 'squat-jump', name: 'Squat jump', area: 'cardio', unit: 'reps' },
+  { id: 'jump-and-reach', name: 'Jump and reach', area: 'cardio', unit: 'reps' },
   { id: 'rope-basics', name: 'Jump rope', area: 'cardio', unit: 'minutes' },
   { id: 'run', name: 'Run', area: 'cardio', unit: 'minutes' },
   { id: 'walk', name: 'Walk', area: 'cardio', unit: 'minutes' },

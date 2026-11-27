@@ -50,9 +50,9 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 | Storage | IndexedDB on the device. WebKit counts days of use separately for home-screen web apps, so daily use keeps the data. The home-screen app keeps its own data, apart from Safari's (verify) | Ask for persistent storage; the Google Drive sync ([§10](#10-backup-and-restore)); the first run asks to install before starting ([§3.8](#38-first-run)) |
 | The address is the data | Data belongs to the exact origin `https://tortoise.doctornova.net`; another address starts empty | The address was chosen once and never changes (decision D-010) |
 | Sound | Web Audio starts only after a tap; the ring/silent switch may mute it (verify) | Unlock audio on the session's Start tap; every cue is also shown on screen |
-| Speech | Safari's speech synthesis uses the phone's own voices and needs no network (verify in the home-screen app) | Spoken cues are optional; tones and text always carry the cue |
+| Speech | Safari's speech synthesis uses the phone's own voices and needs no network (verify in the home-screen app) | Spoken cues are on until switched off (D-072); tones and text always carry the cue |
 | Vibration | Safari has no Vibration API | Visual and sound cues only |
-| Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on whenever the app is open (D-050); if that fails, a notice in the player to set Auto-Lock |
+| Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on whenever the app is open (D-050): the wake lock, asked for again on every tap until held (Safari grants it only inside a tap), plus a tiny silent video looped in the app as a fallback, always on an iPhone or iPad (D-072). No notice and no Auto-Lock advice |
 | Background | iOS suspends a web app in the background; timers stop firing | Timers run from timestamps and catch up on return; cues need the screen on |
 | Updates | An installed web app gets a new version only when its service worker updates | An update banner; Settings shows the app and plan versions |
 | Health data | A web app cannot read Apple Health | Steps and run distance are typed in (optional) |
@@ -112,10 +112,14 @@ open full screen above the tabs.
   |---|---|
   | Reps | Tap each set at the plan's dose; the rest timer starts on its own; nothing to count or weigh (D-069) |
   | Hold | A countdown per set, with "per side" handled automatically |
-  | Interval | Work/rest cycles with a 3-2-1 countdown, start and end tones, and an optional spoken cue ("Easy, 60 seconds") |
+  | Interval | Work/rest cycles with start and end tones and a spoken cue ("Go. Run, 60 seconds", "Stop. Walk, 2 minutes") |
   | Timed | A run or walk: elapsed time; run–walk steps cue each switch |
   | Stretch | A hold timer per position and side |
 
+- **Every countdown is read out (D-072):** its start, its last three seconds ("Three, Two, One", with a tick) and its
+  end ("Go", "Stop", "Done"), while spoken cues are on (the default).
+- **Every rest can be skipped (D-072):** "Skip the rest" between sets, and in a timeline a Skip button on every rest,
+  walk, side change and lead-in.
 - **Fixed doses (D-069):** no questions after an exercise and no rep or weight steppers; the session is the plan's.
 - **No lock layer (D-050).** The screen stays on for as long as the app is open, and only the phone's side button locks
   it. There is no pocket lock: on an outdoor run a stray touch in a pocket can tap a button, which the owner accepted.
@@ -324,7 +328,8 @@ and the Today reminder went with D-055.
   app's own `oauth-silent.html` and posts Google's answer back (the `state` is checked); the service worker serves that
   page as itself, never as the app. Where the browser refuses the frame (Safari blocks Google's cookies in it), the
   user's next tap anywhere in the app renews it: a tap may open Google's window, which closes by itself once consent
-  was given. The sync card's own buttons are not that tap.
+  was given. That tap is armed only while a change waits to upload, and opens the window at most once per opening of
+  the app (D-074). The sync card's own buttons are not that tap.
 - **One shared file (D-071):** `tortoise.json` in the hidden folder, which every device signed in to the account syncs:
   a whole backup in one versioned JSON format (a format tag and version, the export time, the app and schema versions,
   a `generation`, every store). It carries everything: the plan, every day done or missed, logs, levels with their

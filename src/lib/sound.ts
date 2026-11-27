@@ -74,14 +74,15 @@ const SPOKEN_KEY = 'tortoise.spokenCues'
 /**
  * The spoken-cue switch (D-040). Since D-071 it lives in the settings record, so the Drive sync carries it to every
  * device; localStorage keeps this phone's last value so the player can show it before the record is read, and gives
- * an older phone's setting until the switch is next touched.
+ * an older phone's setting until the switch is next touched. On until it is switched off (D-072: the owner wants every
+ * countdown read out).
  */
 export function spokenCuesOn(stored?: boolean): boolean {
   if (stored !== undefined) return stored
   try {
-    return localStorage.getItem(SPOKEN_KEY) === '1'
+    return localStorage.getItem(SPOKEN_KEY) !== '0'
   } catch {
-    return false
+    return true
   }
 }
 

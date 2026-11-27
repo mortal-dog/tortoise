@@ -22,8 +22,9 @@
 // WHEN IT RUNS, BY ITSELF (the owner: "make sure google drive sync is automatic"): 20 s after the last change, when
 // the app goes to the background, when it opens or comes back on screen, when the connection returns, and every five
 // minutes while on screen. "Sync now" runs it at any time. The hour-long Google token is renewed in a hidden frame,
-// or on the user's next tap anywhere in the app (`google.ts`, `armNextTap` below). With no network the change stays
-// to upload, and the `online` event sends it.
+// or on the user's next tap anywhere in the app (`google.ts`, `armNextTap` below), at most once per opening of the app
+// and only while a change waits to upload (D-074). With no network the change stays to upload, and the `online` event
+// sends it.
 //
 // SAFETY. A phone with no plan and no days never uploads, so a wiped phone cannot overwrite its Drive copy with
 // nothing; "Delete all data" also forgets the sign-in on this phone. The Drive file stays until the user removes it
@@ -394,20 +395,35 @@ async function ensureToken(fromTap: boolean): Promise<string | null> {
 let armed: ((event: Event) => void) | null = null
 /** A popup the user closed or Google refused: no other popup on an ordinary tap in this visit. */
 let tapRefused = false
+/** The armed tap has opened its popup in this opening of the app: no second one until the app is opened again. */
+let tapUsed = false
+
+/**
+ * Something of this device's waits for Drive: a change since the last upload, or the first sync after signing in. Only
+ * then may an ordinary tap open Google's popup (the owner, 2026-11-27: "at most one flash per app opening, and only
+ * when there are changes waiting to sync").
+ */
+function waiting(): boolean {
+  const cache = readCache()
+  return !!cache.dirty || cache.generation === undefined
+}
 
 /**
  * The fallback (D-055): when the token is gone and the hidden frame cannot replace it, the user's next tap anywhere in
  * the app does. A tap may open a popup, and with consent already given Google's popup closes by itself. `signIn()` is
  * called straight from the gesture, with no `await` before it, because Safari allows a popup only in the same turn as
  * the tap. It listens for `click`, not `pointerdown`: a touch's pointerdown does not count as a user activation (only
- * its pointerup, touchend and click do), so a popup opened from it is blocked on a phone. Armed once at a time.
+ * its pointerup, touchend and click do), so a popup opened from it is blocked on a phone. Armed once at a time, at
+ * most once per opening of the app (a launch, or a return from the background), and only while something waits to
+ * upload (`waiting`): with nothing to send, a run-out sign-in waits for the next change, "Sync now" or the next opening.
  */
 function armNextTap(): void {
-  if (armed || tapRefused || typeof window === 'undefined') return
+  if (armed || tapRefused || tapUsed || !waiting() || typeof window === 'undefined') return
   const onGesture = (event: Event) => {
     const target = event.target
     if (target instanceof Element && target.closest(`.${SYNC_CONTROLS}`)) return
     disarm()
+    tapUsed = true
     // Signed out since it was armed: a tap is no reason to sign in.
     if (!readSession()?.email) return
     setState({ status: 'syncing', error: undefined })
@@ -533,7 +549,11 @@ export function startAutoSync(): void {
     quietTimer = window.setTimeout(() => void autoSync(), QUIET_MS)
   })
   void autoSync()
-  document.addEventListener('visibilitychange', () => void autoSync())
+  document.addEventListener('visibilitychange', () => {
+    // Back on screen is a new opening of the app: the armed tap may open its popup once more.
+    if (document.visibilityState === 'visible') tapUsed = false
+    void autoSync()
+  })
   window.addEventListener('online', () => void autoSync())
   window.setInterval(() => {
     if (document.visibilityState === 'visible') void autoSync()
@@ -549,6 +569,7 @@ export function resetSyncForTests(drive: Drive = DRIVE): void {
   pendingChoice = undefined
   if (typeof window !== 'undefined') disarm()
   tapRefused = false
+  tapUsed = false
   changes = 0
 }
 

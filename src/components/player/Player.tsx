@@ -2,9 +2,9 @@
 // the check-ins that are due (D-069), saves the logs and marks the card done.
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowDown, ArrowUp, Equal, Volume2, VolumeX, X } from 'lucide-react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ExerciseLink } from '@/components/ExerciseLink'
-import { Banner, Button, Card } from '@/components/ui'
+import { Button, Card } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import type { LocalDate } from '@/lib/dates'
 import { clockText, coachingText, type Unit } from '@/lib/player'
@@ -12,7 +12,6 @@ import { type Answer, type CheckIn, levelAfter } from '@/lib/progression'
 import type { Variant } from '@/lib/records'
 import { getSettings, type PlayedSession, type Slot, savePlayedSession, saveSettings } from '@/lib/repo'
 import { canSpeak, setSpokenCues, speak, spokenCuesOn, unlockAudio } from '@/lib/sound'
-import { WakeLockContext } from '@/lib/wake-lock'
 import { type UnitResult, UnitRunner } from './runners'
 
 interface Done {
@@ -54,7 +53,6 @@ export function Player(props: PlayerProps) {
     }
   }, [])
   const finished = startedAt !== null && index >= units.length
-  const wake = useContext(WakeLockContext)
   const unit = units[index]
 
   // Spoken coaching (Phase 9): with spoken cues on, each step is announced with its target.
@@ -108,14 +106,6 @@ export function Player(props: PlayerProps) {
       </header>
 
       {startedAt !== null && !finished && <Progress units={units} index={index} />}
-
-      {(wake === 'unsupported' || wake === 'refused') && startedAt !== null && !finished && (
-        <div className="mt-3">
-          <Banner tone="shell">
-            The screen may turn off by itself. Set Auto-Lock to Never (Settings, Display &amp; Brightness).
-          </Banner>
-        </div>
-      )}
 
       <div className="glass mt-4 flex-1 rounded-3xl border border-edge p-4">
         {startedAt === null ? (

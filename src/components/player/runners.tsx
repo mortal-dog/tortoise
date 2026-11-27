@@ -27,6 +27,52 @@ export interface SetResult {
 /** What a unit hands back: the sets done for each of its exercises (one, or two for a pair). */
 export type UnitResult = SetResult[][]
 
+/** The last seconds of every countdown are ticked and, with spoken cues on, read out (D-072). */
+const LAST_S = 3
+const NUMBER_WORDS = ['', 'One', 'Two', 'Three']
+
+/** One second of a countdown's end: a tick, and its number spoken. */
+function countdownCue(secs: number, spoken: boolean): void {
+  playTone('tick')
+  if (spoken) speak(NUMBER_WORDS[secs] ?? String(secs))
+}
+
+/** "30 seconds", "1 minute", "2 minutes". */
+export function durationWords(seconds: number): string {
+  return seconds % 60 === 0 ? `${seconds / 60} minute${seconds === 60 ? '' : 's'}` : `${seconds} seconds`
+}
+
+/**
+ * A rest between sets, spoken from start to end (D-072): "Rest, 60 seconds" when it starts, "Three, Two, One" at
+ * its end, then "Go". `restLeft` is null while no rest runs.
+ */
+function useRestCues(restLeft: number | null, spoken: boolean, onEnd: () => void): void {
+  const said = useRef(-1)
+  useEffect(() => {
+    if (restLeft === null) {
+      said.current = -1
+      return
+    }
+    if (restLeft <= 0) {
+      playTone('start')
+      if (spoken) speak('Go')
+      onEnd()
+      return
+    }
+    const secs = Math.ceil(restLeft / 1000)
+    if (secs <= LAST_S && secs !== said.current) {
+      said.current = secs
+      countdownCue(secs, spoken)
+    }
+  })
+}
+
+/** Starts a rest: its clock, and the spoken start. */
+function restStart(restS: number, spoken: boolean): Clock {
+  if (spoken) speak(`Rest, ${durationWords(restS)}`)
+  return startClock(Date.now())
+}
+
 interface RunnerProps {
   unit: Unit
   spoken: boolean
@@ -66,14 +112,7 @@ function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
   const restLeft = rest ? unit.restS * 1000 - elapsedMs(rest, now) : 0
   const ex = unit.exercises[active] ?? unit.exercises[0]
   const setNo = Math.min(unit.sets, (done[active]?.length ?? 0) + 1)
-
-  useEffect(() => {
-    if (rest && restLeft <= 0) {
-      playTone('start')
-      if (spoken) speak('Go')
-      setRest(null)
-    }
-  }, [rest, restLeft, spoken])
+  useRestCues(rest ? restLeft : null, spoken, () => setRest(null))
 
   if (!ex) return null
 
@@ -93,7 +132,7 @@ function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
       return
     }
     setActive(next.findIndex((s) => s.length < unit.sets))
-    if (unit.restS > 0) setRest(startClock(Date.now()))
+    if (unit.restS > 0) setRest(restStart(unit.restS, spoken))
   }
 
   if (rest) {
@@ -102,7 +141,14 @@ function RepsRunner({ unit, spoken, onComplete }: RunnerProps) {
         <p className="text-center font-semibold text-sky uppercase">Rest</p>
         <BigTime ms={restLeft} label="Rest left" />
         <p className="text-center text-sm">Next: {ex.title}</p>
-        <Button variant="quiet" className="w-full" onClick={() => setRest(null)}>
+        <Button
+          variant="quiet"
+          className="w-full"
+          onClick={() => {
+            if (spoken) speak('Go')
+            setRest(null)
+          }}
+        >
           <SkipForward aria-hidden className="size-4" /> Skip the rest
         </Button>
       </div>
@@ -172,16 +218,22 @@ function TimelineRunner({ unit, spoken, onComplete, segments }: RunnerProps & { 
       c.tick = -1
       if (pos.segment.kind === 'work') playTone('start')
       else if (prev?.kind === 'work') playTone('end')
-      if (spoken && pos.segment.kind !== 'ready') speak(cueText(pos.segment))
+      const text = cueText(pos.segment, prev)
+      if (spoken && text) speak(text)
     }
-    // 3-2-1 before a work segment.
-    const next = segments[pos.index + 1]
+    // The last seconds of every segment, read out (D-072).
     const secs = Math.ceil(pos.remainingMs / 1000)
-    if (next?.kind === 'work' && secs <= 3 && secs >= 1 && secs !== c.tick) {
+    if (secs <= LAST_S && secs >= 1 && secs !== c.tick) {
       c.tick = secs
-      playTone('tick')
+      countdownCue(secs, spoken)
     }
   })
+
+  /** Jumps to the next segment: every rest, side change and lead-in can be skipped (D-072). */
+  const skipSegment = () => {
+    if (!clock || !pos) return
+    setClock({ ...clock, startedAt: clock.startedAt - pos.remainingMs })
+  }
 
   if (!clock || !pos) {
     return (
@@ -212,6 +264,12 @@ function TimelineRunner({ unit, spoken, onComplete, segments }: RunnerProps & { 
       <p className="text-center text-sm" data-testid="segment-count">
         {unit.kind === 'interval' ? 'Round' : 'Set'} {Math.max(1, workNo)} of {works}
       </p>
+      {pos.segment.kind !== 'work' && (
+        <Button variant="quiet" className="w-full" onClick={skipSegment}>
+          <SkipForward aria-hidden className="size-4" />
+          {pos.segment.kind === 'rest' ? `Skip the ${pos.segment.label.toLowerCase()}` : 'Skip'}
+        </Button>
+      )}
       <div className="flex gap-2">
         <Button
           variant="quiet"
@@ -236,10 +294,15 @@ function TimelineRunner({ unit, spoken, onComplete, segments }: RunnerProps & { 
   )
 }
 
-function cueText(s: Segment): string {
-  const secs =
-    s.seconds % 60 === 0 ? `${s.seconds / 60} minute${s.seconds === 60 ? '' : 's'}` : `${s.seconds} seconds`
-  return `${s.label}, ${secs}`
+/**
+ * What a segment's start says (D-072): "Go. Hold, 30 seconds"; after a work segment "Stop. Rest, 30 seconds" or
+ * "Stop. Change sides". The lead-in says nothing: its three seconds are counted out.
+ */
+export function cueText(s: Segment, prev?: Segment): string {
+  if (s.kind === 'ready') return ''
+  const stop = prev?.kind === 'work' ? 'Stop. ' : ''
+  if (s.kind === 'switch') return `${stop}${s.label}`
+  return `${s.kind === 'work' ? 'Go. ' : stop}${s.label}, ${durationWords(s.seconds)}`
 }
 
 function segmentsSummary(segments: Segment[]): string {
@@ -270,14 +333,7 @@ function StopwatchRunner({ unit, spoken, onComplete }: RunnerProps) {
   const [rest, setRest] = useState<Clock | null>(null)
   const now = useNow(clock !== null || rest !== null)
   const restLeft = rest ? unit.restS * 1000 - elapsedMs(rest, now) : 0
-
-  useEffect(() => {
-    if (rest && restLeft <= 0) {
-      playTone('start')
-      if (spoken) speak('Go')
-      setRest(null)
-    }
-  }, [rest, restLeft, spoken])
+  useRestCues(rest ? restLeft : null, spoken, () => setRest(null))
 
   const stop = () => {
     if (!clock) return
@@ -285,8 +341,11 @@ function StopwatchRunner({ unit, spoken, onComplete }: RunnerProps) {
     setSets(next)
     setClock(null)
     playTone('end')
-    if (next.length >= unit.sets) onComplete([next])
-    else if (unit.restS > 0) setRest(startClock(Date.now()))
+    if (next.length >= unit.sets) {
+      if (spoken) speak('Done')
+      onComplete([next])
+    } else if (unit.restS > 0) setRest(restStart(unit.restS, spoken))
+    else if (spoken) speak('Stop')
   }
 
   return (
@@ -298,7 +357,14 @@ function StopwatchRunner({ unit, spoken, onComplete }: RunnerProps) {
         <>
           <p className="text-center font-semibold text-sky uppercase">Rest</p>
           <BigTime ms={restLeft} label="Rest left" />
-          <Button variant="quiet" className="w-full" onClick={() => setRest(null)}>
+          <Button
+            variant="quiet"
+            className="w-full"
+            onClick={() => {
+              if (spoken) speak('Go')
+              setRest(null)
+            }}
+          >
             <SkipForward aria-hidden className="size-4" /> Skip the rest
           </Button>
         </>
@@ -314,6 +380,7 @@ function StopwatchRunner({ unit, spoken, onComplete }: RunnerProps) {
               className="min-h-14 w-full text-lg"
               onClick={() => {
                 playTone('start')
+                if (spoken) speak('Go')
                 setClock(startClock(Date.now()))
               }}
             >
@@ -370,6 +437,7 @@ function TimedRunner({ unit, spoken, onComplete }: RunnerProps) {
             className="min-h-14 flex-1 text-lg"
             onClick={() => {
               playTone('start')
+              if (spoken) speak(unit.minutes ? `Go. ${unit.minutes.min} minutes` : 'Go')
               setClock(startClock(Date.now()))
             }}
           >

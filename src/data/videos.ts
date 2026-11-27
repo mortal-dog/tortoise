@@ -8,8 +8,8 @@ import type { VideoLink } from './schema'
 
 const CHECKED = '2026-11-23'
 
-function yt(id: string, title: string, channel: string): VideoLink {
-  return { url: `https://www.youtube.com/watch?v=${id}`, title, channel, checked: CHECKED }
+function yt(id: string, title: string, channel: string, checked = CHECKED): VideoLink {
+  return { url: `https://www.youtube.com/watch?v=${id}`, title, channel, checked }
 }
 
 /** Exercise id → its video. */
@@ -91,10 +91,12 @@ export const videos: Readonly<Record<string, VideoLink>> = {
     'Hollow Body Hold Progression - Gymnastic Core Stability Exercise',
     'GMB Fitness (Praxis)',
   ),
-  'squat-jump': yt(
-    'tZSYZdtbONc',
-    'How to do a Squat Jump  | Proper Form & Technique | NASM',
-    'National Academy of Sports Medicine (NASM)',
+  // D-073: replaced the squat jump; frames checked 2026-11-27 (front and side views, arms reaching overhead).
+  'jump-and-reach': yt(
+    'iq-YN1MFkfo',
+    'Reach Jumps - HASfit Plyometric Exercises - Jumping Exercises - Plyometric Training',
+    'HASfit',
+    '2026-11-27',
   ),
   'worlds-greatest-stretch': yt(
     '-CiWQ2IvY34',

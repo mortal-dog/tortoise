@@ -571,6 +571,51 @@ describe('the Google Drive sign-in', () => {
     controls.remove()
   })
 
+  it('a tap opens Google only while a change waits, and at most once per opening of the app (D-074)', async () => {
+    await startPlan('2026-11-23')
+    const drive = fakeDrive()
+    resetSyncForTests(drive)
+    signedIn()
+    await syncNow()
+    expect(drive.writes).toBe(1)
+
+    // The sign-in runs out with nothing to upload: no tap is armed.
+    signedIn(Date.now() - 1000)
+    const quiet = syncNow()
+    await answerFrame({ error: 'login_required' })
+    await quiet
+    expect(driveState().status).toBe('needs-tap')
+    const asks = fakeGoogle()
+    document.body.click()
+    await new Promise((r) => setTimeout(r, 50))
+    expect(asks).toHaveLength(0)
+    expect(driveState().status).toBe('needs-tap')
+
+    // A change waits: the next tap opens the popup once.
+    noteChangeForTests()
+    resetGoogleForTests()
+    const changed = syncNow()
+    await answerFrame({ error: 'login_required' })
+    await changed
+    const asks2 = fakeGoogle()
+    document.body.click()
+    await vi.waitFor(() => expect(driveState().status).toBe('ok'))
+    expect(asks2).toHaveLength(1)
+
+    // Run out again with another change, in the same opening: no second popup.
+    signedIn(Date.now() - 1000)
+    noteChangeForTests()
+    resetGoogleForTests()
+    const again = syncNow()
+    await answerFrame({ error: 'login_required' })
+    await again
+    const asks3 = fakeGoogle()
+    document.body.click()
+    await new Promise((r) => setTimeout(r, 50))
+    expect(asks3).toHaveLength(0)
+    expect(driveState().status).toBe('needs-tap')
+  })
+
   it('a sign-out cancels the waiting tap', async () => {
     await startPlan('2026-11-23')
     resetSyncForTests(fakeDrive())

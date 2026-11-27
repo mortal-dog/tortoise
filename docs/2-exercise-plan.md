@@ -50,7 +50,7 @@ ramp; there is no fitness test (D-067).
 | At 99, and on the way | What it needs | Where it lives in the week |
 |---|---|---|
 | **A straight back** | Strong back extensors, a mobile upper back, strong bones (a crushed spine bone tips the back forward) | Morning block every day; loaded back extension Monday; bone loading from lifts, jumps, rope and running |
-| **Jump** | Leg power, springy tendons, strong bones, confident landings | Squat jumps Monday and Thursday; rope in the strength and interval warm-ups |
+| **Jump** | Leg power, springy tendons, strong bones, confident landings | Jump and reach Monday and Thursday; rope in the strength and interval warm-ups |
 | **Run** | An aerobic base and peak aerobic power; feet, calves and tendons used to running | Easy run Tuesday, intervals Thursday, long run Saturday; calf work |
 | **Get up off the floor, carry, climb stairs, not fall** | Leg strength, grip, balance | Strength A–C, carries, daily balance |
 | **Handstand** | Wrists that carry body weight, shoulder strength, full overhead range, a hollow body line, the balance skill | 6 minutes every morning; pike push-ups, hollow holds |
@@ -155,7 +155,7 @@ A heart-rate monitor is optional; the talk test works everywhere.
 | **Mon** | Morning block | **Strength A:** jumps, squat, push-up, row, back extension, core, calves | Front (10 min) | ~60 min |
 | **Tue** | Morning block | **Easy run** 30–40 min outdoors (a 45–60 min brisk walk indoors when needed) | Side (10 min) | ~70 min |
 | **Wed** | Morning block | **Strength B:** bridge, pike push-up, squat, row, carry | Front (10 min) | ~60 min |
-| **Thu** | Morning block | **Intervals:** squat jumps, then rope intervals (outdoor running in good weather) | Side (10 min) | ~55–65 min |
+| **Thu** | Morning block | **Intervals:** jump and reach, then rope intervals (outdoor running in good weather) | Side (10 min) | ~55–65 min |
 | **Fri** | Morning block | **Strength C:** wide goblet squat, push-up, row, side plank | Both, short form (10 min) | ~60 min |
 | **Sat** | Morning block | **Long outdoor:** long easy run 45–90 min (a brisk walk indoors, at most 60 min), then rows and farmer holds at home | Both, short form (10 min) | ~1.5–2 h |
 | **Sun** | Morning block | **Light:** an easy walk, then the flexibility session (30 min) | In the session | ~45 min + walk |
@@ -210,7 +210,7 @@ and reps; where it has a ladder, your level's own numbers are in §7.
 
 | # | Exercise (ladder) | Sets × reps | Rest | Why |
 |---|---|---|---|---|
-| A0 | Jumps (§7.10): squat jump, stick the landing | 3 × 5 | 60 s | Done first, while fresh. Power fades earliest [reid2012]; landings load bone [ros2022] |
+| A0 | Jumps (§7.10): jump and reach, stick the landing | 3 × 5 | 60 s | Done first, while fresh. Power fades earliest [reid2012]; landings load bone [ros2022] |
 | A1 | Squat (§7.1): goblet squat, then split squat, then Bulgarian split squat | 3 × 8–12 | after A2 | Legs carry everything. Putting the whole body on one leg makes a fixed dumbbell heavy enough |
 | A2 | Push-up (§7.3): incline, then floor, then feet on a chair | 3 × 6–15 | 75 s | In active men, those who could do more than 40 push-ups had far fewer heart events over 10 years than those who could do fewer than 10 [yang2019] |
 | B1 | Row (§7.5): one-arm dumbbell row, hand and knee on a chair | 3 × 8–12 per side | after B2 | The upper-back pull that holds the shoulders back |
@@ -255,7 +255,7 @@ About 30 min after the warm-up, in pairs as on Monday.
 ### 6.7 Intervals — Thursday
 
 - **Warm-up:** 8 min, made of 4 min easy rope, the warm-up drills (§6.2) and 2 × 20 s of faster rope.
-- **Plyometrics, while fresh:** squat jumps 2 × 5, landing softly on both feet.
+- **Plyometrics, while fresh:** jump and reach 2 × 5, landing softly on both feet.
 - **The main set, by block (§8):**
 
   | Block | Main set |
@@ -468,10 +468,12 @@ shins and strains the calves, and a criss-cross trips (D-056).
 
 | Level | Drill | Pass at |
 |---|---|---|
-| 1 | Squat jump, stick the landing | 3 × 5 |
-| 2 | Squat jump, stick the landing | 4 × 6 |
-| 3 | Squat jumps in a row, soft and quiet landings | 4 × 5 |
+| 1 | Jump and reach, stick the landing | 3 × 5 |
+| 2 | Jump and reach, stick the landing | 4 × 6 |
+| 3 | Jump and reach in a row, soft and quiet landings | 4 × 5 |
 
+- Jump and reach: a normal vertical jump, a small natural knee dip and an arm swing, reaching up at the top. It
+  replaced the squat jump on the owner's ask (D-073).
 - Jumps are done fresh, at the numbers shown, from both feet and landing on both feet. A level is passed when every
   landing in a session is soft and controlled.
 - Jumping far, on one leg or sideways is left out (D-056): those landings are where knees and ankles get hurt.
@@ -738,7 +740,7 @@ channel as YouTube gives them; the list with its check date is in `src/data/vide
 
 | Exercise | Video |
 |---|---|
-| Squat jump | [How to do a Squat Jump  / Proper Form & Technique / NASM (National Academy of Sports Medicine (NASM))](https://www.youtube.com/watch?v=tZSYZdtbONc) |
+| Jump and reach | [Reach Jumps - HASfit Plyometric Exercises - Jumping Exercises - Plyometric Training (HASfit)](https://www.youtube.com/watch?v=iq-YN1MFkfo) |
 | Jump rope | None: everyone knows it |
 | Run | None: everyone knows it |
 | Walk | None: everyone knows it |

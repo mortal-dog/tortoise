@@ -40,7 +40,7 @@ const COMPOSED: Record<string, string> = {
     'the §6.6 bullet without its dose',
   'Indoor version (rain, ice, storm, dangerous footing): walk briskly in circles around a room. At most 60 min; the long run waits for the next safe Saturday (our rule).':
     'the §6.8 bullet without its dose and its order',
-  'Plyometrics, while fresh: squat jumps, landing softly on both feet': 'the §6.7 bullet without its dose',
+  'Plyometrics, while fresh: jump and reach, landing softly on both feet': 'the §6.7 bullet without its dose',
   'Indoors on the rope, using the alternate-foot running step and high knees. Outdoors in good weather, run the same intervals, uphill if possible. The easy parts are an easy bounce or a walk.':
     'capitalised',
   'Wednesday A2; hollow holds on Monday support it.': 'the parenthesis after "Strength track"',

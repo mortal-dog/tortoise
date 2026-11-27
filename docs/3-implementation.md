@@ -204,8 +204,9 @@ Phase 4; the Progress, Library and Settings tabs hold only what Phase 3 needs un
   stages applied.
 - Step kinds: reps, hold, interval, timed, stretch.
 - Timers based on timestamps, so they catch up after the app returns from the background.
-- Sound: audio unlocked on Start; tones; optional spoken cues.
-- Screen: the wake lock, held by the root layout whenever the app is open (D-050).
+- Sound: audio unlocked on Start; tones; spoken cues, on until switched off, reading every countdown (D-072).
+- Screen: the wake lock, held by the root layout whenever the app is open (D-050), with a looping silent video as a
+  fallback (D-072).
 - *D-069 replaced the feedback after each exercise with check-ins on the summary.*
 - Feedback after each exercise, the end summary, and saving the logs.
 
@@ -340,10 +341,10 @@ a picker.
 | Install | Add to Home Screen; opens full screen; the home-screen app starts with its own empty data |
 | Offline | Works in airplane mode after the first load |
 | Update | A new deploy shows the update banner, and the new version loads after a tap |
-| Sound | Cues with the ring/silent switch on and off; a spoken cue |
-| Screen | Wake lock in the installed app, held whenever the app is open |
+| Sound | Cues with the ring/silent switch on and off; every countdown read out at its start, last three seconds and end (D-072); music from another app keeps playing |
+| Screen | In the installed app the screen never dims or locks while the app is open, after any first tap, and again after a return from the background; no notice about Auto-Lock anywhere (D-050, D-072) |
 | Background | Timers catch up after locking the phone mid-interval |
-| Google Drive | Sign in from the installed app (Google's window opens and returns); a change syncs within a minute and the card's last sync time moves; after an hour, opening the app and tapping anything renews the sign-in with no other step (a window may flash and close by itself), and the next change syncs; on a second device or after Delete all data, signing in brings in everything: plan, days, levels, badges, settings, even after a plan was chosen there first; a session done on one device shows on the other after its next sync (open it, or wait 5 min); two devices with different plans and progress show the choice dialog, and REPLACE is asked when the replaced side holds more (D-054, D-055, D-071) |
+| Google Drive | Sign in from the installed app (Google's window opens and returns); a change syncs within a minute and the card's last sync time moves; after an hour, with a change waiting, tapping anything renews the sign-in with no other step (a window may flash and close by itself, at most once per opening of the app, D-074), and with nothing waiting no window flashes; on a second device or after Delete all data, signing in brings in everything: plan, days, levels, badges, settings, even after a plan was chosen there first; a session done on one device shows on the other after its next sync (open it, or wait 5 min); two devices with different plans and progress show the choice dialog, and REPLACE is asked when the replaced side holds more (D-054, D-055, D-071) |
 | Layout | Safe areas, dark mode, larger text |
 | Glass | With the moving backdrop (D-048): scrolling and the player stay smooth, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 | Videos and badges | From the installed app: tapping an exercise's name plays its video inside the app, in the page, and "Open in YouTube" still works (D-060); a day page lists the exercises, past days marked done or not (D-057); earned badges shine and a tap tells how to earn a locked one (D-058); the tab bar stays still when tabs are tapped (D-059) |

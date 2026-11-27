@@ -6,7 +6,7 @@
 // `minutes` is the session's total as a range, warm-up included (design §7):
 // - strength days: the 5-min warm-up and about 30 min of work;
 // - Tuesday: 5 min of walking, 30–40 min of running and 3 min of walking;
-// - Thursday: the 8-min warm-up, about 3 min of squat jumps (our rule: the plan gives no time for them), the main set
+// - Thursday: the 8-min warm-up, about 3 min of jump-and-reach (our rule: the plan gives no time for them), the main set
 //   of the shortest stage (Block 2, 6 × 2 min = 12 min) to the longest (Block 4 on, 4 × 7 min = 28 min) and the 3-min
 //   cool-down;
 // - Saturday: 5 min of walking, the week table's 45–90 min run and 10 min of rows and farmer holds at home;
@@ -227,7 +227,7 @@ export const sessions: SessionInput[] = [
         reps: range(5),
         restS: 60,
         dose: '3 × 5',
-        note: 'Jumps (§7.10): squat jump, stick the landing',
+        note: 'Jumps (§7.10): jump and reach, stick the landing',
         why: 'Done first, while fresh. Power fades earliest [reid2012]; landings load bone [ros2022]',
         sources: ['reid2012', 'ros2022'],
       },
@@ -525,11 +525,11 @@ export const sessions: SessionInput[] = [
       {
         id: 'jumps',
         part: 'main',
-        exerciseId: 'squat-jump',
+        exerciseId: 'jump-and-reach',
         sets: 2,
         reps: range(5),
         dose: '2 × 5',
-        note: 'Plyometrics, while fresh: squat jumps, landing softly on both feet',
+        note: 'Plyometrics, while fresh: jump and reach, landing softly on both feet',
       },
       {
         id: 'main-set',
