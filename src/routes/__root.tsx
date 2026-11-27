@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, useRouterState } from '@tanstack/react-router'
 import { Backdrop } from '@/components/Backdrop'
+import { SyncConflictDialog } from '@/components/SyncConflictDialog'
 import { TabBar } from '@/components/TabBar'
 import { UpdateBanner } from '@/components/UpdateBanner'
 import { useWakeLock, WakeLockContext } from '@/lib/wake-lock'
@@ -22,6 +23,8 @@ function RootLayout() {
         <UpdateBanner />
         <Outlet />
         {!playing && <TabBar />}
+        {/* The Drive sync's question when this device and Drive hold different plans (D-071). */}
+        <SyncConflictDialog />
       </div>
     </WakeLockContext.Provider>
   )

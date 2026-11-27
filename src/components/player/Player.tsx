@@ -10,7 +10,7 @@ import type { LocalDate } from '@/lib/dates'
 import { clockText, coachingText, type Unit } from '@/lib/player'
 import { type Answer, type CheckIn, levelAfter } from '@/lib/progression'
 import type { Variant } from '@/lib/records'
-import { type PlayedSession, type Slot, savePlayedSession } from '@/lib/repo'
+import { getSettings, type PlayedSession, type Slot, savePlayedSession, saveSettings } from '@/lib/repo'
 import { canSpeak, setSpokenCues, speak, spokenCuesOn, unlockAudio } from '@/lib/sound'
 import { WakeLockContext } from '@/lib/wake-lock'
 import { type UnitResult, UnitRunner } from './runners'
@@ -43,6 +43,16 @@ export function Player(props: PlayerProps) {
   const [index, setIndex] = useState(0)
   const [done, setDone] = useState<Done[]>([])
   const [spoken, setSpoken] = useState(() => spokenCuesOn())
+  // The switch is a setting, synced with the other devices (D-071); the local copy shows until it is read.
+  useEffect(() => {
+    let alive = true
+    void getSettings().then((s) => {
+      if (alive && s.spokenCues !== undefined) setSpoken(s.spokenCues)
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
   const finished = startedAt !== null && index >= units.length
   const wake = useContext(WakeLockContext)
   const unit = units[index]
@@ -83,8 +93,10 @@ export function Player(props: PlayerProps) {
             aria-label="Spoken cues"
             aria-pressed={spoken}
             onClick={() => {
-              setSpoken(!spoken)
-              setSpokenCues(!spoken)
+              const next = !spoken
+              setSpoken(next)
+              setSpokenCues(next)
+              void saveSettings({ spokenCues: next })
             }}
             className="glass flex size-11 items-center justify-center rounded-xl border border-edge text-primary"
           >

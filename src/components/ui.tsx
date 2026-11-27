@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react'
 import { cn } from '@/lib/cn'
 
 /** A glass panel (D-048). `tone` colours its edge: a done card, a danger zone. */
@@ -23,7 +23,10 @@ export function Card({
 }
 
 type Variant = 'primary' | 'quiet' | 'danger'
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: Variant
+  ref?: Ref<HTMLButtonElement>
+}
 
 /** A button's look, shared with links that act as buttons. */
 export function buttonClass(variant: Variant = 'primary', className?: string) {

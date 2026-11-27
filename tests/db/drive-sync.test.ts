@@ -1,52 +1,113 @@
-// The Google Drive sync (D-054, D-055) against a fake Drive: one file per device, restore by merge, no upload from an
-// empty phone; the hour-long sign-in renewed in a hidden frame or on the next tap; no network is not an error.
-// Invented values only.
+// The Google Drive sync (D-054, D-055, D-071) against a fake Drive: one shared file synced both ways; the first sync
+// after signing in compares the two sides (Drive's progress replaces a new phone's plan, a conflict waits for the
+// user's choice); older per-device files merged and deleted; no upload from an empty phone; the hour-long sign-in
+// renewed in a hidden frame or on the next tap; no network is not an error. Invented values only.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { getAllDays, getSettings, resetDbForTests, startPlan, updateDay } from '@/lib/repo'
+import { losesMore, summarize } from '@/lib/backup'
+import {
+  getAllDays,
+  getLevels,
+  getSettings,
+  resetDbForTests,
+  saveSettings,
+  startPlan,
+  updateDay,
+} from '@/lib/repo'
 import type { DriveFile } from '@/lib/sync/drive'
 import { AuthError } from '@/lib/sync/drive'
 import { DRIVE_SCOPE, FRAME_MESSAGE, liveToken, resetGoogleForTests, SILENT_PATH } from '@/lib/sync/google'
 import {
   autoSync,
   type Drive,
-  deviceId,
   driveSignOut,
   driveState,
   exchange,
+  firstSync,
+  noteChangeForTests,
   resetSyncForTests,
+  resolveConflict,
+  SHARED_NAME,
   SYNC_CONTROLS,
   syncNow,
 } from '@/lib/sync/sync'
 
 const AT = '2026-12-01T12:00:00.000Z'
 
-/** A Drive in memory: files by id, with names. */
-function fakeDrive(): Drive & { files: Map<string, { name: string; text: string }>; writes: number } {
-  const files = new Map<string, { name: string; text: string }>()
+type FakeFile = { name: string; text: string; modifiedTime: string }
+
+/** A Drive in memory: files by id, each write moving its modified time on. */
+function fakeDrive(): Drive & { files: Map<string, FakeFile>; writes: number; deletes: string[] } {
+  const files = new Map<string, FakeFile>()
   let next = 0
+  let clock = 0
+  const stamp = () => new Date(Date.parse(AT) + ++clock * 1000).toISOString()
   const drive = {
     files,
     writes: 0,
-    async listFiles(_token: string, prefix: string): Promise<DriveFile[]> {
-      return [...files.entries()]
-        .filter(([, f]) => f.name.startsWith(prefix))
-        .map(([id, f]) => ({ id, name: f.name, modifiedTime: AT }))
+    deletes: [] as string[],
+    async listFiles(): Promise<DriveFile[]> {
+      return [...files.entries()].map(([id, f]) => ({ id, name: f.name, modifiedTime: f.modifiedTime }))
     },
     async readText(_token: string, id: string): Promise<string> {
       const f = files.get(id)
       if (!f) throw new Error('not found')
       return f.text
     },
-    async writeText(_token: string, name: string, text: string, id?: string): Promise<string> {
+    async writeText(_token: string, name: string, text: string, id?: string): Promise<DriveFile> {
       drive.writes++
       if (id && !files.has(id)) throw new Error('Google Drive said 404.')
       const fileId = id ?? `file-${++next}`
-      files.set(fileId, { name, text })
-      return fileId
+      const modifiedTime = stamp()
+      files.set(fileId, { name: id ? (files.get(id)?.name ?? name) : name, text, modifiedTime })
+      return { id: fileId, name, modifiedTime }
+    },
+    async deleteFile(_token: string, id: string): Promise<void> {
+      drive.deletes.push(id)
+      files.delete(id)
     },
   }
   return drive
 }
+
+/** The shared file's content. */
+function sharedFile(drive: ReturnType<typeof fakeDrive>) {
+  const f = [...drive.files.values()].find((x) => x.name === SHARED_NAME)
+  if (!f) throw new Error('no shared file')
+  return JSON.parse(f.text)
+}
+
+/** Another device edits the shared file. */
+function editShared(
+  drive: ReturnType<typeof fakeDrive>,
+  edit: (file: ReturnType<typeof sharedFile>) => void,
+) {
+  const entry = [...drive.files.entries()].find(([, x]) => x.name === SHARED_NAME)
+  if (!entry) throw new Error('no shared file')
+  const file = JSON.parse(entry[1].text)
+  edit(file)
+  drive.files.set(entry[0], {
+    ...entry[1],
+    text: JSON.stringify(file),
+    modifiedTime: new Date().toISOString(),
+  })
+}
+
+async function wipeDb() {
+  resetDbForTests()
+  await new Promise<void>((resolve) => {
+    const req = indexedDB.deleteDatabase('tortoise')
+    req.onsuccess = req.onerror = req.onblocked = () => resolve()
+  })
+}
+
+/** This test's phone becomes another device: a new database and no sync state, as after signing in elsewhere. */
+async function anotherDevice(drive: Drive) {
+  localStorage.removeItem('tortoise.drive')
+  await wipeDb()
+  resetSyncForTests(drive)
+}
+
+const done = (date: string) => updateDay(date, (d) => ({ ...d, morning: { doneAt: AT } }))
 
 function signedIn(expiresAt = Date.now() + 3_600_000) {
   localStorage.setItem(
@@ -111,74 +172,299 @@ beforeEach(async () => {
   })
 })
 
-describe('the Google Drive sync', () => {
-  it("writes this device's file, then updates the same file", async () => {
+describe('the first sync after signing in (D-071)', () => {
+  it('ranks progress over a plan over nothing', () => {
+    const none = { activeDays: 0, badges: 0, progress: false }
+    const plan = { ...none, startDate: '2026-11-30' }
+    const progress = { ...plan, activeDays: 3, firstDay: '2026-11-24', lastDay: '2026-11-26', progress: true }
+    expect(firstSync(none, null)).toBe('nothing')
+    expect(firstSync(plan, null)).toBe('upload')
+    expect(firstSync(plan, none)).toBe('upload')
+    expect(firstSync(plan, progress)).toBe('take-remote')
+    expect(firstSync(none, plan)).toBe('take-remote')
+    expect(firstSync(progress, plan)).toBe('upload')
+    expect(firstSync(plan, { ...plan, startDate: '2026-12-07' })).toBe('merge')
+    expect(firstSync(progress, { ...progress, activeDays: 9 })).toBe('merge')
+    expect(firstSync(progress, { ...progress, startDate: '2026-12-07' })).toBe('ask')
+  })
+
+  it('asks for the typed confirmation when the replaced side holds more or older history', () => {
+    const base = {
+      startDate: '2026-11-30',
+      activeDays: 5,
+      firstDay: '2026-11-24',
+      lastDay: '2026-12-01',
+      badges: 2,
+      progress: true,
+    }
+    expect(losesMore(base, base)).toBe(false)
+    expect(losesMore({ ...base, activeDays: 6 }, base)).toBe(true)
+    expect(losesMore({ ...base, badges: 3 }, base)).toBe(true)
+    expect(losesMore({ ...base, firstDay: '2026-11-23' }, base)).toBe(true)
+    expect(losesMore(base, { ...base, activeDays: 40, firstDay: '2026-01-05' })).toBe(false)
+  })
+
+  it('writes one shared file with a generation, then updates the same file', async () => {
     await startPlan('2026-11-23')
     const drive = fakeDrive()
-    const first = await exchange('token', false, drive)
-    expect(first.uploaded).toBe(true)
-    expect([...drive.files.values()].map((f) => f.name)).toEqual([`device-${deviceId()}.json`])
-    const second = await exchange('token', false, drive)
-    expect(second.fileId).toBe(first.fileId)
-    expect(drive.files.size).toBe(1)
-    const saved = JSON.parse(drive.files.get(first.fileId ?? '')?.text ?? '{}')
+    const first = await exchange('token', drive)
+    expect(first).toMatchObject({ outcome: 'replaced-remote', uploaded: true })
+    expect([...drive.files.values()].map((f) => f.name)).toEqual([SHARED_NAME])
+    const saved = sharedFile(drive)
     expect(saved.format).toBe('tortoise-backup')
+    expect(saved.generation).toEqual(expect.any(String))
     expect(saved.stores.settings[0].startDate).toBe('2026-11-30')
+    noteChangeForTests()
+    const second = await exchange('token', drive)
+    expect(second).toMatchObject({ outcome: 'synced', uploaded: true })
+    expect(drive.files.size).toBe(1)
+    expect(sharedFile(drive).generation).toBe(saved.generation)
   })
 
   it('never uploads from an empty phone, so a wiped phone cannot overwrite its copy', async () => {
     const drive = fakeDrive()
-    const r = await exchange('token', false, drive)
-    expect(r.uploaded).toBe(false)
+    const r = await exchange('token', drive)
+    expect(r).toMatchObject({ outcome: 'nothing', uploaded: false })
     expect(drive.writes).toBe(0)
   })
 
-  it("restores by merging every device's copy into an empty phone", async () => {
+  it("replaces a new phone's just-chosen plan with Drive's whole state", async () => {
     const drive = fakeDrive()
-    // Another phone's copy.
+    // The first phone: a plan, levels moved, days done, a unit setting, spoken cues on.
+    await startPlan('2026-11-02', { pushups: 20, trains: 1 })
+    await done('2026-11-03')
+    await done('2026-11-10')
+    await saveSettings((s) => ({ units: { ...s.units, mass: 'lb' }, spokenCues: true }))
+    await exchange('token', drive)
+    const firstLevels = await getLevels()
+    // A new phone: the first run picks another Monday and other start answers, then signs in.
+    await anotherDevice(drive)
+    await startPlan('2026-11-23', { pushups: 2, runMin: 40 })
+    const writes = drive.writes
+    const r = await exchange('token', drive)
+    expect(r.outcome).toBe('took-remote')
+    const settings = await getSettings()
+    expect(settings.startDate).toBe('2026-11-09')
+    expect(settings.units.mass).toBe('lb')
+    expect(settings.spokenCues).toBe(true)
+    expect([...(await getAllDays()).keys()].sort()).toEqual(['2026-11-03', '2026-11-10'])
+    expect(await getLevels()).toEqual(firstLevels)
+    // Nothing of the new phone went to Drive.
+    expect(drive.writes).toBe(writes)
+    expect(sharedFile(drive).stores.settings[0].startDate).toBe('2026-11-09')
+  })
+
+  it("replaces Drive's plan without progress with this phone's progress", async () => {
+    const drive = fakeDrive()
     await startPlan('2026-11-23')
-    await updateDay('2026-11-24', (d) => ({ ...d, morning: { doneAt: AT } }))
-    await exchange('token', false, drive)
-    const [[id, file]] = [...drive.files.entries()] as [[string, { name: string; text: string }]]
-    drive.files.set(id, { ...file, name: 'device-another-phone.json' })
-    // This phone, wiped: a new database and a new device id.
-    localStorage.clear()
-    resetDbForTests()
-    await new Promise<void>((resolve) => {
-      const req = indexedDB.deleteDatabase('tortoise')
-      req.onsuccess = req.onerror = req.onblocked = () => resolve()
+    await exchange('token', drive)
+    const oldGeneration = sharedFile(drive).generation
+    await anotherDevice(drive)
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    const r = await exchange('token', drive)
+    expect(r.outcome).toBe('replaced-remote')
+    const saved = sharedFile(drive)
+    expect(saved.stores.settings[0].startDate).toBe('2026-11-09')
+    expect(saved.generation).not.toBe(oldGeneration)
+  })
+
+  it('merges two phones on the same plan', async () => {
+    const drive = fakeDrive()
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    await anotherDevice(drive)
+    await startPlan('2026-11-02')
+    await done('2026-11-04')
+    const r = await exchange('token', drive)
+    expect(r).toMatchObject({ outcome: 'merged', uploaded: true })
+    expect([...(await getAllDays()).keys()].sort()).toEqual(['2026-11-03', '2026-11-04'])
+    expect(
+      sharedFile(drive)
+        .stores.days.map((d: { date: string }) => d.date)
+        .sort(),
+    ).toEqual(['2026-11-03', '2026-11-04'])
+  })
+
+  it('asks when both sides hold progress on different plans, and changes nothing until the answer', async () => {
+    const drive = fakeDrive()
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await done('2026-11-05')
+    await exchange('token', drive)
+    const before = drive.files.get('file-1')?.text
+    await anotherDevice(drive)
+    await startPlan('2026-11-23')
+    await done('2026-11-24')
+    signedIn()
+    await syncNow()
+    const s = driveState()
+    expect(s.status).toBe('conflict')
+    expect(s.conflict?.remote).toMatchObject({
+      startDate: '2026-11-09',
+      activeDays: 2,
+      firstDay: '2026-11-03',
     })
-    const r = await exchange('token', true, drive)
-    expect(r.restored?.files).toBe(1)
-    expect(r.restored?.written).toBeGreaterThan(0)
+    expect(s.conflict?.local).toMatchObject({
+      startDate: '2026-11-30',
+      activeDays: 1,
+      firstDay: '2026-11-24',
+    })
+    expect(drive.files.get('file-1')?.text).toBe(before)
     expect((await getSettings()).startDate).toBe('2026-11-30')
-    expect((await getAllDays()).get('2026-11-24')?.morning?.doneAt).toBe(AT)
-    // And now this phone has its own copy too.
-    expect([...drive.files.values()].map((f) => f.name).sort()).toEqual(
-      ['device-another-phone.json', `device-${deviceId()}.json`].sort(),
-    )
+    // The automatic sync waits for the answer.
+    await autoSync()
+    expect(driveState().status).toBe('conflict')
   })
 
-  it('skips a damaged copy instead of half-reading it', async () => {
+  it("the answer 'use Google Drive's' replaces this phone; 'keep this device's' replaces Drive with a new generation", async () => {
     const drive = fakeDrive()
-    drive.files.set('bad', { name: 'device-broken.json', text: '{"format":"tortoise-backup"' })
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    const generation = sharedFile(drive).generation
+    await anotherDevice(drive)
     await startPlan('2026-11-23')
-    const r = await exchange('token', true, drive)
-    expect(r.restored).toEqual({ written: 0, files: 0 })
-    expect(r.uploaded).toBe(true)
+    await done('2026-11-24')
+    signedIn()
+    await syncNow()
+    expect(driveState().status).toBe('conflict')
+    await resolveConflict('local')
+    expect(driveState().status).toBe('ok')
+    const saved = sharedFile(drive)
+    expect(saved.stores.settings[0].startDate).toBe('2026-11-30')
+    expect(saved.stores.days.map((d: { date: string }) => d.date)).toEqual(['2026-11-24'])
+    expect(saved.generation).not.toBe(generation)
+
+    // The first phone, still under the old generation, now finds Drive replaced: it asks too, and takes Drive's.
+    localStorage.setItem('tortoise.drive', JSON.stringify({ fileId: 'file-1', seen: 'old', generation }))
+    await wipeDb()
+    resetSyncForTests(drive)
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await syncNow()
+    expect(driveState().status).toBe('conflict')
+    await resolveConflict('remote')
+    expect(driveState().status).toBe('ok')
+    expect((await getSettings()).startDate).toBe('2026-11-30')
+    expect([...(await getAllDays()).keys()]).toEqual(['2026-11-24'])
+    expect(sharedFile(drive).generation).toBe(saved.generation)
   })
 
-  it('writes a new file when its own was deleted in Drive', async () => {
-    await startPlan('2026-11-23')
+  it('a sign-out answers the conflict by stopping the sync', async () => {
     const drive = fakeDrive()
-    const first = await exchange('token', false, drive)
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    await anotherDevice(drive)
+    await startPlan('2026-11-23')
+    await done('2026-11-24')
+    signedIn()
+    await syncNow()
+    await driveSignOut(false)
+    expect(driveState()).toMatchObject({ status: 'signed-out', conflict: undefined })
+    expect(localStorage.getItem('tortoise.drive')).not.toContain('generation')
+  })
+
+  it('merges the older per-device files into the shared file and deletes them', async () => {
+    const drive = fakeDrive()
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    // As the D-054 sync wrote it: a device file without a generation.
+    const legacy = sharedFile(drive)
+    delete legacy.generation
     drive.files.clear()
-    localStorage.setItem('tortoise.drive', JSON.stringify({ fileId: first.fileId }))
-    const again = await exchange('token', false, drive)
-    expect(again.fileId).not.toBe(first.fileId)
-    expect(drive.files.size).toBe(1)
+    drive.files.set('old', { name: 'device-abc.json', text: JSON.stringify(legacy), modifiedTime: AT })
+    await anotherDevice(drive)
+    await startPlan('2026-11-23')
+    const r = await exchange('token', drive)
+    expect(r.outcome).toBe('took-remote')
+    expect(drive.deletes).toEqual(['old'])
+    expect([...drive.files.values()].map((f) => f.name)).toEqual([SHARED_NAME])
+    expect(sharedFile(drive).generation).toEqual(expect.any(String))
+    expect((await getSettings()).startDate).toBe('2026-11-09')
   })
 
+  it('leaves a damaged Drive copy as it is and says so', async () => {
+    const drive = fakeDrive()
+    drive.files.set('bad', { name: SHARED_NAME, text: '{"format":"tortoise-backup"', modifiedTime: AT })
+    await startPlan('2026-11-23')
+    signedIn()
+    resetSyncForTests(drive)
+    await syncNow()
+    expect(driveState().status).toBe('error')
+    expect(driveState().error).toMatch(/could not be read/)
+    expect(drive.writes).toBe(0)
+  })
+})
+
+describe('the Google Drive sync after the first', () => {
+  it("brings in another device's changes and writes only what this device adds", async () => {
+    const drive = fakeDrive()
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    const writes = drive.writes
+    // Nothing new on either side: nothing read beyond the list, nothing written.
+    await exchange('token', drive)
+    expect(drive.writes).toBe(writes)
+    // Another device logs a day and moves a level.
+    editShared(drive, (file) => {
+      file.stores.days.push({
+        date: '2026-11-04',
+        morning: { doneAt: AT },
+        updatedAt: '2030-01-01T00:00:00.000Z',
+      })
+    })
+    const r = await exchange('token', drive)
+    expect(r).toMatchObject({ outcome: 'synced', uploaded: false })
+    expect((await getAllDays()).get('2026-11-04')?.morning?.doneAt).toBe(AT)
+    // This device logs one too: it goes up, and the other device's day stays.
+    await done('2026-11-05')
+    noteChangeForTests()
+    await exchange('token', drive)
+    expect(
+      sharedFile(drive)
+        .stores.days.map((d: { date: string }) => d.date)
+        .sort(),
+    ).toEqual(['2026-11-03', '2026-11-04', '2026-11-05'])
+  })
+
+  it("heals a lost write: a copy that lacks this device's records is written again", async () => {
+    const drive = fakeDrive()
+    await startPlan('2026-11-02')
+    await done('2026-11-03')
+    await exchange('token', drive)
+    // Another device wrote over the copy from a state without 2026-11-03.
+    editShared(drive, (file) => {
+      file.stores.days = []
+    })
+    const r = await exchange('token', drive)
+    expect(r.uploaded).toBe(true)
+    expect(sharedFile(drive).stores.days.map((d: { date: string }) => d.date)).toEqual(['2026-11-03'])
+  })
+
+  it('summarizes a side by its done days, first and last day and badges', async () => {
+    await startPlan('2026-11-02')
+    await done('2026-11-05')
+    await done('2026-11-03')
+    await updateDay('2026-11-04', (d) => ({ ...d, folded: true }))
+    const { readAllStores } = await import('@/lib/backup')
+    const { getDb } = await import('@/lib/repo')
+    const s = summarize(await readAllStores(await getDb()))
+    expect(s).toMatchObject({
+      startDate: '2026-11-09',
+      activeDays: 2,
+      firstDay: '2026-11-03',
+      lastDay: '2026-11-05',
+      progress: true,
+    })
+  })
+})
+
+describe('the Google Drive sign-in', () => {
   it('waits for a tap once the sign-in has run out and the frame is refused, and when Google refuses the token', async () => {
     await startPlan('2026-11-23')
     const drive = fakeDrive()

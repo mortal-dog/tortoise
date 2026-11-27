@@ -8,7 +8,7 @@ only: nutrition, sleep and medicine are out of scope.
 
 | | |
 |---|---|
-| Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). The Google Drive sync moves the data between them (D-055) |
+| Users | One person; the iPhone first (installed from Safari), and every other platform too: Android phones and desktop browsers install or run it the same way (D-047). The Google Drive sync keeps the data the same on all of them (D-055, D-071) |
 | Address | <https://tortoise.doctornova.net> |
 | Data | On the phone (IndexedDB), with a copy in the user's own Google Drive once they sign in (D-054, D-055) |
 | Network | None needed after the first load; app updates use it, and the Google Drive sync once the user signs in (D-054); an exercise video, only when its name is tapped (D-060). No server, no analytics, and no other third-party request |
@@ -188,8 +188,9 @@ the Tortoise Test button and the At-99 board (D-067).
 - **Until Week 0 begins:** Today shows the days left. The morning block can be tried; days
   before Week 0 have no status and no streak.
 - The profile is optional.
-- A link leads to Settings → Google Drive sync: signing in there restores the Drive copy instead of starting afresh (a
-  new phone, or the move from the Safari tab to the home-screen app).
+- A link leads to Settings → Google Drive sync: signing in there brings in the Drive copy instead of starting afresh (a
+  new phone, or the move from the Safari tab to the home-screen app); a plan just chosen here gives way to Drive's
+  progress (D-071).
 
 ---
 
@@ -254,7 +255,7 @@ Settings ─ Profile / Units / Google Drive sync / About
 
 | Store | Key | Fields |
 |---|---|---|
-| `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}. Records from before D-053 also held dumbbellKg, location, runDefault and reminders, and from before D-055 backup {lastAt, everyDays}; they are dropped when read |
+| `settings` | `"settings"` | startDate; profile {birthYear, sex, weightKg, heightCm} (all optional); units {mass, distance}; spokenCues (D-071). Records from before D-053 also held dumbbellKg, location, runDefault and reminders, and from before D-055 backup {lastAt, everyDays}; they are dropped when read |
 | `days` | `YYYY-MM-DD` | morning {doneAt, steps}; main {doneAt, sessionId, variant (outdoor or indoor), minutes, distanceKm, effort 1–10 and note (no longer written since D-069), asPlanned (a one-tap "Done as planned"), steps}; split {doneAt, kind (front, side, both or long), steps}; folded (the "Make it a Shell day" tap). `steps` lists the step ids the player finished; without it the whole part counts (D-057). Records from before D-057 may hold paused; it is dropped when read |
 | `logs` | a random id, unique across devices; indexes on date and on ladder | date, sessionId, exerciseId, ladderId, level, sets [{seconds}] (reps, kg and feedback no longer written since D-069) |
 | `levels` | ladderId | level, since, history [{level, date}], askedAt, eased (D-069) |
@@ -315,7 +316,7 @@ server (D-013). The Today cards say when in the day each part belongs (plan §4)
 
 ## 10. Backup and restore
 
-**The Google Drive sync (D-054, D-055)**, after the French app's sync, is the only backup: the backup file, its import
+**The Google Drive sync (D-054, D-055, D-071)**, after the French app's sync, is the only backup: the backup file, its import
 and the Today reminder went with D-055.
 - **Sign-in:** Google Identity Services' token model in the browser, no server; the scope `drive.appdata` (a hidden
   folder only this app sees) and the e-mail address. A token lasts an hour and there is no refresh token.
@@ -324,15 +325,27 @@ and the Today reminder went with D-055.
   page as itself, never as the app. Where the browser refuses the frame (Safari blocks Google's cookies in it), the
   user's next tap anywhere in the app renews it: a tap may open Google's window, which closes by itself once consent
   was given. The sync card's own buttons are not that tap.
-- **One file per device:** `device-<id>.json` in the hidden folder: a whole backup in one versioned JSON format (a
-  format tag and version, the export time, the app and schema versions, every store). A device writes only its own
-  file, so two devices never overwrite each other.
-- **By itself:** when something changed since the last upload: 20 s after the last change, when the app goes to the
-  background or comes back, when the connection returns, and every 5 minutes while on screen. An opening with nothing
-  to upload still renews a dead sign-in, so the visit's changes find a live one. No network is a wait, not an error.
-- **Restore:** signing in on a device for the first time (a new phone, or this one after "Delete all data") merges
-  every device file into the phone first: the newer `updatedAt` wins (D-032). A file that is damaged or from a newer
-  app is skipped whole. A plain sync only uploads, so a deleted photo does not come back.
+- **One shared file (D-071):** `tortoise.json` in the hidden folder, which every device signed in to the account syncs:
+  a whole backup in one versioned JSON format (a format tag and version, the export time, the app and schema versions,
+  a `generation`, every store). It carries everything: the plan, every day done or missed, logs, levels with their
+  check-ins, badges, settings (spoken cues included). The per-device files of D-054 are merged into it once and deleted.
+- **Both ways:** each sync reads the copy when it changed since this device last read or wrote it and merges it (the
+  newer `updatedAt` wins, D-032), then writes the copy when this device holds something it lacks. A copy that is damaged
+  or from a newer app is left as it is, with an error line.
+- **By itself:** 20 s after the last change, when the app goes to the background or comes back, when the connection
+  returns, and every 5 minutes while on screen. An opening with a dead sign-in renews it. No network is a wait, not an
+  error.
+- **The first sync after signing in (D-071)** compares the two sides. Progress (a day with a done part, or a logged set)
+  outranks a plan alone, which outranks nothing, and the higher side replaces the other whole: a new phone where the
+  plan was just chosen takes Drive's whole state. Both with progress on the same Week 1 Monday, or both with only a
+  plan, are merged. Both with progress on different plans: a dialog over every screen shows both sides (Week 1, days
+  done, first and last day, badges) and asks "Use Google Drive's", "Keep this device's" or "Sign out of Google
+  instead"; a second step confirms, and when the side to be replaced holds more days, an earlier first day or more
+  badges, REPLACE must be typed. The sync waits until then.
+- **Lineage:** replacing the Drive copy gives it a new `generation`; a device that synced under the old one compares
+  again at its next sync (and may ask the same question) instead of merging its old records back in.
+- **No deletions:** records are never deleted while signed in (an undone week swap keeps its record with no swaps), since
+  a deleted record would come back from another device's copy.
 - **Safety:** a phone with no plan and no days never uploads; "Delete all data" forgets the sign-in on the phone and
   leaves the Drive copy.
 - **The card** shows only the last sync's date and time (the owner: "you can just show last sync date time"), an error

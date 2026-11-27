@@ -3,6 +3,8 @@
 // user's Drive, and the `drive.appdata` scope reaches nothing outside it.
 //
 // Uploads are resumable, because a backup with progress photos can pass the 5 MB limit of a one-request upload.
+// Since D-071 every device syncs one shared file, `tortoise.json`; the per-device files of D-054 are merged into it
+// and deleted.
 
 const API = 'https://www.googleapis.com/drive/v3'
 const UPLOAD = 'https://www.googleapis.com/upload/drive/v3'
@@ -41,17 +43,17 @@ async function errorOf(response: Response): Promise<{ reason?: string; message?:
   }
 }
 
-/** The files in the app folder whose name starts with `prefix`. */
-export async function listFiles(token: string, prefix: string): Promise<DriveFile[]> {
+/** Every file in the app folder. */
+export async function listFiles(token: string): Promise<DriveFile[]> {
   const params = new URLSearchParams({
     spaces: 'appDataFolder',
-    q: `name contains '${prefix.replace(/'/g, "\\'")}' and trashed = false`,
+    q: 'trashed = false',
     fields: 'files(id,name,modifiedTime)',
     pageSize: '100',
   })
   const r = await call(token, `${API}/files?${params}`)
   const body = (await r.json()) as { files?: DriveFile[] }
-  return (body.files ?? []).filter((f) => f.name.startsWith(prefix))
+  return body.files ?? []
 }
 
 export async function readText(token: string, id: string): Promise<string> {
@@ -61,15 +63,16 @@ export async function readText(token: string, id: string): Promise<string> {
 
 /**
  * Writes `text` as a JSON file: a new file in the app folder when `id` is undefined, else that file's new content.
- * Resolves with the file's id.
+ * Resolves with the file's id and its new modified time.
  */
-export async function writeText(token: string, name: string, text: string, id?: string): Promise<string> {
+export async function writeText(token: string, name: string, text: string, id?: string): Promise<DriveFile> {
   const metadata = id ? {} : { name, parents: ['appDataFolder'], mimeType: 'application/json' }
+  const fields = 'fields=id,name,modifiedTime'
   const start = await call(
     token,
     id
-      ? `${UPLOAD}/files/${encodeURIComponent(id)}?uploadType=resumable&fields=id`
-      : `${UPLOAD}/files?uploadType=resumable&fields=id`,
+      ? `${UPLOAD}/files/${encodeURIComponent(id)}?uploadType=resumable&${fields}`
+      : `${UPLOAD}/files?uploadType=resumable&${fields}`,
     {
       method: id ? 'PATCH' : 'POST',
       headers: {
@@ -86,5 +89,10 @@ export async function writeText(token: string, name: string, text: string, id?: 
     headers: { 'Content-Type': 'application/json' },
     body: text,
   })
-  return ((await done.json()) as { id: string }).id
+  return (await done.json()) as DriveFile
+}
+
+/** Deletes a file of the app folder for good (the older per-device copies, once merged into the shared one, D-071). */
+export async function deleteFile(token: string, id: string): Promise<void> {
+  await call(token, `${API}/files/${encodeURIComponent(id)}`, { method: 'DELETE' })
 }

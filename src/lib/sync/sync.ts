@@ -1,29 +1,50 @@
-// The Google Drive sync (D-054, D-055), after the French app's src/features/sync/sync.ts. It is the app's only backup:
-// the backup file, its import and the Today reminder went with D-055.
+// The Google Drive sync (D-054, D-055, D-071), after the French app's src/features/sync/sync.ts. It is the app's only
+// backup, and it carries every record (days, logs, levels, badges, check-ins, settings) from one device to another.
 //
-// ONE FILE PER DEVICE. Each device writes only `device-<its id>.json` in the app's hidden Drive folder: a whole backup
-// in the backup format (backup.ts). Two devices can never overwrite each other's copy.
+// ONE SHARED FILE (D-071). Every device signed in to the same Google account syncs `tortoise.json` in the app's hidden
+// Drive folder: a whole backup in the backup format (backup.ts) plus a `generation`, the copy's lineage. The
+// per-device files of D-054 (`device-<id>.json`) are merged into it once and deleted.
 //
-// WHEN IT RUNS, BY ITSELF (the owner: "make sure google drive sync is automatic"). It uploads only when something
-// changed since the last upload: 20 s after the last change, when the app goes to the background, when it opens or
-// comes back on screen, when the connection returns, and every five minutes while on screen. "Sync now" uploads at
-// any time. The hour-long Google token does not stop it: it is renewed in a hidden frame, or on the user's next tap
-// anywhere in the app (`google.ts`, `armNextTap` below). With no network the change stays to upload, and the
-// `online` event sends it.
+// EACH SYNC, BOTH WAYS. When the Drive copy changed since this device last read or wrote it, it is read and merged
+// into this device (for each record the newer `updatedAt` wins, D-032); then this device writes the copy when it holds
+// something the copy lacks. So a session done on one phone shows on the other at its next sync.
 //
-// RESTORE. Signing in on a device for the first time (a new phone, or this one after "Delete all data") merges every
-// device file into this phone first: for each record the newer `updatedAt` wins (D-032). An ordinary sync only
-// uploads, so a photo deleted here does not come back from the Drive copy.
+// THE FIRST SYNC AFTER SIGNING IN (the owner, 2026-11-27) compares the two sides instead of merging blindly. Progress
+// (a day with a done part, or a logged set) outranks a plan alone, which outranks nothing:
+// - only Drive has progress (a new phone where the plan was just chosen): Drive's whole state replaces this device's;
+// - only this device has progress: it replaces the Drive copy;
+// - both, on the same plan (the same Week 1 Monday), or both with a plan and no progress: merged;
+// - both, on different plans: the user chooses which side replaces the other (SyncConflictDialog), with a second,
+//   typed confirmation when the side to be replaced holds more or older history (backup.ts `losesMore`).
+// A replacement gives the copy a new generation; a device that synced under the old one compares the same way at its
+// next sync instead of merging its records back into the copy.
+//
+// WHEN IT RUNS, BY ITSELF (the owner: "make sure google drive sync is automatic"): 20 s after the last change, when
+// the app goes to the background, when it opens or comes back on screen, when the connection returns, and every five
+// minutes while on screen. "Sync now" runs it at any time. The hour-long Google token is renewed in a hidden frame,
+// or on the user's next tap anywhere in the app (`google.ts`, `armNextTap` below). With no network the change stays
+// to upload, and the `online` event sends it.
 //
 // SAFETY. A phone with no plan and no days never uploads, so a wiped phone cannot overwrite its Drive copy with
-// nothing; "Delete all data" also forgets the sign-in on this phone. The Drive files stay until the user removes them
+// nothing; "Delete all data" also forgets the sign-in on this phone. The Drive file stays until the user removes it
 // (Google Drive → Settings → Manage apps).
 import { useSyncExternalStore } from 'react'
-import { BACKUP_FORMAT, BACKUP_VERSION, type BackupFile, parseBackup, readAllStores } from '@/lib/backup'
+import {
+  aheadOf,
+  BACKUP_FORMAT,
+  BACKUP_VERSION,
+  BackupError,
+  type BackupFile,
+  mergeStores,
+  parseBackup,
+  readAllStores,
+  type StateSummary,
+  summarize,
+} from '@/lib/backup'
 import { SCHEMA_VERSION } from '@/lib/db'
 import { onChange } from '@/lib/live'
-import { appVersion, getDb, mergeBackup } from '@/lib/repo'
-import { AuthError, type DriveFile, listFiles, readText, writeText } from './drive'
+import { appVersion, getDb, mergeBackup, replaceWithBackup } from '@/lib/repo'
+import { AuthError, type DriveFile, deleteFile, listFiles, readText, writeText } from './drive'
 import {
   dropToken,
   liveToken,
@@ -35,40 +56,56 @@ import {
   silentWorks,
 } from './google'
 
-export const FILE_PREFIX = 'device-'
-const DEVICE_KEY = 'tortoise.deviceId'
+/** The one file every device syncs (D-071). */
+export const SHARED_NAME = 'tortoise.json'
+/** The per-device files of D-054, merged into the shared file and deleted. */
+export const LEGACY_PREFIX = 'device-'
 const CACHE_KEY = 'tortoise.drive'
-/** After a change, upload once nothing has changed for this long. */
+/** After a change, sync once nothing has changed for this long. */
 const QUIET_MS = 20_000
-/** While the app is on screen, look this often for a change still to upload. */
+/** While the app is on screen, sync this often. */
 const PERIOD_MS = 5 * 60_000
 /** The sync card's buttons do their own signing in; a tap on them does not answer the armed tap. */
 export const SYNC_CONTROLS = 'js-sync-controls'
 
 interface Cache {
+  /** The shared file's id. */
   fileId?: string
-  /** Unix ms of the last upload. */
+  /** Its modified time when this device last read or wrote it: the same time means nothing new to read. */
+  seen?: string
+  /** The copy's generation this device synced under; unset until the first sync after signing in has finished. */
+  generation?: string
+  /** Unix ms of the last finished sync. */
   lastSync?: number
   /** Something changed since the last upload. */
   dirty?: boolean
 }
 
 /** `offline` is not a fault: the change stays to upload and goes when the connection is back. */
-export type DriveStatus = 'signed-out' | 'needs-tap' | 'syncing' | 'ok' | 'offline' | 'error'
+export type DriveStatus = 'signed-out' | 'needs-tap' | 'syncing' | 'ok' | 'offline' | 'error' | 'conflict'
+
+/** The two sides of a first sync that cannot be merged (D-071). */
+export interface Conflict {
+  local: StateSummary
+  remote: StateSummary
+}
 
 export interface DriveState {
   status: DriveStatus
   email?: string
   lastSync?: number
   error?: string
+  /** Set while the status is `conflict`: the user has to choose. */
+  conflict?: Conflict
 }
 
 export interface Drive {
-  listFiles: (token: string, prefix: string) => Promise<DriveFile[]>
+  listFiles: (token: string) => Promise<DriveFile[]>
   readText: (token: string, id: string) => Promise<string>
-  writeText: (token: string, name: string, text: string, id?: string) => Promise<string>
+  writeText: (token: string, name: string, text: string, id?: string) => Promise<DriveFile>
+  deleteFile: (token: string, id: string) => Promise<void>
 }
-const DRIVE: Drive = { listFiles, readText, writeText }
+const DRIVE: Drive = { listFiles, readText, writeText, deleteFile }
 /** The Drive every sync talks to; the tests put a fake one here. */
 let currentDrive: Drive = DRIVE
 
@@ -85,26 +122,16 @@ function writeJsonKey(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value))
   } catch {
-    // Storage refused: the next sync starts over, which is safe.
+    // Storage refused: the next sync compares again, which is safe.
   }
 }
 
 const readCache = () => readJsonKey<Cache>(CACHE_KEY, {})
 const writeCache = (patch: Partial<Cache>) => writeJsonKey(CACHE_KEY, { ...readCache(), ...patch })
 
-/** This device's id, made once and kept. */
-export function deviceId(): string {
-  let id = readJsonKey<string | null>(DEVICE_KEY, null)
-  if (!id) {
-    id = crypto.randomUUID()
-    writeJsonKey(DEVICE_KEY, id)
-  }
-  return id
-}
-
-// A small store for the Settings card.
+// A small store for the Settings card and the conflict dialog.
 let state: DriveState = { status: 'signed-out' }
-/** Changes seen since the app started (live.ts). */
+/** This device's own changes seen since the app started (live.ts); writes from Drive are not counted. */
 let changes = 0
 const listeners = new Set<() => void>()
 
@@ -139,73 +166,177 @@ export function driveState(): DriveState {
   return state
 }
 
-/** This phone's backup, as it would be written now; `empty` when there is no plan and no day to keep. */
-export async function ownFile(now: Date = new Date()): Promise<{ text: string; empty: boolean }> {
-  const stores = await readAllStores(await getDb())
+type Stores = BackupFile['stores']
+
+/** A phone with no plan and no day has nothing to keep and never uploads. */
+function isEmpty(stores: Stores): boolean {
+  return !stores.settings[0]?.startDate && stores.days.length === 0
+}
+
+function fileText(stores: Stores, generation: string, now: Date = new Date()): string {
   const file: BackupFile = {
     format: BACKUP_FORMAT,
     version: BACKUP_VERSION,
     exportedAt: now.toISOString(),
     appVersion: appVersion(),
     schemaVersion: SCHEMA_VERSION,
+    generation,
     stores,
   }
-  const empty = !stores.settings[0]?.startDate && stores.days.length === 0
-  return { text: JSON.stringify(file), empty }
+  return JSON.stringify(file)
 }
 
+/** What the first sync after signing in does with the two sides (D-071; the header above). */
+export type FirstSync = 'nothing' | 'upload' | 'take-remote' | 'merge' | 'ask'
+
+export function firstSync(local: StateSummary, remote: StateSummary | null): FirstSync {
+  const rank = (s: StateSummary) => (s.progress ? 2 : s.startDate ? 1 : 0)
+  const l = rank(local)
+  const r = remote ? rank(remote) : 0
+  if (r === 0) return l === 0 ? 'nothing' : 'upload'
+  if (r > l) return 'take-remote'
+  if (l > r) return 'upload'
+  if (l === 1 || local.startDate === remote?.startDate) return 'merge'
+  return 'ask'
+}
+
+/** The user's answer to a conflict: which side's records stay. */
+export type Choice = 'local' | 'remote'
+
 export interface ExchangeResult {
-  fileId?: string
+  outcome: 'synced' | 'nothing' | 'took-remote' | 'replaced-remote' | 'merged' | 'conflict'
   uploaded: boolean
-  /** The change count when this phone's file was read: a later change is not in the upload. */
-  snapshot: number
-  /** Records written by the restore, and the device files it read. */
-  restored?: { written: number; files: number }
+  /** Something of this device's is still not in the Drive copy. */
+  dirty: boolean
+  conflict?: Conflict
+}
+
+function readError(e: unknown): Error {
+  if (e instanceof BackupError && /newer version/.test(e.message)) {
+    return new Error(
+      'Google Drive holds a copy from a newer version of Tortoise. Close the app and open it again.',
+    )
+  }
+  return new Error("Google Drive's copy could not be read, so it was left as it is.")
 }
 
 /**
- * One exchange with Drive: with `restore`, merge every device file into this phone first; then write this device's
- * file, unless the phone is empty. `drive` is for the tests.
+ * One exchange with Drive (the header above). `choice` is the user's answer to a conflict. `drive` is for the tests.
  */
 export async function exchange(
   token: string,
-  restore: boolean,
   drive: Drive = currentDrive,
+  choice?: Choice,
 ): Promise<ExchangeResult> {
-  const me = `${FILE_PREFIX}${deviceId()}.json`
-  const files = await drive.listFiles(token, FILE_PREFIX)
-  let fileId = files.find((f) => f.name === me)?.id ?? readCache().fileId
-  let restored: ExchangeResult['restored']
-  if (restore) {
-    let written = 0
-    let read = 0
-    for (const f of files) {
-      let backup: BackupFile
-      try {
-        backup = parseBackup(await drive.readText(token, f.id))
-      } catch (e) {
-        if (e instanceof AuthError) throw e
-        continue // a damaged or newer file is skipped, never half-read
-      }
-      written += (await mergeBackup(backup)).written
-      read++
-    }
-    restored = { written, files: read }
-  }
-  const snapshot = changes
-  const own = await ownFile()
-  if (own.empty) return { fileId, uploaded: false, snapshot, restored }
-  if (fileId) {
+  const cache = readCache()
+  const files = await drive.listFiles(token)
+  const shared = files.filter((f) => f.name === SHARED_NAME)
+  const primary =
+    shared.find((f) => f.id === cache.fileId) ??
+    [...shared].sort((a, b) => b.modifiedTime.localeCompare(a.modifiedTime))[0]
+  // Older per-device files, and a second shared file two devices created at once: merged in, then deleted.
+  const extras = files.filter(
+    (f) =>
+      f !== primary &&
+      (f.name === SHARED_NAME || (f.name.startsWith(LEGACY_PREFIX) && f.name.endsWith('.json'))),
+  )
+  const joined = cache.generation !== undefined
+  const changed = !!primary && (primary.id !== cache.fileId || primary.modifiedTime !== cache.seen)
+
+  let remote: Stores | null = null
+  let remoteGen: string | undefined
+  if (primary && (changed || !joined || choice)) {
+    let file: BackupFile
     try {
-      await drive.writeText(token, me, own.text, fileId)
-      return { fileId, uploaded: true, snapshot, restored }
+      file = parseBackup(await drive.readText(token, primary.id))
     } catch (e) {
-      // Gone since the last sync (deleted in Drive): write it anew below.
-      if (e instanceof AuthError) throw e
+      if (e instanceof AuthError || e instanceof TypeError) throw e
+      throw readError(e) // never written over: it may hold what this device lacks
+    }
+    remote = file.stores
+    remoteGen = file.generation
+  }
+  const merged: string[] = []
+  for (const f of extras) {
+    try {
+      const file = parseBackup(await drive.readText(token, f.id))
+      remote = remote ? mergeStores(remote, file.stores) : file.stores
+      merged.push(f.id)
+    } catch (e) {
+      if (e instanceof AuthError || e instanceof TypeError) throw e
+      // A damaged or newer extra file is left alone, never half-read.
     }
   }
-  fileId = await drive.writeText(token, me, own.text)
-  return { fileId, uploaded: true, snapshot, restored }
+
+  const db = await getDb()
+  const local = await readAllStores(db)
+  let outcome: ExchangeResult['outcome']
+  let generation: string
+  let upload: boolean
+  const lineageBroken = joined && primary !== undefined && remote !== null && remoteGen !== cache.generation
+  if (!joined || lineageBroken || choice) {
+    const localSum = summarize(local)
+    const remoteSum = remote ? summarize(remote) : null
+    let action = firstSync(localSum, remoteSum)
+    if (choice) action = choice === 'remote' && remote ? 'take-remote' : 'upload'
+    if (action === 'ask' && remoteSum) {
+      return {
+        outcome: 'conflict',
+        uploaded: false,
+        dirty: !!cache.dirty,
+        conflict: { local: localSum, remote: remoteSum },
+      }
+    }
+    if (action === 'nothing') return { outcome: 'nothing', uploaded: false, dirty: false }
+    if (action === 'take-remote' && remote) {
+      await replaceWithBackup({ stores: remote })
+      outcome = 'took-remote'
+      generation = remoteGen ?? crypto.randomUUID()
+      upload = !primary || remoteGen === undefined || merged.length > 0
+    } else if (action === 'merge' && remote) {
+      await mergeBackup({ stores: remote })
+      outcome = 'merged'
+      generation = remoteGen ?? crypto.randomUUID()
+      upload = !primary || remoteGen === undefined || merged.length > 0 || aheadOf(local, remote)
+    } else {
+      outcome = 'replaced-remote'
+      generation = crypto.randomUUID()
+      upload = true
+    }
+  } else {
+    generation = cache.generation as string
+    if (remote) await mergeBackup({ stores: remote })
+    outcome = 'synced'
+    upload = !!cache.dirty || !primary || merged.length > 0 || (remote !== null && aheadOf(local, remote))
+  }
+
+  const snapshot = changes
+  const after = await readAllStores(db)
+  if (!upload || isEmpty(after)) {
+    writeCache({ fileId: primary?.id, seen: primary?.modifiedTime, generation })
+    return { outcome, uploaded: false, dirty: false }
+  }
+  const text = fileText(after, generation)
+  let written: DriveFile | undefined
+  if (primary) {
+    try {
+      written = await drive.writeText(token, SHARED_NAME, text, primary.id)
+    } catch (e) {
+      // Gone since it was listed (deleted in Drive): written anew below.
+      if (e instanceof AuthError || e instanceof TypeError) throw e
+    }
+  }
+  written ??= await drive.writeText(token, SHARED_NAME, text)
+  writeCache({ fileId: written.id, seen: written.modifiedTime, generation })
+  for (const id of merged) {
+    try {
+      await drive.deleteFile(token, id)
+    } catch (e) {
+      if (e instanceof AuthError) throw e
+      // Left for the next sync, which merges it again (no harm: the newer record wins).
+    }
+  }
+  return { outcome, uploaded: true, dirty: changes !== snapshot }
 }
 
 let signingIn: Promise<string> | null = null
@@ -309,10 +440,12 @@ function isOffline(e: unknown): boolean {
 }
 
 let running: Promise<void> | null = null
+/** The user's answer to the conflict, for the next run. */
+let pendingChoice: Choice | undefined
 
 /**
- * Syncs once. `fromTap`: the call comes from a tap, so a missing token may be asked for with a popup. A device's
- * first sync after signing in restores the Drive copies first. Concurrent calls share the one in flight.
+ * Syncs once. `fromTap`: the call comes from a tap, so a missing token may be asked for with a popup. Concurrent
+ * calls share the one in flight.
  */
 export function syncNow(opts: { fromTap?: boolean } = {}, drive: Drive = currentDrive): Promise<void> {
   running ??= run(opts.fromTap ?? false, drive).finally(() => {
@@ -324,14 +457,17 @@ export function syncNow(opts: { fromTap?: boolean } = {}, drive: Drive = current
 async function run(fromTap: boolean, drive: Drive): Promise<void> {
   const token = await ensureToken(fromTap)
   if (!token) return
-  const cache = readCache()
-  const firstTime = !cache.fileId && !cache.lastSync
-  setState({ status: 'syncing', error: undefined, email: readSession()?.email })
+  const choice = pendingChoice
+  pendingChoice = undefined
+  setState({ status: 'syncing', error: undefined, conflict: undefined, email: readSession()?.email })
   try {
-    const result = await exchange(token, firstTime, drive)
-    const lastSync = result.uploaded ? Date.now() : readCache().lastSync
-    // A change made after this phone's file was read is not in the upload, so it stays to upload.
-    writeCache({ fileId: result.fileId, lastSync, dirty: !result.uploaded || changes !== result.snapshot })
+    const result = await exchange(token, drive, choice)
+    if (result.outcome === 'conflict') {
+      setState({ status: 'conflict', conflict: result.conflict })
+      return
+    }
+    const lastSync = Date.now()
+    writeCache({ lastSync, dirty: result.dirty })
     setState({ status: 'ok', lastSync, error: undefined })
   } catch (e) {
     if (e instanceof AuthError) {
@@ -346,27 +482,38 @@ async function run(fromTap: boolean, drive: Drive): Promise<void> {
   }
 }
 
-/** Signs out on this phone (and with Google); the Drive files stay. */
+/**
+ * The user's answer to a conflict (D-071): `local` keeps this device's records and replaces the Drive copy with them;
+ * `remote` replaces this device's records with the Drive copy. Called from the dialog's button.
+ */
+export async function resolveConflict(choice: Choice, drive: Drive = currentDrive): Promise<void> {
+  if (running) await running
+  pendingChoice = choice
+  return syncNow({ fromTap: true }, drive)
+}
+
+/** Signs out on this phone (and with Google); the Drive file stays. */
 export async function driveSignOut(revoke = true): Promise<void> {
   disarm()
+  pendingChoice = undefined
   await signOut(revoke)
-  writeCache({ fileId: undefined, lastSync: undefined, dirty: false })
-  setState({ status: 'signed-out', email: undefined, lastSync: undefined, error: undefined })
+  writeCache({ fileId: undefined, seen: undefined, generation: undefined, lastSync: undefined, dirty: false })
+  setState({
+    status: 'signed-out',
+    email: undefined,
+    lastSync: undefined,
+    error: undefined,
+    conflict: undefined,
+  })
 }
 
 /**
- * An automatic sync: uploads when something waits to be uploaded (a change, or a sign-in whose first sync has not
- * finished). With nothing to upload, an opening or a return to the screen still renews a dead token, so the visit's
- * changes find a live one.
+ * An automatic sync: reads what other devices wrote and writes what this one changed. Nothing while signed out or
+ * while a conflict waits for the user's answer.
  */
 export function autoSync(drive: Drive = currentDrive): Promise<void> {
-  if (!readSession()?.email) return Promise.resolve()
-  const cache = readCache()
-  if (cache.dirty || !cache.lastSync) return syncNow({}, drive)
-  if (liveToken()) return Promise.resolve()
-  return ensureToken(false).then(() => {
-    if (liveToken() && state.status === 'syncing') setState({ status: 'ok' })
-  })
+  if (!readSession()?.email || state.status === 'conflict') return Promise.resolve()
+  return syncNow({}, drive)
 }
 
 let started = false
@@ -378,7 +525,8 @@ export function startAutoSync(): void {
   started = true
   state = initialState()
   preloadGis()
-  onChange(() => {
+  onChange((fromSync) => {
+    if (fromSync) return
     changes++
     writeCache({ dirty: true })
     window.clearTimeout(quietTimer)
@@ -398,7 +546,14 @@ export function resetSyncForTests(drive: Drive = DRIVE): void {
   state = initialState()
   running = null
   signingIn = null
+  pendingChoice = undefined
   if (typeof window !== 'undefined') disarm()
   tapRefused = false
   changes = 0
+}
+
+/** For tests: count a change of this device's, as startAutoSync's listener does. */
+export function noteChangeForTests(): void {
+  changes++
+  writeCache({ dirty: true })
 }

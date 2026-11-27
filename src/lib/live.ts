@@ -2,16 +2,20 @@
 // phone; no state library needed.
 import { useEffect, useState } from 'react'
 
-const listeners = new Set<() => void>()
+const listeners = new Set<(fromSync: boolean) => void>()
 let version = 0
 
-export function notifyChange(): void {
+/**
+ * Tells every screen to read again. `fromSync`: the write came from Google Drive (D-071), so it is not a change for
+ * the sync to upload.
+ */
+export function notifyChange(fromSync = false): void {
   version++
-  for (const l of listeners) l()
+  for (const l of listeners) l(fromSync)
 }
 
-/** Calls `listener` after every write; returns the unsubscribe. The Drive sync uses it (D-054). */
-export function onChange(listener: () => void): () => void {
+/** Calls `listener` after every write; returns the unsubscribe. The Drive sync uses it (D-054, D-071). */
+export function onChange(listener: (fromSync: boolean) => void): () => void {
   listeners.add(listener)
   return () => {
     listeners.delete(listener)

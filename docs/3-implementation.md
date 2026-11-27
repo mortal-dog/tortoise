@@ -343,7 +343,7 @@ a picker.
 | Sound | Cues with the ring/silent switch on and off; a spoken cue |
 | Screen | Wake lock in the installed app, held whenever the app is open |
 | Background | Timers catch up after locking the phone mid-interval |
-| Google Drive | Sign in from the installed app (Google's window opens and returns); a change syncs within a minute and the card's last sync time moves; after an hour, opening the app and tapping anything renews the sign-in with no other step (a window may flash and close by itself), and the next change syncs; on a second device or after Delete all data, signing in restores everything (D-054, D-055) |
+| Google Drive | Sign in from the installed app (Google's window opens and returns); a change syncs within a minute and the card's last sync time moves; after an hour, opening the app and tapping anything renews the sign-in with no other step (a window may flash and close by itself), and the next change syncs; on a second device or after Delete all data, signing in brings in everything: plan, days, levels, badges, settings, even after a plan was chosen there first; a session done on one device shows on the other after its next sync (open it, or wait 5 min); two devices with different plans and progress show the choice dialog, and REPLACE is asked when the replaced side holds more (D-054, D-055, D-071) |
 | Layout | Safe areas, dark mode, larger text |
 | Glass | With the moving backdrop (D-048): scrolling and the player stay smooth, and the phone does not grow warm over a full session. CI draws the glass without a GPU and found it costly per pixel (D-049), so this is the check that counts. With Reduce Transparency on (Settings → Accessibility → Display & Text Size), the panels turn solid |
 | Videos and badges | From the installed app: tapping an exercise's name plays its video inside the app, in the page, and "Open in YouTube" still works (D-060); a day page lists the exercises, past days marked done or not (D-057); earned badges shine and a tap tells how to earn a locked one (D-058); the tab bar stays still when tabs are tapped (D-059) |
@@ -390,7 +390,7 @@ the owner's choice (D-045): the official API answers browsers, but it would be t
 
 | Risk | Mitigation |
 |---|---|
-| Losing the data on the phone (app deleted, storage cleared) | The Google Drive sync, by itself after each change, its sign-in renewed without a tap or on the next tap (D-054, D-055); persistent storage, asked for when the plan starts |
+| Losing the data on the phone (app deleted, storage cleared) | The Google Drive sync, by itself after each change and both ways between devices, its sign-in renewed without a tap or on the next tap (D-054, D-055, D-071); persistent storage, asked for when the plan starts |
 | iOS web-app quirks (sound, wake lock, background) | Every cue also on screen; timers from timestamps; real-phone checks in Phases 4 and 8 |
 | Playwright's WebKit cannot serve the app from its service worker with the network off | Checked in Phase 0: WebKit does serve it, so the offline test runs on WebKit (D-036). The phone check of Phase 8 still covers Safari |
 | A new address would strand the data | The address is fixed (D-010); the custom domain lets the host change without changing the address |

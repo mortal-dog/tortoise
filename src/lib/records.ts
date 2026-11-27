@@ -21,6 +21,8 @@ export const SettingsRecord = z.object({
   units: z
     .object({ mass: z.enum(['kg', 'lb']), distance: z.enum(['km', 'mi']) })
     .default({ mass: 'kg', distance: 'km' }),
+  /** The player's spoken cues (D-040); in the record since D-071, so every device signed in to Drive shares it. */
+  spokenCues: z.boolean().optional(),
   updatedAt: Instant,
 })
 export type SettingsRecord = z.infer<typeof SettingsRecord>

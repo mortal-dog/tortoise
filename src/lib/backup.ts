@@ -1,6 +1,7 @@
-// The backup format (design §10): one versioned JSON document holding every store. It is what each device writes to
-// Google Drive (D-054); restoring validates it with zod, then merges it (for each key the later updatedAt wins, D-032)
-// in one transaction. The backup file, its import screen and the reminder went with D-055.
+// The backup format (design §10): one versioned JSON document holding every store. It is the shared copy every device
+// syncs with on Google Drive (D-054, D-071); reading validates it with zod, then merges it (for each key the later
+// updatedAt wins, D-032) or, when the user chose it, replaces this device's records with it, in one transaction.
+// The backup file, its import screen and the reminder went with D-055.
 import { z } from 'zod'
 import { type Db, request, SCHEMA_VERSION } from './db'
 import {
@@ -64,6 +65,11 @@ export const BackupFile = z.object({
   appVersion: z.string(),
   /** The database schema version (db.ts) the records follow. */
   schemaVersion: z.number().int().positive(),
+  /**
+   * The Drive copy's lineage (D-071): a new id each time one side replaced the other. A device that synced under
+   * another id must compare again before it merges.
+   */
+  generation: z.string().optional(),
   stores: z.object({
     settings: uniqueKeys('settings', SettingsRecord),
     days: uniqueKeys('days', DayRecord),
@@ -152,6 +158,70 @@ export function isNewer(incoming: { updatedAt: string }, stored: { updatedAt: st
   return a > b
 }
 
+type Stores_ = BackupFile['stores']
+
+/** The stores of `base` with every record of `incoming` that is newer or missing in it (D-032); meta stays base's. */
+export function mergeStores(base: Stores_, incoming: Stores_): Stores_ {
+  const out = { ...base }
+  for (const name of STORE_NAMES) {
+    if (name === 'meta') continue
+    const keyOf = KEY_OF[name] as (r: AnyRecord) => string
+    const merged = new Map((base[name] as AnyRecord[]).map((r) => [keyOf(r), r]))
+    for (const r of incoming[name] as AnyRecord[]) {
+      if (isNewer(r, merged.get(keyOf(r)))) merged.set(keyOf(r), r)
+    }
+    ;(out as Record<string, AnyRecord[]>)[name] = [...merged.values()]
+  }
+  return out
+}
+
+/** True when `mine` holds a record that `theirs` lacks or holds an older copy of: `theirs` needs an upload. */
+export function aheadOf(mine: Stores_, theirs: Stores_): boolean {
+  return STORE_NAMES.some((name) => {
+    if (name === 'meta') return false
+    const keyOf = KEY_OF[name] as (r: AnyRecord) => string
+    const other = new Map((theirs[name] as AnyRecord[]).map((r) => [keyOf(r), r]))
+    return (mine[name] as AnyRecord[]).some((r) => isNewer(r, other.get(keyOf(r))))
+  })
+}
+
+/** What one side of a sync holds, to compare this device with the Drive copy (D-071). */
+export interface StateSummary {
+  /** The Monday of Week 1, when a plan is set. */
+  startDate?: string
+  /** Days with a done part. */
+  activeDays: number
+  firstDay?: string
+  lastDay?: string
+  badges: number
+  /** Something was done: a day with a done part or a logged set. A plan and its start answers alone are not. */
+  progress: boolean
+}
+
+export function summarize(stores: Stores_): StateSummary {
+  const active = stores.days
+    .filter((d) => d.morning || d.main || d.split)
+    .map((d) => d.date)
+    .sort()
+  return {
+    startDate: stores.settings[0]?.startDate,
+    activeDays: active.length,
+    firstDay: active[0],
+    lastDay: active.at(-1),
+    badges: stores.milestones.length,
+    progress: active.length > 0 || stores.logs.length > 0,
+  }
+}
+
+/**
+ * True when replacing `lost` with `kept` throws away more or older history (D-071): more days done, an earlier first
+ * day, or more badges. The choice then needs a second, typed confirmation.
+ */
+export function losesMore(lost: StateSummary, kept: StateSummary): boolean {
+  if (lost.activeDays > kept.activeDays || lost.badges > kept.badges) return true
+  return lost.firstDay !== undefined && (kept.firstDay === undefined || lost.firstDay < kept.firstDay)
+}
+
 /** Reads every store in one transaction. */
 export async function readAllStores(db: Db): Promise<BackupFile['stores']> {
   return db.transaction([...STORE_NAMES], 'readonly', async (tx) => {
@@ -171,7 +241,11 @@ type AnyRecord = Stores[StoreName]
  * Merges a validated backup in one transaction: for each key the record with the later updatedAt is kept (D-032). The
  * meta record keeps describing this database and app, with the earlier of the two creation dates.
  */
-export async function importBackup(db: Db, file: BackupFile, now: Date): Promise<ImportResult> {
+export async function importBackup(
+  db: Db,
+  file: Pick<BackupFile, 'stores'>,
+  now: Date,
+): Promise<ImportResult> {
   const names = STORE_NAMES.filter((n) => n !== 'meta')
   return db.transaction([...STORE_NAMES], 'readwrite', async (tx) => {
     let written = 0
@@ -201,6 +275,30 @@ export async function importBackup(db: Db, file: BackupFile, now: Date): Promise
       })
     }
     return { written, kept }
+  })
+}
+
+/**
+ * Replaces every record with the given stores in one transaction (D-071: "use Google Drive's"). The meta record keeps
+ * describing this database and app, with the earlier of the two creation dates.
+ */
+export async function replaceAll(db: Db, stores: Stores_, now: Date): Promise<void> {
+  await db.transaction([...STORE_NAMES], 'readwrite', async (tx) => {
+    const localMeta = (await request(tx.objectStore('meta').get('meta'))) as Stores['meta'] | undefined
+    for (const name of STORE_NAMES) {
+      if (name === 'meta') continue
+      const store = tx.objectStore(name)
+      store.clear()
+      for (const r of stores[name] as AnyRecord[]) store.put(r)
+    }
+    const fileMeta = stores.meta[0]
+    if (fileMeta && localMeta && Date.parse(fileMeta.createdAt) < Date.parse(localMeta.createdAt)) {
+      tx.objectStore('meta').put({
+        ...localMeta,
+        createdAt: fileMeta.createdAt,
+        updatedAt: now.toISOString(),
+      })
+    }
   })
 }
 

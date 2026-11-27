@@ -1,7 +1,7 @@
 // Reading and writing the app's records. Every write stamps updatedAt (D-032) and tells the UI to refresh.
 import { plan } from '@/data/plan'
 import type { Weekday } from '@/data/schema'
-import { type BackupFile, type ImportResult, importBackup, wipeAll } from './backup'
+import { type BackupFile, type ImportResult, importBackup, replaceAll, wipeAll } from './backup'
 import type { Swap } from './calendar'
 import { addDays, type LocalDate } from './dates'
 import { type Db, openDb, request, requestPersistentStorage, SCHEMA_VERSION } from './db'
@@ -147,8 +147,8 @@ export async function getOverride(monday: LocalDate): Promise<OverrideRecord | u
 
 export async function saveSwaps(monday: LocalDate, swaps: Swap[]): Promise<void> {
   const db = await getDb()
-  if (swaps.length === 0) await db.delete('overrides', monday)
-  else await db.put('overrides', { monday, swaps: swaps as Array<[Weekday, Weekday]>, updatedAt: nowIso() })
+  // An undo keeps the record with no swaps: a deleted record would come back from another device's copy (D-071).
+  await db.put('overrides', { monday, swaps: swaps as Array<[Weekday, Weekday]>, updatedAt: nowIso() })
   notifyChange()
 }
 
@@ -230,11 +230,17 @@ export async function savePlayedSession(p: PlayedSession): Promise<void> {
   notifyChange()
 }
 
-/** Merges a Google Drive copy into this phone (D-032): for each record the newer one is kept. */
-export async function mergeBackup(file: BackupFile): Promise<ImportResult> {
+/** Merges the Google Drive copy into this phone (D-032): for each record the newer one is kept. */
+export async function mergeBackup(file: Pick<BackupFile, 'stores'>): Promise<ImportResult> {
   const result = await importBackup(await getDb(), file, new Date())
-  notifyChange()
+  if (result.written > 0) notifyChange(true)
   return result
+}
+
+/** Replaces this phone's records with the Google Drive copy (D-071). */
+export async function replaceWithBackup(file: Pick<BackupFile, 'stores'>): Promise<void> {
+  await replaceAll(await getDb(), file.stores, new Date())
+  notifyChange(true)
 }
 
 /** Deletes all data (design §3.7, Reset); the app returns to its first run. */

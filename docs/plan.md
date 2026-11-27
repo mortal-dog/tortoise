@@ -18,8 +18,8 @@ only.
 ### 1. [App design](1-app-design.md)
 
 - A private, offline app at <https://tortoise.doctornova.net>, iPhone first, on every platform (D-047). The data
-  stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself (D-054, D-055); there is no
-  server.
+  stays on the device, with a copy in the user's own Google Drive once they sign in, synced by itself and the same on
+  every signed-in device (D-054, D-055, D-071); there is no server.
 - Four tabs: **Today** (the day's cards and one-tap logging), **Week** (each day's exercises, and what was done),
   **Progress** (the streak numbers and badges, D-062, D-067) and **Settings** (profile, units, the Google Drive
   sync, and in About the equipment: a yoga mat, a jump rope, one pair of dumbbells, D-063). Each exercise's name opens its YouTube video (D-056).
@@ -91,3 +91,5 @@ The stack is React 19, TypeScript, Vite, Tailwind, TanStack Router, zod, Vitest,
   exercises, 35 under well-known names, no bar, no library, the videos played in the app on a tap (D-056, D-060,
   D-061); day pages that show what was done and no pause (D-057); badges (D-058); a shorter Progress without the Shell,
   photos or charts (D-062); the equipment in About (D-063).
+- **2026-11-27:** the Drive sync keeps every signed-in device the same, both ways; a new phone where the plan was just
+  chosen takes Drive's progress, and two different plans with progress ask the user which side stays (D-071).
