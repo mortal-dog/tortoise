@@ -20,6 +20,10 @@ metadata:
 - **The service worker build:** a second Vite (Rolldown) input `src/sw/sw.ts` emitted as `sw.js`; the plugin replaces
   `__PRECACHE__` and `__VERSION__` in `generateBundle` and throws if they are missing. The worker imports nothing, so
   no shared chunk can appear.
+- **The update takeover (D-075):** never call `skipWaiting()` in the worker's install handler and never let the page
+  send `SKIP_WAITING` without reloading: the new worker's `activate` deletes the old cache, so an old page that keeps
+  running asks for its lazy files and gets nothing. The page sends it only when idle (not on `/play/`), and the
+  `controllerchange` handler reloads at once.
 - **Playwright:**
   - day travel: `page.clock.setFixedTime(new Date('…T09:00:00Z'))`, then `page.reload()`; IndexedDB survives.
   - `getByRole(name)` matches a substring: two links "Week" and "Back to the week" collide; use `exact: true`.

@@ -3,16 +3,25 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-27, 14:47 ET)
+## Open work and next steps (as of 2026-11-27, 16:17 ET)
 
 - **Nothing in flight; the handoff sheet is empty.** The owner's 2026-11-27 asks are built and pushed: the sync of all
-  state across devices as `5d0bb73` (D-071), then the four player bugs and the Google flash as `07b0ed9` (D-072 to
-  D-074); gates green on `07b0ed9`: 268 Vitest in 30 files, build, 16 e2e (one e2e run before timed out once in
-  `progress.spec.ts` under load, 35.8 s; it passed alone and in the full rerun, 49 s).
-- **Live is `f2f0848`** (D-063 to D-070; scheduled runs green since 45621967711, 2026-11-25 13:16 UTC, the latest
-  46005563267 on 2026-11-27 13:15 UTC). **Not deployed yet:** `5d0bb73` (D-071), `07b0ed9` (D-072 to D-074); the next
-  scheduled run (23:07 UTC 2026-11-27, 18:07 ET; GitHub starts schedules late) publishes them. A manual deploy run needs
-  his yes in a picker.
+  state across devices as `5d0bb73` (D-071), the four player bugs and the Google flash as `07b0ed9` (D-072 to D-074),
+  and the automatic update as `a8c56bd` (D-075); gates green on `a8c56bd`: 271 Vitest in 31 files, build, 16 e2e (one
+  e2e run on `07b0ed9` timed out once in `progress.spec.ts` under load, 35.8 s; it passed alone and in the full rerun).
+- **Live is `06c521d`** (D-071 to D-074), deployed by manual run 46059533911 (2026-11-27 19:50 UTC, 14:50 ET, deploy
+  job green). **Not deployed yet:** `a8c56bd` (D-075); the next scheduled run (23:07 UTC 2026-11-27, 18:07 ET; GitHub
+  starts schedules late) publishes it. A manual deploy run needs his yes in a picker. Note: the first deploy of D-075
+  still reaches phones through the old banner (the running version is the old one); every update after it is automatic.
+- **D-075 (`a8c56bd`): the app updates by itself, with no banner.** The owner: "a notification 'there is a new version'
+  and then an update button is unnecessary; just always update to the latest version automatically by default, refresh
+  the app automatically or even restart it"; his picker "auto-update, no reload during a session (Recommended)".
+  `src/lib/sw-register.ts`: the waiting worker gets `SKIP_WAITING` at once when idle, and the existing
+  `controllerchange` handler reloads; `setUpdateIdle(!playing)` from `__root.tsx` (idle = not on a `/play/` route, which
+  covers the unsaved summary too); `UpdateBanner.tsx` deleted; test `tests/unit/sw-register.test.ts` (seams
+  `resetUpdaterForTests`, `setWaitingForTests`). Takeover and reload always go together (an old page must never ask the
+  new cache for removed files). An update arriving during the first-run questions or the conflict dialog reloads too
+  (rare; the dialog comes back by itself). Phase 8 Update row rewritten.
 - **D-072 (`07b0ed9`): the screen stays on with no notice, every countdown is read out, every rest can be skipped.**
   The owner: "the screen dims by itself … can't a PWA ask for permission to keep the screen on? If some platforms don't
   support it, could an invisible video play forever? … a very small video bundled with the PWA, looping forever. Then
@@ -163,7 +172,7 @@
   tap marks itself refused. Tortoise listens for `click` (D-055). Told the owner 2026-11-23; neither verified on a
   phone.
 - **Phase 8 is all that is left: the real-phone checklist** (`docs/3-implementation.md`, Phase 8 table), the owner's,
-  on the iPhone from Safari: install, offline, the update banner, sound with the silent switch and music from another app
+  on the iPhone from Safari: install, offline, the automatic update (D-075), sound with the silent switch and music from another app
   still playing, every countdown read out, the screen never dimming while the app is open with no Auto-Lock notice
   (D-050, D-072), background catch-up, **Google Drive** (sign in from the installed app:
   does Google's popup open and come back in home-screen mode; a change syncs within a minute and "Last sync" moves;
@@ -188,8 +197,8 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 268 Vitest tests in 30 files and 16 e2e tests on `07b0ed9` (local); CI green last on `f2f0848` (run
-  46005563267).
+  Last green: 271 Vitest tests in 31 files and 16 e2e tests on `a8c56bd` (local); CI green last on `06c521d` (run
+  46059533911, manual, deployed).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
   `tests/unit/dates.test.ts` (every day of 1900–2100) timed out once at 5.5 s on 2026-11-23 under load and passed on
@@ -222,7 +231,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-075**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-076**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -389,7 +398,8 @@
   levels move by check-ins after a session; five start questions), D-070 (owner: badges have real names), D-071 (owner: the Drive sync carries every record
   both ways; a clash of plans asks; the shared file, generation and ranking are builder's rulings),
   D-072 (owner: screen on with no notice, the keep-awake video, countdowns read out, every rest skippable), D-073
-  (owner's picker: jump and reach), D-074 (owner: Google's window at most once per opening, only with changes waiting).
+  (owner's picker: jump and reach), D-074 (owner: Google's window at most once per opening, only with changes waiting), D-075 (owner's picker: the app
+  updates by itself, never during a session; no banner).
 
 ## Where things are
 
@@ -419,7 +429,7 @@
   `a9153fc` Phase 9 offline parts, `bd7a9b8` D-045; afternoon: `7f2ef15` the settings race, `e64c8ed` CI side by side
   (D-046), `856d3d7` the install card (D-047), `af76e29` the glass (D-048), `5a32c8d` CI e2e at 1x (D-049), `3fa4a81`
   the Phase 8 glass check; Phases 0–3 earlier (`79befb7` … `f63c61d`). 2026-11-23: `a512c90` D-050, `9e7400e`
-  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, `12b73a1` D-070 (badge names), `5d0bb73` D-071 (sync of all state, 2026-11-27), and the source counts in `docs/sources.md` (Part A 21, Part B 17).
+  D-051/D-052, `bda0535` D-053, `4933a2a` the heavy tests' limits, `dcf1621` D-054, `687985c` D-055, `f9bdde3` D-056 to D-059, `ec23c75` D-060, `df84136` D-061/D-062, `4dad116` D-063/D-064, `6f049f2` D-065 (version from git), `447a5f6` D-066, `3c09296` D-067/D-068, `c8f6d07` D-069, `12b73a1` D-070 (badge names), `5d0bb73` D-071 (sync of all state, 2026-11-27), `07b0ed9` D-072 to D-074, `a8c56bd` D-075, and the source counts in `docs/sources.md` (Part A 21, Part B 17).
 
 ## Background
 
