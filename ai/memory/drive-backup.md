@@ -87,3 +87,9 @@ resumable uploads (Google's own CORS upload sample reads it), whether the final 
 `modifiedTime` (if not, each sync after an upload reads the copy once more, harmless), and DELETE in appDataFolder. Safari refuses Google's cookies in the frame, so on the
 iPhone expect renewals from the next tap. If the upload fails with "Google Drive gave no upload address", fall back to a
 multipart upload for files under 5 MB. See [[building-pitfalls]].
+
+**D-074 (2026-11-27): the next-tap popup is rationed.** `armNextTap()` arms only while `waiting()` (cache `dirty`, or
+no `generation` yet) and only if `tapUsed` is false; the armed tap sets it, a return to the screen clears it. In Safari
+the hidden frame never renews, so before this every hour any tap opened Google's window ("feels like a virus"). A test
+of the rationing must wait after `document.body.click()` (the popup opens after an awaited `loadGis()`); asserting at
+once passed even with the gate removed.

@@ -3,13 +3,54 @@
 <!-- Written only by the compact-ai skill. This repo is PUBLIC: project facts only, no personal facts (D-022), English
      only (the owner's words are quoted in English translation). -->
 
-## Open work and next steps (as of 2026-11-27, 14:35 ET)
+## Open work and next steps (as of 2026-11-27, 14:47 ET)
 
-- **Nothing in flight; the handoff sheet is empty.** The owner's 2026-11-27 ask (the sync of all state across devices)
-  is built and pushed as `5d0bb73` (D-071); gates green on it: 261 Vitest in 29 files, build, 16 e2e.
+- **Nothing in flight; the handoff sheet is empty.** The owner's 2026-11-27 asks are built and pushed: the sync of all
+  state across devices as `5d0bb73` (D-071), then the four player bugs and the Google flash as `07b0ed9` (D-072 to
+  D-074); gates green on `07b0ed9`: 268 Vitest in 30 files, build, 16 e2e (one e2e run before timed out once in
+  `progress.spec.ts` under load, 35.8 s; it passed alone and in the full rerun, 49 s).
 - **Live is `f2f0848`** (D-063 to D-070; scheduled runs green since 45621967711, 2026-11-25 13:16 UTC, the latest
-  46005563267 on 2026-11-27 13:15 UTC). **Not deployed yet:** `5d0bb73` (D-071); the next scheduled run (23:07 UTC
-  2026-11-27, 18:07 ET; GitHub starts schedules late) publishes it. A manual deploy run needs his yes in a picker.
+  46005563267 on 2026-11-27 13:15 UTC). **Not deployed yet:** `5d0bb73` (D-071), `07b0ed9` (D-072 to D-074); the next
+  scheduled run (23:07 UTC 2026-11-27, 18:07 ET; GitHub starts schedules late) publishes them. A manual deploy run needs
+  his yes in a picker.
+- **D-072 (`07b0ed9`): the screen stays on with no notice, every countdown is read out, every rest can be skipped.**
+  The owner: "the screen dims by itself … can't a PWA ask for permission to keep the screen on? If some platforms don't
+  support it, could an invisible video play forever? … a very small video bundled with the PWA, looping forever. Then
+  remove the notification 'the screen may turn off by itself. Set Auto-Lock to Never' entirely … who changes a system
+  setting for one app? This notification must go, whatever happens"; "read out the start and end of every countdown;
+  read out the last few seconds too"; "some rests in the middle cannot be skipped … every rest must be skippable".
+  - Screen (`src/lib/wake-lock.ts`, `useWakeLock(true)` in `__root.tsx`; `WakeLockContext` and the player's notice
+    are gone): the wake lock is asked for again on every `click`/`touchend` (capture) while not held — the likely cause
+    of the notice was Safari refusing a request made outside a tap —, on return to the screen and on the sentinel's
+    `release`. Fallback: `src/lib/keep-awake-video.ts`, a 4-s 16 × 16 H.264 + silent AAC video (2.7 KB, base64, made
+    with ffmpeg 9, the command in its header) played from a blob: URL (CSP `media-src 'self' blob:` in
+    `scripts/vite-pwa-plugin.ts`; inlined so the service worker never answers Safari's range requests), started by
+    a tap, unmuted (WebKit keeps the display awake only for a playing video with audio), looped by hand
+    (`currentTime` back to 0 after 0.5 s: WebKit lets a `loop` video sleep), off screen; always on iPhone/iPad
+    (`isAppleMobile`; the home-screen wake lock was broken before iOS 18.4 while it said it was held), elsewhere only
+    while the wake lock is not held; `navigator.audioSession.type = 'ambient'` first so the user's music keeps
+    playing. None of this is verified on a phone (Phase 8 Screen and Sound rows).
+  - Speech (`src/components/player/runners.tsx`): spoken cues are on until switched off (`spokenCuesOn()` reads
+    `!== '0'`); every countdown speaks its start ("Go. Hold, 30 seconds", "Rest, 60 seconds"), its last 3 seconds
+    ("Three", "Two", "One", each with a tick tone) and its end ("Stop. Rest, 30 seconds", "Stop. Change sides", "Go",
+    "Done"); the 3-s lead-in only counts. `cueText()`, `durationWords()`, `useRestCues()`, `restStart()`.
+  - Skips: a timeline (holds, stretches, intervals) shows "Skip the rest" / "Skip the walk" on a rest segment and
+    "Skip" on a lead-in or side change (`skipSegment` moves the clock's start back by the time left); the reps and
+    stopwatch rests already had "Skip the rest". Tests: `tests/component/runners.test.tsx` (new),
+    `tests/component/wake-lock.test.tsx` (asks again on a tap after a refusal).
+- **D-073 (`07b0ed9`): Jump and reach replaces the squat jump** (owner: "I don't like the squat jump; change it to
+  another exercise"; his picker "Jump and reach (Recommended)" over jumping jacks, more jump rope, side-to-side line
+  hops). Exercise id `jump-and-reach` (logs saved as `squat-jump` stay; lookups tolerate unknown ids); the jumps ladder
+  keeps its doses (3 × 5, 4 × 6, 4 × 5 in a row), turns and the Springbok badge (L3); video HASfit "Reach Jumps"
+  (`iq-YN1MFkfo`, embeddable, frames checked 2026-11-27: front and side views, arms overhead; it shows a fairly deep
+  dip — a possible doubt for the owner). Plan §4, §5 table, §6.7, §7.10, Appendix A updated.
+- **D-074 (`07b0ed9`): Google's window flashes at most once per opening, only when changes wait** (owner: "the Google
+  sign-in keeps flashing by itself … like a virus. Make it rarer. Smallest change. At most one flash per app opening,
+  and only when there are changes waiting to sync"). `sync.ts` `armNextTap()` returns unless `waiting()` (cache
+  `dirty`, or no `generation` yet = the first sync after sign-in) and unless `tapUsed` is false; `tapUsed` is set by
+  the armed tap and cleared when the app comes back on screen (`visibilitychange` → visible). With nothing waiting, a
+  run-out token waits for the next change, "Sync now" or the next opening, so another device's changes come in only
+  then. Test in `tests/db/drive-sync.test.ts` (fails without the gate, checked).
 - **D-071 (`5d0bb73`): the Drive sync carries every record to every device, both ways, and asks when two plans
   clash.** The owner: "a very serious problem: syncing progress. When a user has just started, chosen the plan, then
   signs in to Google in Settings, the app must look whether Drive already holds progress; if so, update the local state
@@ -122,11 +163,12 @@
   tap marks itself refused. Tortoise listens for `click` (D-055). Told the owner 2026-11-23; neither verified on a
   phone.
 - **Phase 8 is all that is left: the real-phone checklist** (`docs/3-implementation.md`, Phase 8 table), the owner's,
-  on the iPhone from Safari: install, offline, the update banner, sound with the silent switch, spoken cues, the screen
-  staying on whenever the app is open (D-050), background catch-up, **Google Drive** (sign in from the installed app:
+  on the iPhone from Safari: install, offline, the update banner, sound with the silent switch and music from another app
+  still playing, every countdown read out, the screen never dimming while the app is open with no Auto-Lock notice
+  (D-050, D-072), background catch-up, **Google Drive** (sign in from the installed app:
   does Google's popup open and come back in home-screen mode; a change syncs within a minute and "Last sync" moves;
-  after an hour, opening the app and tapping anything renews the sign-in with no other step, a window may flash and
-  close; on a second device or after Delete all data, signing in brings in everything even after a plan was chosen
+  after an hour, with a change waiting, tapping anything renews the sign-in, a window may flash and close, at most
+  once per opening (D-074), and with nothing waiting nothing flashes; on a second device or after Delete all data, signing in brings in everything even after a plan was chosen
   there first; a session done on one device shows on the other after its next sync; two different plans with progress
   show the choice dialog, REPLACE asked when the replaced side holds more; D-054, D-055, D-071), layout, and
   **the new screens** (badges shine and a tap opens the badge's card, closed by ✕; a name plays its video in the app;
@@ -135,7 +177,7 @@
   panels; D-049). Then **other platforms** (D-047): Android Chrome, desktop Chrome or Edge. **When the owner reports
   results, write them into `docs/3-implementation.md` under Phase 8** (its done criterion) and fix what fails. The
   calendar-file, location and storage rows went with D-053, the backup-file row with D-055.
-- **Plan gaps still encoded by their closest reading (D-038):** Thursday's squat jumps counted as about 3 min; no data home yet for the ramp-week effort notes,
+- **Plan gaps still encoded by their closest reading (D-038):** Thursday's jump and reach counted as about 3 min; no data home yet for the ramp-week effort notes,
   §9 stages to 99 (except its bone-density rationale), §13 pain rules and §14 adaptations.
 - **The domain steps are done** (D-035): Pages with source "GitHub Actions", custom domain `tortoise.doctornova.net`,
   GoDaddy CNAME `tortoise` → `mortal-dog.github.io`, TXT `_github-pages-challenge-mortal-dog` (must stay), HTTPS
@@ -146,7 +188,7 @@
 - **Gates before every code commit:** `pnpm check && pnpm test && pnpm build && pnpm e2e`, chained with `&&` (CLAUDE.md
   rule 3). `pnpm e2e` builds and serves `dist/` itself, on port 4173 or `TORTOISE_E2E_PORT` (one port per worktree;
   a running server is never reused), at the iPhone profile's 3x unless `TORTOISE_E2E_DPR` says otherwise (CI sets 1).
-  Last green: 261 Vitest tests in 29 files and 16 e2e tests on `5d0bb73` (local); CI green last on `f2f0848` (run
+  Last green: 268 Vitest tests in 30 files and 16 e2e tests on `07b0ed9` (local); CI green last on `f2f0848` (run
   46005563267).
   The two heavy tests (`tests/db/db.test.ts` 60 years of days, `tests/guard/personal-terms.test.ts`) carry their own
   30-s limit since `4933a2a`: under vitest's 5-s default they failed twice while another repo's tests loaded the Mac.
@@ -180,7 +222,7 @@
   fetch: `ai/memory/reading-sources-raw.md`.
 - **Docs and data change together:** a plan change updates `docs/2-exercise-plan.md`, `src/data/` and (for a number)
   `docs/sources.md` in one commit; `tests/content/verbatim.test.ts` catches drift.
-- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-072**. Entries sit in the section of their topic
+- **Decisions** get a D-number in `docs/decisions.md`; **the next is D-075**. Entries sit in the section of their topic
   (CI rulings under "Building and the repo"). The docs guard requires the numbers with no gap, so parallel sessions'
   entries are renumbered after main's at merge (done for D-042 and D-043; D-047 and D-048 were reserved up front).
 - **Settings saves:** `saveSettings` reads and writes the record in one transaction; a nested field (profile, units)
@@ -218,7 +260,7 @@
   an export and import (D-010).
 - **The guard key has no backup** besides the CI secret, which cannot be read back.
 - **iOS web-app limits** still to verify on the phone (design §2; the Phase 8 checklist): sound after a tap and the
-  silent switch, speech in the home-screen app, wake lock in home-screen mode, timers stopped in the background (the
+  silent switch, speech in the home-screen app, wake lock and the keep-awake video in home-screen mode, timers stopped in the background (the
   player catches up from timestamps), the home-screen app's separate data, and Google's sign-in popup from the
   home-screen app, both from the sign-in button and from the next-tap renewal (D-054, D-055). Safari refuses Google's
   cookies in the hidden renewal frame, so on the iPhone expect every renewal to come from the next tap.
@@ -238,9 +280,9 @@
   four soft glows drifting over 80–131 s (`src/components/Backdrop.tsx`); a floating glass tab bar with a gliding pill.
   No raindrops and no Display switch since D-053: the backdrop always drifts (`src/lib/effects.ts` reads only reduced
   motion), reduced transparency gives solid panels; the contrast guard checks every text colour over every glow overlap.
-- **Screen awake (D-050):** the root layout (`src/routes/__root.tsx`) holds the wake lock whenever the app is open and
-  shares its state through `WakeLockContext` (`src/lib/wake-lock.ts`); the player shows the Auto-Lock notice when it is
-  missing or refused. No pocket lock. The owner: the lock and "Hold to unlock" felt pointless; "once the app is open the
+- **Screen awake (D-050, D-072):** the root layout (`src/routes/__root.tsx`) calls `useWakeLock(true)`
+  (`src/lib/wake-lock.ts`): the wake lock, re-asked on every tap until held, plus the looping silent video fallback; no
+  notice anywhere, no `WakeLockContext`. No pocket lock. The owner: the lock and "Hold to unlock" felt pointless; "once the app is open the
   screen stays on, the OS cannot lock it".
 - **Today:** cards with **Start** (the player) and "Done as planned", each with its time of day (D-052); the Week 0
   and light-week banners. No test card or test banners (D-067), no level suggestions (D-069), no day ring and no "Yesterday has nothing logged" banner (D-057), no habits
@@ -255,14 +297,15 @@
   alternate and rest after each pair; level holds vs reps by the pass target; run–walk and rope levels as intervals;
   the interval stage by block; Week 0, ramp and light changes; Friday's push-up `levelOffset: 1`); each exercise's name
   opens its video, no cue or "How" text (D-056); timers from
-  timestamps (`position()`); tones unlocked on Start (`src/lib/sound.ts`), spoken cues and spoken coaching (switch kept
-  in localStorage; it says the step and target, no cue); fixed doses, a reps step only taps "Set done" (D-069); the
+  timestamps (`position()`); tones unlocked on Start (`src/lib/sound.ts`), spoken cues and spoken coaching (on by default since
+  D-072, the switch in the settings record since D-071; it says the step and target, no cue; every countdown's start,
+  last 3 s and end, D-072); every rest, lead-in and side change skippable (D-072); fixed doses, a reps step only taps "Set done" (D-069); the
   summary (time, sets, the outdoor run's distance, the due check-ins) saves logs (sets without reps), the finished
   step ids, the card and the check-ins' levels in one transaction (`repo.ts` `savePlayedSession`); the route
   `play.$date.$slot.tsx` computes `checkInsDue()` once, frozen with the units.
 - **Exercises and videos** (D-056, D-060, D-061): no Library page and no exercise text; an exercise is `{id, name,
   area, unit, video?}` (`src/data/exercises.ts`, 35, well-known names); `videos.ts` holds 32 YouTube videos, each
-  chosen by its storyboard frames, title, channel and length (checked 2026-11-23); `NO_VIDEO` = rope-basics, run, walk
+  chosen by its storyboard frames, title, channel and length (checked 2026-11-23; jump-and-reach 2026-11-27, D-073); `NO_VIDEO` = rope-basics, run, walk
   ("everyone knows them"); `src/components/ExerciseLink.tsx` turns a name into a button that opens the in-app video
   sheet (`videoId()`, `embedUrl()`); every exercise is used by a step or a ladder level (tested).
   Plan Appendix A is the name → video table, generated from the data and checked by `tests/content/plan.test.ts`.
@@ -344,7 +387,9 @@
   version from git), D-066 (owner: a badge's card with ✕, no hover tooltips, one-line labels), D-067 (owner: no fitness
   test; ability badges by ladder level), D-068 (owner: docs, code and badges agree before every commit), D-069 (owner:
   levels move by check-ins after a session; five start questions), D-070 (owner: badges have real names), D-071 (owner: the Drive sync carries every record
-  both ways; a clash of plans asks; the shared file, generation and ranking are builder's rulings).
+  both ways; a clash of plans asks; the shared file, generation and ranking are builder's rulings),
+  D-072 (owner: screen on with no notice, the keep-awake video, countdowns read out, every rest skippable), D-073
+  (owner's picker: jump and reach), D-074 (owner: Google's window at most once per opening, only with changes waiting).
 
 ## Where things are
 
@@ -354,7 +399,7 @@
 - `src/lib/` `dates`, `calendar`, `status`, `progression`, `calc`, `milestones`, `pillars`, `records`,
   `db` (migrations 1–2), `repo`, `live`, `plan-view`, `use-app`, `player`, `sound`, `wake-lock`, `use-now`,
   `milestone-repo` (was `test-repo`), `start-levels`, `photos`, `badges`, `backup` (the format and the merge only),
-  `install`, `effects`,
+  `install`, `effects`, `keep-awake-video` (D-072),
   `sync/` (google, drive, sync). Removed by D-053: `daylight`, `ics`, `rain`, `src/data/habits.ts`, `RemindersCard`;
   by D-055: `share`, `BackupCard`, `BackupReminder`, `formatBytes`; by D-056/D-057: `library`, the library routes,
   `DayRing`; by D-067: `test-results`, the Rockport, sit-to-rise and height calculators in `calc`.

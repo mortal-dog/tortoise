@@ -26,3 +26,9 @@ level (the bail lives in H10 with the kick-up video).
 playability `OK` (all were, 2026-11-23). The player is `https://www.youtube-nocookie.com/embed/<id>?playsinline=1&rel=0`
 with `referrerPolicy="strict-origin-when-cross-origin"` (YouTube's embed refuses a request without a referrer);
 the CSP's frame-src allows that host only.
+
+**Finding candidates (2026-11-27, D-073):** `curl -sL -A 'Mozilla/5.0' "https://www.youtube.com/results?search_query=…"`
+holds `var ytInitialData = {…};`; walk it for `videoRenderer` (videoId, title runs, ownerText, lengthText). Very short
+clips (10–20 s) often have only 48×27 storyboards (level 0): unusable, pick a longer one. Frames come about one per
+second, so a jump's peak may fall between them: tile several sheets (`ffmpeg … xstack`) and look for the airborne frames.
+A video checked on another day passes its date as `yt()`'s fourth argument (`checked`).

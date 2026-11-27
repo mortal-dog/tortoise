@@ -375,3 +375,11 @@ Phase 0 (D-021).
 - Plan: milestones.ts names (Hatchling-style, ≤14 chars, unique); badges.ts drops `label` (name = label); Next up rows
   open the badge card; e2e/unit tests; plan §11 + design §3.4 + D-070; gates; commit, push, compact.
 - Done: D-070 committed (gates green: 247 Vitest, 16 e2e).
+
+## Four player bugs and the Google flash (owner asks 2026-11-27, D-072 to D-074)
+- What: the owner's asks (2026-11-27): (1) the screen dims: keep it awake (wake lock, plus a tiny looping in-app video
+  as fallback) and remove the Auto-Lock notice entirely; (2) speak every countdown's start and end and the last
+  seconds; (3) the squat jump becomes "Jump and reach" (his picker); (4) every rest in the player must be skippable;
+  (5) the Google sign-in popup flashes too often: at most once per app opening, only when changes wait to sync.
+  D-072 player fixes, D-073 jump and reach, D-074 the flash.
+- Done: `07b0ed9` pushed (gates green: 268 Vitest, 16 e2e); worktree `../tortoise-wt-bugs` and branch removed.
