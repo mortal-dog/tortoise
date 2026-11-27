@@ -100,7 +100,8 @@ Sizes are relative: S is small, M medium, L large.
   - a manifest: name "Tortoise", start URL `/`, standalone display, theme and background colours, icons at 192 and 512 px
     and a maskable one;
   - the Apple touch icon and iOS meta tags;
-  - the service worker skeleton with its build-time precache list and an update banner.
+  - the service worker skeleton with its build-time precache list and an update banner. *Since D-075 there is no banner:
+    the app updates and reloads by itself, never during a session.*
 - A Content Security Policy meta tag in the production build ([design §11](1-app-design.md#11-privacy-and-security)).
   The dev server needs inline scripts, so the tag is not served there.
 - The guard tests (§3).
@@ -340,7 +341,7 @@ a picker.
 |---|---|
 | Install | Add to Home Screen; opens full screen; the home-screen app starts with its own empty data |
 | Offline | Works in airplane mode after the first load |
-| Update | A new deploy shows the update banner, and the new version loads after a tap |
+| Update | After a new deploy, opening the app (or bringing it back to the foreground) loads the new version by itself, with no banner: Settings › About shows the new number, at the latest after a second opening; during a session nothing reloads until the player closes (D-075) |
 | Sound | Cues with the ring/silent switch on and off; every countdown read out at its start, last three seconds and end (D-072); music from another app keeps playing |
 | Screen | In the installed app the screen never dims or locks while the app is open, after any first tap, and again after a return from the background; no notice about Auto-Lock anywhere (D-050, D-072) |
 | Background | Timers catch up after locking the phone mid-interval |

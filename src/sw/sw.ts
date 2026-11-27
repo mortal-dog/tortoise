@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 // The first-party service worker (D-017). The build replaces __PRECACHE__ and __VERSION__ (scripts/vite-pwa-plugin.ts).
-// It precaches the whole app at install, serves it cache-first, and waits for the user's tap before taking over.
+// It precaches the whole app at install, serves it cache-first, and takes over when the page tells it to: the page
+// does so by itself once the user is not in a session, then reloads (D-075).
 
 declare const self: ServiceWorkerGlobalScope
 declare const __PRECACHE__: string[]

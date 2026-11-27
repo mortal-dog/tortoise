@@ -54,7 +54,7 @@ phone in Phase 8 of [3-implementation.md](3-implementation.md).
 | Vibration | Safari has no Vibration API | Visual and sound cues only |
 | Screen awake | Screen Wake Lock API in Safari; older iOS versions had it broken in home-screen mode (verify) | Keep the screen on whenever the app is open (D-050): the wake lock, asked for again on every tap until held (Safari grants it only inside a tap), plus a tiny silent video looped in the app as a fallback, always on an iPhone or iPad (D-072). No notice and no Auto-Lock advice |
 | Background | iOS suspends a web app in the background; timers stop firing | Timers run from timestamps and catch up on return; cues need the screen on |
-| Updates | An installed web app gets a new version only when its service worker updates | An update banner; Settings shows the app and plan versions |
+| Updates | An installed web app gets a new version only when its service worker updates | The app updates by itself: a new version downloads in the background and the app reloads onto it at once, or, during a session, as soon as the player closes; no banner and no button (D-075). Settings shows the app and plan versions |
 | Health data | A web app cannot read Apple Health | Steps and run distance are typed in (optional) |
 
 ---
